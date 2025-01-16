@@ -1,9 +1,10 @@
 // Initialize EmailJS
 (function() {
-    emailjs.init("YOUR_USER_ID"); // Replace with your EmailJS user ID
+    // Replace YOUR_PUBLIC_KEY with the Public Key from your EmailJS account
+    emailjs.init("YOUR_PUBLIC_KEY");
 })();
 
-// Available time slots
+// Available time slots (you can customize these)
 const timeSlots = [
     "10:00 AM", "11:00 AM", "12:00 PM",
     "1:00 PM", "2:00 PM", "3:00 PM",
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         maxDate: new Date().fp_incr(30), // Allow booking up to 30 days in advance
         disable: [
             function(date) {
-                // Disable Sundays and Mondays
+                // Disable Sundays and Mondays (customize as needed)
                 return date.getDay() === 0 || date.getDay() === 1;
             }
         ],
@@ -41,23 +42,37 @@ document.addEventListener('DOMContentLoaded', function() {
     bookingForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
+        // Show loading state
+        const submitButton = bookingForm.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+
         const formData = new FormData(bookingForm);
         const templateParams = {
-            name: formData.get('name'),
-            email: formData.get('email'),
+            to_email: "senghakmad@gmail.com",
+            from_name: formData.get('name'),
+            from_email: formData.get('email'),
             phone: formData.get('phone'),
             date: formData.get('date'),
             time: formData.get('timeSlot'),
-            description: formData.get('description')
+            message: formData.get('description')
         };
 
-        // Send email using EmailJS
-        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+        // Replace SERVICE_ID and TEMPLATE_ID with your EmailJS service and template IDs
+        emailjs.send('SERVICE_ID', 'TEMPLATE_ID', templateParams)
             .then(function(response) {
+                // Show success message
                 alert('Booking request sent successfully! We will contact you shortly to confirm your appointment.');
                 bookingForm.reset();
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
             }, function(error) {
+                // Show error message
+                console.error('EmailJS error:', error);
                 alert('Sorry, there was an error sending your booking request. Please try again or contact us directly.');
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
             });
     });
 });
