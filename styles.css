@@ -486,41 +486,81 @@ body::before {
 }
 
 .booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
     max-width: 600px;
     margin: 0 auto;
-    display: grid;
-    gap: 1.5rem;
+    padding: 2rem;
+    background: rgba(26, 26, 26, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.1);
+}
+
+.form-group {
+    position: relative;
 }
 
 .booking-form input,
+.booking-form select,
 .booking-form textarea {
     width: 100%;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--accent-color);
     border-radius: 5px;
     color: var(--text-color);
     font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.booking-form input:focus,
+.booking-form select:focus,
+.booking-form textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--glow-color);
 }
 
 .booking-form textarea {
-    height: 150px;
+    min-height: 120px;
     resize: vertical;
 }
 
-.booking-form button {
+.submit-btn {
     background: var(--accent-color);
     color: var(--text-color);
-    padding: 1rem 2rem;
+    padding: 12px 24px;
     border: none;
     border-radius: 5px;
-    font-size: 1.1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
-.booking-form button:hover {
-    background-color: #ff1f4f;
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px var(--glow-color);
+}
+
+.flatpickr-calendar {
+    background: var(--primary-color) !important;
+    border: 1px solid var(--accent-color) !important;
+    box-shadow: 0 0 20px var(--glow-color) !important;
+}
+
+.flatpickr-day {
+    color: var(--text-color) !important;
+}
+
+.flatpickr-day.selected {
+    background: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+}
+
+.flatpickr-day:hover {
+    background: rgba(255, 107, 107, 0.3) !important;
 }
 
 /* Footer */
