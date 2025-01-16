@@ -1,7 +1,7 @@
 // Initialize EmailJS
 (function() {
-    // Replace YOUR_PUBLIC_KEY with the Public Key from your EmailJS account
-    emailjs.init("YOUR_PUBLIC_KEY");
+    // Initialize with your public key
+    emailjs.init("nqLDVniO3BUlQ-e1n");
 })();
 
 // Available time slots (you can customize these)
@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
             message: formData.get('description')
         };
 
-        // Replace SERVICE_ID and TEMPLATE_ID with your EmailJS service and template IDs
-        emailjs.send('SERVICE_ID', 'TEMPLATE_ID', templateParams)
+        // Send email using EmailJS
+        emailjs.send('service_3pilkcs', 'template_otj2ita', templateParams)
             .then(function(response) {
                 // Show success message
                 alert('Booking request sent successfully! We will contact you shortly to confirm your appointment.');
