@@ -253,6 +253,23 @@ body::before {
     color: #f0f0f0;
 }
 
+.phone-link {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.phone-link:hover {
+    color: var(--accent-color);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px var(--glow-color);
+}
+
 @media (max-width: 768px) {
     .artist-profile {
         grid-template-columns: 1fr;
