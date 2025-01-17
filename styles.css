@@ -200,47 +200,24 @@ body::before {
 }
 
 .artist-profile {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
+    display: flex;
     gap: 2rem;
-    align-items: start;
-    background: rgba(26, 26, 26, 0.8);
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(255, 107, 107, 0.1);
+    align-items: flex-start;
 }
 
 .artist-image {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+    flex: 0 0 300px;
 }
 
-.artist-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(255, 107, 107, 0.2), transparent);
-    z-index: 1;
-}
-
-.profile-img {
+.artist-image img {
     width: 100%;
     height: auto;
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-.artist-image:hover .profile-img {
-    transform: scale(1.05);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
 }
 
 .artist-bio {
-    padding: 1rem;
+    flex: 1;
 }
 
 .artist-bio h3 {
@@ -288,7 +265,7 @@ body::before {
 
 @media (max-width: 768px) {
     .artist-profile {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 
     .specialties ul {
@@ -602,7 +579,7 @@ footer {
     }
 
     .artist-profile {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 
     .social-links {

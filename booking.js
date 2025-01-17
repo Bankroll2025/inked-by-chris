@@ -39,40 +39,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle form submission
     const bookingForm = document.getElementById('bookingForm');
-    bookingForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
 
-        // Show loading state
-        const submitButton = bookingForm.querySelector('button[type="submit"]');
-        const originalButtonText = submitButton.textContent;
-        submitButton.textContent = 'Sending...';
-        submitButton.disabled = true;
+            // Show loading state
+            const submitButton = bookingForm.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+            submitButton.textContent = 'Sending...';
+            submitButton.disabled = true;
 
-        const formData = new FormData(bookingForm);
-        const templateParams = {
-            to_email: "senghakmad@gmail.com",
-            from_name: formData.get('name'),
-            from_email: formData.get('email'),
-            phone: formData.get('phone'),
-            date: formData.get('date'),
-            time: formData.get('timeSlot'),
-            message: formData.get('description')
-        };
+            // Get form values
+            const name = bookingForm.querySelector('input[name="name"]').value;
+            const email = bookingForm.querySelector('input[name="email"]').value;
+            const phone = bookingForm.querySelector('input[name="phone"]').value;
+            const date = bookingForm.querySelector('input[name="date"]').value;
+            const time = bookingForm.querySelector('select[name="timeSlot"]').value;
+            const description = bookingForm.querySelector('textarea[name="description"]').value;
 
-        // Send email using EmailJS
-        emailjs.send('service_3pilkcs', 'template_otj2ita', templateParams)
-            .then(function(response) {
-                // Show success message
-                alert('Booking request sent successfully! We will contact you shortly to confirm your appointment.');
-                bookingForm.reset();
-                submitButton.textContent = originalButtonText;
-                submitButton.disabled = false;
-            }, function(error) {
-                // Show error message
-                console.error('EmailJS error:', error);
-                alert('Sorry, there was an error sending your booking request. Please try again or contact us directly.');
-                submitButton.textContent = originalButtonText;
-                submitButton.disabled = false;
-            });
-    });
+            // Create template parameters
+            const templateParams = {
+                from_name: name,
+                from_email: email,
+                phone: phone,
+                date: date,
+                time: time,
+                message: description
+            };
+
+            console.log('Sending email with params:', templateParams);
+
+            // Send email using EmailJS
+            emailjs.send('service_3pilkcs', 'template_otj2ita', templateParams)
+                .then(function(response) {
+                    console.log('Email sent successfully:', response);
+                    // Show success message
+                    alert('Booking request sent successfully! We will contact you shortly to confirm your appointment.');
+                    bookingForm.reset();
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                })
+                .catch(function(error) {
+                    console.error('EmailJS error:', error);
+                    // Show error message
+                    alert('Sorry, there was an error sending your booking request. Please try again or contact us directly.');
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                });
+        });
+    } else {
+        console.error('Booking form not found');
+    }
 });
