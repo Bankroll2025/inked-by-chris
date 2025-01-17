@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- EmailJS Setup Instructions:
+    1. Replace YOUR_PUBLIC_KEY below with the public key from your EmailJS account
+    2. Replace YOUR_SERVICE_ID with the Service ID from your email service
+    3. Replace YOUR_TEMPLATE_ID with the Template ID from your email template
+    -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
     <div class="cursor"></div>
@@ -38,7 +44,7 @@
                 <h2>The Artist</h2>
                 <div class="artist-profile">
                     <div class="artist-image">
-                        <img src="images/chris-profile.jpg" alt="Chris Mod - Professional Tattoo Artist" class="profile-img">
+                        <img src="./images/chris-profile.jpg" alt="Chris Mod - Professional Tattoo Artist" class="profile-img">
                     </div>
                     <div class="artist-bio">
                         <h3>Chris Mod</h3>
@@ -62,31 +68,31 @@
                 <h2>My Work</h2>
                 <div class="gallery-grid">
                     <div class="gallery-item">
-                        <img src="images/IMG_6827.jpg" alt="Custom tattoo design showcasing detailed artistry" loading="lazy">
+                        <img src="./images/IMG_6827.jpg" alt="Custom tattoo design showcasing detailed artistry" loading="lazy">
                         <div class="gallery-overlay">
                             <p>Custom Design</p>
                         </div>
                     </div>
                     <div class="gallery-item">
-                        <img src="images/IMG_6845.jpg" alt="Intricate tattoo artwork with fine details" loading="lazy">
+                        <img src="./images/IMG_6845.jpg" alt="Intricate tattoo artwork with fine details" loading="lazy">
                         <div class="gallery-overlay">
                             <p>Fine Detail Work</p>
                         </div>
                     </div>
                     <div class="gallery-item">
-                        <img src="images/IMG_6860 (1).jpg" alt="Unique tattoo design with personal meaning" loading="lazy">
+                        <img src="./images/IMG_6860 (1).jpg" alt="Unique tattoo design with personal meaning" loading="lazy">
                         <div class="gallery-overlay">
                             <p>Personal Design</p>
                         </div>
                     </div>
                     <div class="gallery-item">
-                        <img src="images/IMG_6970.jpg" alt="Beautiful custom tattoo artwork" loading="lazy">
+                        <img src="./images/IMG_6970.jpg" alt="Beautiful custom tattoo artwork" loading="lazy">
                         <div class="gallery-overlay">
                             <p>Custom Artwork</p>
                         </div>
                     </div>
                     <div class="gallery-item">
-                        <img src="images/IMG_6974.jpg" alt="Stunning tattoo design showcasing artistic skill" loading="lazy">
+                        <img src="./images/IMG_6974.jpg" alt="Stunning tattoo design showcasing artistic skill" loading="lazy">
                         <div class="gallery-overlay">
                             <p>Artistic Design</p>
                         </div>
@@ -117,6 +123,27 @@
                     <a href="https://www.snapchat.com/add/sasuke_2k" target="_blank" class="social-btn snapchat">
                         <i class="fab fa-snapchat-ghost"></i> @sasuke_2k
                     </a>
+                </div>
+                <div class="contact-form">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">Your Name:</label>
+                            <input type="text" id="name" name="user_name" required placeholder="Enter your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Your Email:</label>
+                            <input type="email" id="email" name="user_email" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject:</label>
+                            <input type="text" id="subject" name="user_subject" required placeholder="e.g., Tattoo Inquiry">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Your Message:</label>
+                            <textarea id="message" name="user_message" rows="5" required placeholder="Tell us about your tattoo idea..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -157,6 +184,87 @@
             <p>&copy; 2025 Inked by Chris. All rights reserved.</p>
         </div>
     </footer>
+
+    <script type="text/javascript">
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("nqLDVniO3BUlQ-e1n");
+        })();
+
+        // Handle contact form submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            const templateParams = {
+                user_name: document.getElementById('name').value,
+                user_email: document.getElementById('email').value,
+                user_subject: document.getElementById('subject').value,
+                user_message: document.getElementById('message').value
+            };
+
+            emailjs.send('service_3pilkcs', 'template_zz78gfo', templateParams)
+                .then(
+                    function(response) {
+                        console.log('SUCCESS!', response);
+                        alert('Thank you for your message! We will get back to you soon about your tattoo inquiry.');
+                        document.getElementById('contact-form').reset();
+                    },
+                    function(error) {
+                        console.log('FAILED...', error);
+                        alert('Sorry, there was an error sending your message. Please try again or contact us directly.');
+                    }
+                )
+                .finally(function() {
+                    // Reset button state
+                    submitBtn.textContent = 'Send Message';
+                    submitBtn.disabled = false;
+                });
+        });
+
+        // Handle booking form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending Request...';
+            submitBtn.disabled = true;
+
+            const templateParams = {
+                user_name: this.querySelector('input[name="name"]').value,
+                user_email: this.querySelector('input[name="email"]').value,
+                user_phone: this.querySelector('input[name="phone"]').value,
+                user_date: this.querySelector('input[name="date"]').value,
+                user_time: this.querySelector('select[name="timeSlot"]').value,
+                user_description: this.querySelector('textarea[name="description"]').value,
+                user_subject: 'Tattoo Consultation Request'
+            };
+
+            emailjs.send('service_3pilkcs', 'template_zz78gfo', templateParams)
+                .then(
+                    function(response) {
+                        console.log('Booking request sent successfully:', response);
+                        alert('Thank you for your consultation request! We will review your request and contact you soon to confirm your appointment.');
+                        document.getElementById('bookingForm').reset();
+                    },
+                    function(error) {
+                        console.log('Booking request failed:', error);
+                        alert('Sorry, there was an error sending your booking request. Please try again or contact us directly at 651-592-5122.');
+                    }
+                )
+                .finally(function() {
+                    // Reset button state
+                    submitBtn.textContent = originalBtnText;
+                    submitBtn.disabled = false;
+                });
+        });
+    </script>
 
     <script src="script.js"></script>
     <script src="booking.js"></script>
