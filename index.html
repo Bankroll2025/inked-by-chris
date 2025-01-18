@@ -189,7 +189,10 @@
                     <div class="form-section">
                         <h3>Preferred Appointment</h3>
                         <div class="form-group">
-                            <input type="text" id="datePicker" name="preferred_date" placeholder="Select Date" required>
+                            <input type="text" id="datePicker" name="preferred_date" placeholder="Select Date" required readonly>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
                         </div>
                         <div class="form-group">
                             <select name="preferred_time" id="timeSlot" required>
@@ -255,11 +258,10 @@
                             <p>Please read our cancellation policy carefully:</p>
                             <ul>
                                 <li>Appointments must be cancelled at least 24 hours before the scheduled time.</li>
-                                <li>Cancellations within 24 hours of the appointment may result in loss of deposit.</li>
                                 <li>To cancel your appointment, please contact us at:</li>
                                 <ul>
                                     <li>Phone: 651-592-5122</li>
-                                    <li>Email: inkedbychris651@gmail.com</li>
+                                    <li>Email: senghakmad@gmail.com</li>
                                 </ul>
                                 <li>Emergency situations will be handled on a case-by-case basis.</li>
                             </ul>
@@ -359,7 +361,9 @@
                     to_name: "Chris",
                     shop_name: "Inked by Chris",
                     shop_phone: "651-592-5122",
-                    shop_address: "2395 7th St N, Saint Paul, MN 55109"
+                    shop_address: "2395 7th St N, Saint Paul, MN 55109",
+                    shop_email: "senghakmad@gmail.com",
+                    cancellation_policy: "Please note that cancellations must be made at least 24 hours before your appointment."
                 };
 
                 // Send emails
@@ -372,8 +376,8 @@
                     shop_name: templateParams.shop_name,
                     shop_phone: templateParams.shop_phone,
                     shop_address: templateParams.shop_address,
-                    shop_email: "inkedbychris651@gmail.com",
-                    cancellation_policy: "Please note that cancellations must be made at least 24 hours before your appointment to avoid losing your deposit."
+                    shop_email: templateParams.shop_email,
+                    cancellation_policy: templateParams.cancellation_policy
                 });
 
                 // Show success message
@@ -390,6 +394,26 @@
                 submitBtn.textContent = originalBtnText;
                 submitBtn.disabled = false;
             }
+        });
+    </script>
+
+    <script>
+        // Initialize Flatpickr
+        const datePicker = flatpickr("#datePicker", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            disable: [
+                function(date) {
+                    // Disable Sundays and Mondays
+                    return (date.getDay() === 0 || date.getDay() === 1);
+                }
+            ],
+            locale: {
+                firstDayOfWeek: 1 // Start week on Monday
+            },
+            disableMobile: false, // Enable custom calendar on mobile
+            static: true,
+            theme: "dark"
         });
     </script>
 
