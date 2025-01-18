@@ -29,11 +29,7 @@
 
         if (!bookingId) {
             document.getElementById('cancellation-content').innerHTML = `
-                <p class="error">Invalid cancellation link. Please check your email for the correct link or contact us directly.</p>
-                <div class="contact-info">
-                    <p>Phone: 651-592-5122</p>
-                    <p>Email: senghakmad@gmail.com</p>
-                </div>
+                <p class="error">Invalid cancellation link. Please check your email for the correct link or contact us at senghakmad@gmail.com</p>
             `;
         } else {
             // Show confirmation dialog
@@ -70,11 +66,7 @@
                 document.getElementById('cancellation-content').innerHTML = `
                     <div class="error-message">
                         <p>Sorry, there was an error cancelling your appointment.</p>
-                        <p>Please contact us directly:</p>
-                        <div class="contact-info">
-                            <p>Phone: 651-592-5122</p>
-                            <p>Email: senghakmad@gmail.com</p>
-                        </div>
+                        <p>Please contact us at senghakmad@gmail.com</p>
                     </div>
                 `;
             }
