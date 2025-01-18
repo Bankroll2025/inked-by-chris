@@ -321,6 +321,27 @@
             return age >= 18;
         }
 
+        // Format date for display
+        const formatDate = (dateStr) => {
+            return new Date(dateStr).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        };
+
+        // Format gender for display
+        const formatGender = (gender) => {
+            const genderMap = {
+                'male': 'Male',
+                'female': 'Female',
+                'other': 'Other',
+                'prefer_not_to_say': 'Prefer not to say'
+            };
+            return genderMap[gender] || gender;
+        };
+
         // Handle booking form submission
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -345,6 +366,44 @@
             // Generate booking ID
             const bookingId = generateBookingId();
 
+            // Create cancellation link with full URL
+            const cancelUrl = `${window.location.origin}/cancel.html?id=${bookingId}`;
+
+            // Calculate client's age
+            const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
+
+            // Prepare the template parameters
+            const templateParams = {
+                booking_id: bookingId,
+                client_name: document.getElementById('client_name').value,
+                client_email: document.getElementById('client_email').value,
+                client_phone: document.getElementById('client_phone').value,
+                client_gender: formatGender(document.getElementById('client_gender').value),
+                client_birthdate: formatDate(birthDate),
+                client_age: clientAge,
+                preferred_date: formatDate(document.getElementById('datePicker').value),
+                preferred_time: document.getElementById('timeSlot').value,
+                tattoo_type: document.getElementById('tattooType').value,
+                tattoo_size: document.getElementById('tattooSize').value,
+                tattoo_placement: document.getElementById('tattoo_placement').value,
+                color_preference: document.getElementById('colorPreference').value,
+                tattoo_description: document.getElementById('tattoo_description').value,
+                additional_notes: document.getElementById('additional_notes').value || 'None provided',
+                to_name: "Chris",
+                shop_name: "Inked by Chris",
+                shop_phone: "651-592-5122",
+                shop_address: "2395 7th St N, Saint Paul, MN 55109",
+                shop_email: "senghakmad@gmail.com",
+                cancellation_policy: `
+                    • Cancellations must be made at least 24 hours before your appointment
+                    • Click the cancellation link below to cancel your appointment
+                    • For any questions, please email us at senghakmad@gmail.com
+                `,
+                cancel_url: cancelUrl,
+                cancel_button_text: "Cancel Appointment",
+                cancel_instructions: "To cancel your appointment, click the button below:"
+            };
+
             // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -352,52 +411,10 @@
             submitBtn.disabled = true;
 
             try {
-                // Format the message for better readability
-                const formatDate = (dateStr) => {
-                    return new Date(dateStr).toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                };
-
-                // Create cancellation link
-                const cancelUrl = `${window.location.origin}/cancel.html?id=${bookingId}`;
-
-                // Calculate client's age
-                const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
-
-                // Prepare the template parameters
-                const templateParams = {
-                    booking_id: bookingId,
-                    client_name: document.getElementById('client_name').value,
-                    client_email: document.getElementById('client_email').value,
-                    client_phone: document.getElementById('client_phone').value,
-                    client_gender: document.getElementById('client_gender').value,
-                    client_birthdate: formatDate(birthDate),
-                    client_age: clientAge,
-                    preferred_date: formatDate(document.getElementById('datePicker').value),
-                    preferred_time: document.getElementById('timeSlot').value,
-                    tattoo_type: document.getElementById('tattooType').value,
-                    tattoo_size: document.getElementById('tattooSize').value,
-                    tattoo_placement: document.getElementById('tattoo_placement').value,
-                    color_preference: document.getElementById('colorPreference').value,
-                    tattoo_description: document.getElementById('tattoo_description').value,
-                    additional_notes: document.getElementById('additional_notes').value || 'None provided',
-                    to_name: "Chris",
-                    shop_name: "Inked by Chris",
-                    shop_phone: "651-592-5122",
-                    shop_address: "2395 7th St N, Saint Paul, MN 55109",
-                    shop_email: "senghakmad@gmail.com",
-                    cancellation_policy: "Please note that cancellations must be made at least 24 hours before your appointment.",
-                    cancel_url: cancelUrl
-                };
-
                 // Send notification to shop owner
                 await emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams);
 
-                // Send confirmation to client with cancellation link
+                // Send confirmation to client
                 await emailjs.send('service_3pilkcs', 'template_gowinjb', {
                     booking_id: templateParams.booking_id,
                     reply_to: templateParams.client_email,
@@ -408,14 +425,9 @@
                     shop_email: templateParams.shop_email,
                     shop_address: templateParams.shop_address,
                     cancel_url: templateParams.cancel_url,
-                    cancellation_text: `
-                        Cancellation Policy:
-                        • Please cancel at least 24 hours before your appointment
-                        • Use the cancellation link below or email us at senghakmad@gmail.com
-                        • Early notification helps us accommodate other clients
-
-                        To cancel your appointment, click here: {{cancel_url}}
-                    `
+                    cancel_button_text: templateParams.cancel_button_text,
+                    cancel_instructions: templateParams.cancel_instructions,
+                    cancellation_policy: templateParams.cancellation_policy
                 });
 
                 // Show success message
