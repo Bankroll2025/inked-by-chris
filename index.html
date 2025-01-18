@@ -441,212 +441,6 @@
                 const tattooDescription = document.getElementById('tattoo_description').value;
                 const additionalNotes = document.getElementById('additional_notes').value || 'None provided';
 
-                // Prepare the template parameters for shop notification
-                const shopTemplateParams = {
-                    to_name: "Chris",
-                    from_name: clientName,
-                    to_email: "senghakmad@gmail.com",  
-                    reply_to: clientEmail,
-                    client_name: clientName,
-                    client_email: clientEmail,
-                    client_phone: clientPhone,
-                    client_gender: formatGender(clientGender),
-                    client_age: clientAge,
-                    client_birthdate: formatDate(birthDate),
-                    preferred_date: formatDate(preferredDate),
-                    preferred_time: preferredTime,
-                    tattoo_type: tattooType,
-                    tattoo_size: tattooSize,
-                    tattoo_placement: tattooPlacement,
-                    color_preference: colorPreference,
-                    tattoo_description: tattooDescription,
-                    additional_notes: additionalNotes,
-                    cancel_url: cancelUrl,
-                    message: `
-New Booking Request (ID: ${bookingId})
-
-Client Information:
-- Name: ${clientName}
-- Email: ${clientEmail}
-- Phone: ${clientPhone}
-- Gender: ${formatGender(clientGender)}
-- Age: ${clientAge}
-- Date of Birth: ${formatDate(birthDate)}
-
-Appointment Details:
-- Date: ${formatDate(preferredDate)}
-- Time: ${preferredTime}
-- Tattoo Type: ${tattooType}
-- Size: ${tattooSize}
-- Placement: ${tattooPlacement}
-- Color Preference: ${colorPreference}
-
-Tattoo Description:
-${tattooDescription}
-
-Additional Notes:
-${additionalNotes}
-
-Cancellation Link:
-${cancelUrl}
-                    `
-                };
-
-                // Prepare the template parameters for client notification
-                const clientTemplateParams = {
-                    to_name: clientName,
-                    from_name: "Inked by Chris",
-                    to_email: clientEmail,  
-                    reply_to: "senghakmad@gmail.com",
-                    booking_id: bookingId,
-                    booking_date: formatDate(preferredDate),
-                    booking_time: preferredTime,
-                    tattoo_type: tattooType,
-                    tattoo_size: tattooSize,
-                    tattoo_placement: tattooPlacement,
-                    color_preference: colorPreference,
-                    cancel_url: cancelUrl,
-                    message: `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-    <div style="text-align: center; padding: 20px 0;">
-        <h1 style="color: #333; margin: 0;">Booking Confirmation</h1>
-        <p style="font-size: 18px; color: #666;">Inked by Chris</p>
-    </div>
-
-    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
-        <p style="font-size: 16px; margin-bottom: 20px;">Dear ${clientName},</p>
-        <p style="margin-bottom: 20px;">Thank you for booking your tattoo appointment with Inked by Chris! Here are your booking details:</p>
-        
-        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Appointment Details</h2>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                    <strong>Booking ID:</strong> ${bookingId}
-                </li>
-                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                    <strong>Date:</strong> ${formatDate(preferredDate)}
-                </li>
-                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                    <strong>Time:</strong> ${preferredTime}
-                </li>
-                <li style="padding: 8px 0;">
-                    <strong>Location:</strong> 2395 7th St N, Saint Paul, MN 55109
-                </li>
-            </ul>
-        </div>
-
-        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Tattoo Details</h2>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                    <strong>Type:</strong> ${tattooType}
-                </li>
-                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                    <strong>Size:</strong> ${tattooSize}
-                </li>
-                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
-                    <strong>Placement:</strong> ${tattooPlacement}
-                </li>
-                <li style="padding: 8px 0;">
-                    <strong>Color Preference:</strong> ${colorPreference}
-                </li>
-            </ul>
-        </div>
-
-        <div style="background-color: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Cancellation Policy</h2>
-            <div style="border-left: 4px solid #ffc107; padding-left: 15px; margin: 15px 0;">
-                <p style="margin: 10px 0; color: #666;">Please read our cancellation policy carefully:</p>
-                <ul style="list-style: none; padding: 0; margin: 10px 0;">
-                    <li style="margin: 8px 0;">• Cancellations must be made at least 24 hours before your scheduled appointment</li>
-                    <li style="margin: 8px 0;">• Late cancellations (less than 24 hours notice) may result in a cancellation fee</li>
-                    <li style="margin: 8px 0;">• No-shows will be charged a fee and may affect future booking privileges</li>
-                    <li style="margin: 8px 0;">• Emergencies will be handled on a case-by-case basis</li>
-                </ul>
-                <p style="margin: 10px 0; color: #666;">To cancel your appointment, simply click the button below:</p>
-            </div>
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="${cancelUrl}" 
-                   style="background-color: #dc3545; 
-                          color: white; 
-                          padding: 12px 25px; 
-                          text-decoration: none; 
-                          border-radius: 5px; 
-                          display: inline-block;
-                          font-weight: bold;">
-                    Cancel Appointment
-                </a>
-            </div>
-            <p style="margin-top: 15px; font-size: 14px; color: #666; text-align: center;">
-                Questions about cancellation? Contact us at senghakmad@gmail.com
-            </p>
-        </div>
-
-        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Important Notes</h2>
-            <ul style="padding-left: 20px; margin: 10px 0;">
-                <li style="margin: 8px 0;">Please arrive 10-15 minutes before your appointment time</li>
-                <li style="margin: 8px 0;">Bring a valid government-issued photo ID</li>
-                <li style="margin: 8px 0;">If you have any reference images, please bring them with you</li>
-            </ul>
-        </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-        <p style="color: #666; margin-bottom: 5px;">Questions? Contact us at:</p>
-        <p style="color: #666; margin-top: 0;">
-            Email: senghakmad@gmail.com<br>
-            Location: 2395 7th St N, Saint Paul, MN 55109
-        </p>
-        <p style="color: #666; font-size: 12px; margin-top: 20px;">
-            &copy; 2025 Inked by Chris. All rights reserved.
-        </p>
-    </div>
-</div>`,
-                    html_message: true
-                };
-
-                console.log('Sending shop notification...');
-                // Send notification to shop owner (to your email)
-                const shopResponse = await emailjs.send(
-                    'service_3pilkcs',
-                    'template_tukgt7p',
-                    shopTemplateParams,
-                    'nqLDVniO3BUlQ-e1n'
-                );
-                console.log('Shop notification sent:', shopResponse);
-
-                console.log('Sending client confirmation...');
-                // Send confirmation to client (to their email)
-                const clientResponse = await emailjs.send(
-                    'service_3pilkcs',
-                    'template_gowinjb',
-                    {
-                        ...clientTemplateParams,
-                        to_email: clientEmail,  
-                        email_to: clientEmail,  
-                        user_email: clientEmail 
-                    },
-                    'nqLDVniO3BUlQ-e1n'
-                );
-                console.log('Client confirmation sent:', clientResponse);
-
-                // Format appointment details for SMS
-                const appointmentSMS = `
-Appointment Confirmed!
-Date: ${formatDate(preferredDate)}
-Time: ${preferredTime}
-Type: ${tattooType}
-Size: ${tattooSize}
-
-Need to cancel? Visit:
-${cancelUrl}
-
-Questions? Call or text: (555) 555-5555`;
-
-                // Send SMS to client
-                await sendSMS(clientPhone, appointmentSMS);
-                
                 // Save appointment to database
                 try {
                     const response = await fetch('http://localhost:3000/api/save-appointment', {
@@ -663,7 +457,8 @@ Questions? Call or text: (555) 555-5555`;
                             appointment_time: preferredTime,
                             tattoo_type: tattooType,
                             tattoo_size: tattooSize,
-                            tattoo_placement: tattooPlacement
+                            tattoo_placement: tattooPlacement,
+                            status: 'scheduled'
                         })
                     });
 
@@ -673,13 +468,48 @@ Questions? Call or text: (555) 555-5555`;
                     console.log('Appointment saved to database successfully');
                 } catch (error) {
                     console.error('Error saving appointment:', error);
-                    // Continue with email/SMS sending even if database save fails
                 }
 
-                // Show success message
-                alert('Booking request sent successfully! Please check your email for confirmation.');
-                this.reset();
+                // Send email and SMS notifications
+                try {
+                    // Send confirmation email to client
+                    await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                        to_name: clientName,
+                        from_name: "Inked by Chris",
+                        to_email: clientEmail,
+                        reply_to: "senghakmad@gmail.com",
+                        booking_id: bookingId,
+                        booking_date: formatDate(preferredDate),
+                        booking_time: preferredTime,
+                        tattoo_type: tattooType,
+                        tattoo_size: tattooSize,
+                        tattoo_placement: tattooPlacement,
+                        cancel_url: cancelUrl
+                    });
 
+                    // Send SMS confirmation
+                    const appointmentSMS = `
+Appointment Confirmed!
+Date: ${formatDate(preferredDate)}
+Time: ${preferredTime}
+Type: ${tattooType}
+Size: ${tattooSize}
+
+Need to cancel? Visit:
+${cancelUrl}
+
+Questions? Call or text: (555) 555-5555`;
+
+                    await sendSMS(clientPhone, appointmentSMS);
+                    
+                    // Show success message and reset form
+                    alert('Booking request sent successfully! Please check your email and phone for confirmation.');
+                    this.reset();
+                    window.location.href = '#home';
+                } catch (error) {
+                    console.error('Error sending notifications:', error);
+                    alert('Your appointment was saved but there was an error sending notifications. Please contact us for confirmation.');
+                }
             } catch (error) {
                 console.error('Failed to send email:', error);
                 const errorMessage = error.text || error.message || 'Unknown error';
