@@ -496,7 +496,7 @@ body::before {
 }
 
 .booking-form {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
     background: rgba(10, 10, 10, 0.8);
@@ -506,8 +506,28 @@ body::before {
     backdrop-filter: blur(10px);
 }
 
+.form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(196, 30, 58, 0.2);
+}
+
+.form-section h3 {
+    color: var(--accent-color);
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(196, 30, 58, 0.2);
+}
+
 .form-group {
     margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
 }
 
 .booking-form input,
@@ -530,6 +550,16 @@ body::before {
     border-color: var(--accent-color);
     box-shadow: 0 0 15px rgba(196, 30, 58, 0.2);
     background: rgba(255, 255, 255, 0.1);
+}
+
+.booking-form input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.booking-form input[type="number"]::-webkit-outer-spin-button,
+.booking-form input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .booking-form textarea {
@@ -555,6 +585,7 @@ body::before {
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-top: 1rem;
 }
 
 .submit-btn:hover {
@@ -598,6 +629,10 @@ body::before {
     .booking-form {
         padding: 1.5rem;
         margin: 0 1rem;
+    }
+
+    .form-section {
+        padding: 1rem;
     }
 }
 
