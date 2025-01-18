@@ -67,6 +67,11 @@ async function sendEmail(to, subject, text) {
     }
 }
 
+// Function to generate cancellation link
+function generateCancellationLink(appointmentId) {
+    return `https://inkedbychris.com/cancel.html?id=${appointmentId}`;
+}
+
 // Function to send reminders for an appointment
 async function sendReminders(appointment) {
     const reminderSMS = `
@@ -76,32 +81,36 @@ Location: 2395 7th St N, Saint Paul, MN 55109
 Need to cancel? Please call or text: (555) 555-5555
 Booking ID: ${appointment.id}`;
 
+    const cancellationLink = generateCancellationLink(appointment.id);
     const reminderEmail = `
 Dear ${appointment.client_name},
 
-This is a reminder about your tattoo appointment:
+This is a friendly reminder about your upcoming tattoo appointment:
+
 Date: ${appointment.appointment_date}
 Time: ${appointment.appointment_time}
 Location: 2395 7th St N, Saint Paul, MN 55109
 
-Tattoo Details:
-- Type: ${appointment.tattoo_type}
-- Size: ${appointment.tattoo_size}
-- Placement: ${appointment.tattoo_placement}
-
-Please remember:
-1. Arrive 10-15 minutes early
+Important Reminders:
+1. Please arrive 10 minutes early
 2. Bring a valid ID
 3. If you need to cancel, please do so at least 24 hours in advance
 
-Questions? Call or text: (555) 555-5555
+Cancellation Policy:
+- A 24-hour notice is required for all cancellations.
+- To cancel your appointment, click here: ${cancellationLink}
+- For questions or rescheduling, contact us at:
+  Email: senghakmad@gmail.com
+  Phone/Text: (651) 592-5122
+
+We look forward to seeing you!
 
 Best regards,
 Inked by Chris`;
 
     await Promise.all([
         sendSMS(appointment.client_phone, reminderSMS),
-        sendEmail(appointment.client_email, 'Tattoo Appointment Reminder', reminderEmail)
+        sendEmail(appointment.client_email, 'Appointment Reminder - Inked by Chris', reminderEmail)
     ]);
 }
 

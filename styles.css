@@ -866,7 +866,33 @@ nav a:hover {
 }
 
 .policy-agreement {
-    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.policy-agreement input[type="checkbox"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.policy-agreement label {
+    cursor: pointer;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.policy-text ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.policy-text li {
+    margin-bottom: 8px;
+    line-height: 1.4;
 }
 
 .checkbox-label {
