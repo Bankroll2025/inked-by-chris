@@ -157,116 +157,74 @@ Questions? Call or text: (555) 555-5555`;
                 }
 
                 // Send cancellation notification to shop
-                await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
-                    to_name: "Chris",
+                await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                    to_name: 'Chris',
                     from_name: "Cancellation System",
-                    to_email: "senghakmad@gmail.com",
-                    email_to: "senghakmad@gmail.com",
-                    user_email: "senghakmad@gmail.com",
                     reply_to: clientEmail,
-                    message: `
-Appointment Cancellation Notice
-
-Client Information:
-- Booking ID: ${bookingId}
-- Name: ${clientName || 'Not provided'}
-- Email: ${clientEmail}
-
-Cancelled Appointment Details:
-- Date: ${appointmentDate || 'Not provided'}
-- Time: ${appointmentTime || 'Not provided'}
-
-Tattoo Details:
-- Type: ${tattooType || 'Not provided'}
-- Size: ${tattooSize || 'Not provided'}
-- Placement: ${tattooPlacement || 'Not provided'}
-
-This appointment has been cancelled by the client.
-                    `
-                }, 'nqLDVniO3BUlQ-e1n');
+                    booking_id: bookingId,
+                    client_name: clientName,
+                    appointment_date: appointmentDate,
+                    appointment_time: appointmentTime,
+                    tattoo_type: tattooType,
+                    tattoo_size: tattooSize,
+                    tattoo_placement: tattooPlacement
+                });
 
                 // Send cancellation confirmation to client
                 await emailjs.send('service_3pilkcs', 'template_gowinjb', {
-                    to_name: "Client",
+                    to_name: clientName,
                     from_name: "Inked by Chris",
-                    to_email: clientEmail,
-                    email_to: clientEmail,
-                    user_email: clientEmail,
-                    reply_to: "senghakmad@gmail.com",
+                    reply_to: clientEmail,
                     message: `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-    <div style="text-align: center; padding: 20px 0;">
-        <h1 style="color: #333; margin: 0;">Appointment Cancellation</h1>
-        <p style="font-size: 18px; color: #666;">Inked by Chris</p>
-    </div>
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                        <h1 style="color: #333; margin: 0;">Appointment Cancellation</h1>
+                        <p style="color: #666;">Booking ID: ${bookingId}</p>
+                        
+                        <div style="margin: 30px 0;">
+                            <p>Dear ${clientName},</p>
+                            
+                            <p style="margin-bottom: 20px;">We understand that circumstances can change, and we want to thank you for letting us know about your cancellation. While we're sorry we won't be able to bring your tattoo vision to life at this time, we completely understand that timing is everything when it comes to getting inked.</p>
+                            
+                            <div style="background-color: #f8f8f8; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                                <h3 style="color: #333; margin-top: 0;">Cancelled Appointment Details:</h3>
+                                <p>Date: ${appointmentDate}<br>
+                                Time: ${appointmentTime}<br>
+                                Tattoo Type: ${tattooType}<br>
+                                Size: ${tattooSize}<br>
+                                Placement: ${tattooPlacement}</p>
+                            </div>
+                            
+                            <p>If you'd like to reschedule for a future date, please don't hesitate to:</p>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li> Call or text: (651) 592-5122</li>
+                                <li> DM on Instagram: @inked_bychris</li>
+                            </ul>
+                            
+                            <p>Thank you for choosing Inked by Chris. We hope to see you in the future!</p>
+                        </div>
+                        
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                            <p style="color: #888; font-size: 14px;">
+                                Inked by Chris<br>
+                                2395 7th St N<br>
+                                Saint Paul, MN 55109<br>
+                                (651) 592-5122
+                            </p>
+                        </div>
+                    </div>
+                    `
+                });
 
-    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
-        <p style="font-size: 16px; margin-bottom: 20px;">Dear valued client,</p>
-        
-        <p style="margin-bottom: 20px;">We understand that circumstances can change, and we want to thank you for letting us know about your cancellation. While we're sorry we won't be able to bring your tattoo vision to life at this time, we completely understand that timing is everything when it comes to getting inked.</p>
-
-        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Cancelled Appointment Details</h2>
-            <p style="margin: 10px 0;">Booking ID: ${bookingId}</p>
-            ${appointmentDate ? `<p style="margin: 10px 0;">Date: ${appointmentDate}</p>` : ''}
-            ${appointmentTime ? `<p style="margin: 10px 0;">Time: ${appointmentTime}</p>` : ''}
-            ${tattooType ? `<p style="margin: 10px 0;">Tattoo Type: ${tattooType}</p>` : ''}
-            ${tattooSize ? `<p style="margin: 10px 0;">Tattoo Size: ${tattooSize}</p>` : ''}
-            ${tattooPlacement ? `<p style="margin: 10px 0;">Tattoo Placement: ${tattooPlacement}</p>` : ''}
-        </div>
-
-        <div style="background-color: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Ready to Reschedule?</h2>
-            <p style="margin-bottom: 15px;">When you're ready to make your tattoo dreams a reality, we'll be here. Your vision matters to us, and we'd be honored to work with you in the future.</p>
-            <div style="text-align: center;">
-                <a href="https://inkedbychris.com" 
-                   style="background-color: #28a745; 
-                          color: white; 
-                          padding: 12px 25px; 
-                          text-decoration: none; 
-                          border-radius: 5px; 
-                          display: inline-block;
-                          font-weight: bold;">
-                    Book New Appointment
-                </a>
-            </div>
-        </div>
-
-        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Stay Connected</h2>
-            <p style="margin-bottom: 15px;">Follow us on social media to stay inspired and see our latest work. When you're ready for your next tattoo journey, we'll be here to help bring your vision to life.</p>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="margin: 8px 0;">✨ Every tattoo tells a story</li>
-                <li style="margin: 8px 0;">✨ Your vision is worth waiting for</li>
-                <li style="margin: 8px 0;">✨ We're here when you're ready</li>
-            </ul>
-        </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-        <p style="color: #666; margin-bottom: 5px;">Questions? Contact us at:</p>
-        <p style="color: #666; margin-top: 0;">
-            Email: senghakmad@gmail.com<br>
-            Location: 2395 7th St N, Saint Paul, MN 55109
-        </p>
-        <p style="color: #666; font-size: 12px; margin-top: 20px;">
-            2025 Inked by Chris. All rights reserved.
-        </p>
-    </div>
-</div>`,
-                    html_message: true
-                }, 'nqLDVniO3BUlQ-e1n');
-
-                // Show success message
                 document.getElementById('cancellation-content').innerHTML = `
                     <div class="success-message">
-                        <h2>Appointment Cancelled</h2>
-                        <p>We understand that timing is everything when it comes to getting inked.</p>
-                        <p>A confirmation email has been sent to ${clientEmail}.</p>
-                        <p>When you're ready to make your tattoo dreams a reality, we'll be here waiting to help bring your vision to life.</p>
-                        <div class="button-group">
-                            <button onclick="window.location.href='index.html'" class="keep-btn">Return to Homepage</button>
-                        </div>
+                        <h2>Appointment Successfully Cancelled</h2>
+                        <p>Your appointment has been cancelled. A confirmation email has been sent to your inbox.</p>
+                        <p>If you'd like to book a new appointment:</p>
+                        <ul>
+                            <li>Call or text: (651) 592-5122</li>
+                            <li>DM on Instagram: @inked_bychris</li>
+                        </ul>
+                        <a href="index.html" class="button">Return to Homepage</a>
                     </div>
                 `;
             } catch (error) {
@@ -275,7 +233,7 @@ This appointment has been cancelled by the client.
                     <div class="error-message">
                         <h2>Error</h2>
                         <p>Sorry, there was an error cancelling your appointment.</p>
-                        <p>Please contact us at senghakmad@gmail.com</p>
+                        <p>Please contact us at (651) 592-5122</p>
                         <p>Your booking ID is: ${bookingId}</p>
                         <div class="button-group">
                             <button onclick="window.location.href='index.html'" class="keep-btn">Return to Homepage</button>

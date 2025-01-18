@@ -149,7 +149,7 @@
                     <div class="contact-card">
                         <i class="fas fa-phone"></i>
                         <h3>Phone</h3>
-                        <p><a href="tel:+16515925122" class="phone-link">651-592-5122</a></p>
+                        <p><a href="tel:+16515925122" class="phone-link">(651) 592-5122</a></p>
                     </div>
                     <div class="contact-card">
                         <i class="fas fa-map-marker-alt"></i>
@@ -272,8 +272,9 @@
                                 <li>We understand that plans can change. If you need to cancel or reschedule your appointment, please do so at least 24 hours in advance.</li>
                                 <li>You can easily cancel your appointment through:</li>
                                 <ul>
-                                    <li>The cancellation link in your confirmation email</li>
-                                    <li>Email: senghakmad@gmail.com</li>
+                                    <li>Phone: (651) 592-5122</li>
+                                    <li>Text: (651) 592-5122</li>
+                                    <li>Instagram: @inked_bychris</li>
                                 </ul>
                                 <li>Early notification allows us to accommodate other clients who may be waiting for an appointment.</li>
                                 <li>We appreciate your consideration and understanding.</li>
@@ -367,7 +368,6 @@
                 const bookingId = generateBookingId();
                 const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?` + 
                     `id=${bookingId}&` +
-                    `email=${encodeURIComponent(document.getElementById('client_email').value)}&` +
                     `name=${encodeURIComponent(document.getElementById('client_name').value)}&` +
                     `date=${encodeURIComponent(formatDate(document.getElementById('datePicker').value))}&` +
                     `time=${encodeURIComponent(document.getElementById('timeSlot').value)}&` +
@@ -426,10 +426,9 @@
                 try {
                     // Send confirmation email to client
                     await emailjs.send('service_3pilkcs', 'template_gowinjb', {
-                        to_name: clientName,
-                        from_name: "Inked by Chris",
-                        to_email: clientEmail,
-                        reply_to: "senghakmad@gmail.com",
+                        to_name: 'Chris',
+                        from_name: clientName,
+                        reply_to: clientEmail,
                         booking_id: bookingId,
                         booking_date: formatDate(preferredDate),
                         booking_time: preferredTime,
