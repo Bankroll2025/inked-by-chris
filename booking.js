@@ -148,18 +148,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         template_id: "template_gowinjb",
                         user_id: "nqLDVniO3BUlQ-e1n",
                         template_params: {
-                            client_name: data.clientName,
-                            client_email: data.clientEmail,
-                            client_phone: data.clientPhone,
-                            appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
-                            tattoo_type: data.tattooType,
-                            tattoo_size: data.tattooSize,
-                            tattoo_placement: data.tattooPlacement,
-                            color_preference: data.colorPreference,
-                            booking_id: data.originalBookingId,
                             to_name: data.clientName,
                             to_email: data.clientEmail,
+                            from_name: "Inked by Chris",
                             subject: "Your Tattoo Appointment Confirmation",
                             message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}\n\nYou can manage your appointment using these links:\nReschedule: https://inkedbychris.com/?reschedule=${data.originalBookingId}#booking\nCancel: https://inkedbychris.com/cancel.html?id=${data.originalBookingId}`
                         }
@@ -195,7 +186,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
 
                         if (!clientResponse.ok) {
-                            throw new Error(`Client email failed: ${clientResponse.statusText}`);
+                            const errorText = await clientResponse.text();
+                            console.error('Client email error response:', errorText);
+                            throw new Error(`Client email failed: ${errorText || clientResponse.statusText}`);
                         }
                         console.log('Client confirmation sent successfully');
 
