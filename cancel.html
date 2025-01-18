@@ -112,22 +112,71 @@ This appointment has been cancelled by the client.
                     to_email: clientEmail,
                     reply_to: "senghakmad@gmail.com",
                     message: `
-Your appointment (Booking ID: ${bookingId}) has been successfully cancelled.
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="text-align: center; padding: 20px 0;">
+        <h1 style="color: #333; margin: 0;">Appointment Cancellation</h1>
+        <p style="font-size: 18px; color: #666;">Inked by Chris</p>
+    </div>
 
-Thank you for letting us know. If you'd like to book another appointment in the future, please visit our website.
+    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+        <p style="font-size: 16px; margin-bottom: 20px;">Dear valued client,</p>
+        
+        <p style="margin-bottom: 20px;">We understand that circumstances can change, and we want to thank you for letting us know about your cancellation. While we're sorry we won't be able to bring your tattoo vision to life at this time, we completely understand that timing is everything when it comes to getting inked.</p>
 
-Best regards,
-Inked by Chris
-                    `
+        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Cancelled Appointment Details</h2>
+            <p style="margin: 10px 0;">Booking ID: ${bookingId}</p>
+        </div>
+
+        <div style="background-color: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Ready to Reschedule?</h2>
+            <p style="margin-bottom: 15px;">When you're ready to make your tattoo dreams a reality, we'll be here. Your vision matters to us, and we'd be honored to work with you in the future.</p>
+            <div style="text-align: center;">
+                <a href="https://inkedbychris.com" 
+                   style="background-color: #28a745; 
+                          color: white; 
+                          padding: 12px 25px; 
+                          text-decoration: none; 
+                          border-radius: 5px; 
+                          display: inline-block;
+                          font-weight: bold;">
+                    Book New Appointment
+                </a>
+            </div>
+        </div>
+
+        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Stay Connected</h2>
+            <p style="margin-bottom: 15px;">Follow us on social media to stay inspired and see our latest work. When you're ready for your next tattoo journey, we'll be here to help bring your vision to life.</p>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin: 8px 0;">✨ Every tattoo tells a story</li>
+                <li style="margin: 8px 0;">✨ Your vision is worth waiting for</li>
+                <li style="margin: 8px 0;">✨ We're here when you're ready</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+        <p style="color: #666; margin-bottom: 5px;">Questions? Contact us at:</p>
+        <p style="color: #666; margin-top: 0;">
+            Email: senghakmad@gmail.com<br>
+            Location: 2395 7th St N, Saint Paul, MN 55109
+        </p>
+        <p style="color: #666; font-size: 12px; margin-top: 20px;">
+            2025 Inked by Chris. All rights reserved.
+        </p>
+    </div>
+</div>`,
+                    html_message: true
                 });
 
                 // Show success message
                 document.getElementById('cancellation-content').innerHTML = `
                     <div class="success-message">
                         <h2>Appointment Cancelled</h2>
-                        <p>Your appointment has been successfully cancelled.</p>
+                        <p>We understand that timing is everything when it comes to getting inked.</p>
                         <p>A confirmation email has been sent to ${clientEmail}.</p>
-                        <p>Thank you for letting us know. We hope to see you another time!</p>
+                        <p>When you're ready to make your tattoo dreams a reality, we'll be here waiting to help bring your vision to life.</p>
                         <div class="button-group">
                             <button onclick="window.location.href='index.html'" class="keep-btn">Return to Homepage</button>
                         </div>
