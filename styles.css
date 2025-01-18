@@ -95,24 +95,46 @@ header {
 
 .payment-methods-header {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: center;
 }
 
 .payment-methods-header .payment-method {
-    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     color: var(--accent-color);
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
+.payment-methods-header .payment-method i {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 8px rgba(196, 30, 58, 0.3));
+}
+
+.payment-methods-header .payment-method .payment-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
 .payment-methods-header .payment-method:hover {
     transform: translateY(-2px);
+}
+
+.payment-methods-header .payment-method:hover i {
     color: #fff;
 }
 
-.payment-methods-header .payment-method i {
-    filter: drop-shadow(0 0 8px rgba(196, 30, 58, 0.3));
+.payment-methods-header .payment-method:hover .payment-label {
+    opacity: 1;
+}
+
+@media (max-width: 968px) {
+    .payment-methods-header .payment-label {
+        display: none;
+    }
 }
 
 nav ul {
@@ -182,24 +204,46 @@ nav a:hover {
 
 .payment-methods-header {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: center;
 }
 
 .payment-methods-header .payment-method {
-    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     color: var(--accent-color);
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
+.payment-methods-header .payment-method i {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 8px rgba(196, 30, 58, 0.3));
+}
+
+.payment-methods-header .payment-method .payment-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
 .payment-methods-header .payment-method:hover {
     transform: translateY(-2px);
+}
+
+.payment-methods-header .payment-method:hover i {
     color: #fff;
 }
 
-.payment-methods-header .payment-method i {
-    filter: drop-shadow(0 0 8px rgba(196, 30, 58, 0.3));
+.payment-methods-header .payment-method:hover .payment-label {
+    opacity: 1;
+}
+
+@media (max-width: 968px) {
+    .payment-methods-header .payment-label {
+        display: none;
+    }
 }
 
 .nav-links {
