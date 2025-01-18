@@ -70,6 +70,12 @@
         const urlParams = new URLSearchParams(window.location.search);
         const bookingId = urlParams.get('id');
         const clientEmail = urlParams.get('email');
+        const clientName = urlParams.get('name');
+        const appointmentDate = urlParams.get('date');
+        const appointmentTime = urlParams.get('time');
+        const tattooType = urlParams.get('type');
+        const tattooSize = urlParams.get('size');
+        const tattooPlacement = urlParams.get('placement');
 
         if (!bookingId || !clientEmail) {
             document.getElementById('cancellation-content').innerHTML = `
@@ -79,28 +85,44 @@
             // Show confirmation dialog
             document.getElementById('cancellation-content').innerHTML = `
                 <div class="cancellation-confirmation">
-                    <p>Are you sure you want to cancel your appointment (Booking ID: ${bookingId})?</p>
+                    <p>Are you sure you want to cancel your appointment?</p>
+                    <div class="cancellation-details">
+                        <p><strong>Booking ID:</strong> ${bookingId}</p>
+                        ${appointmentDate ? `<p><strong>Date:</strong> ${appointmentDate}</p>` : ''}
+                        ${appointmentTime ? `<p><strong>Time:</strong> ${appointmentTime}</p>` : ''}
+                    </div>
                     <div class="button-group">
-                        <button onclick="cancelAppointment('${bookingId}', '${clientEmail}')" class="cancel-btn">Yes, Cancel Appointment</button>
+                        <button onclick="cancelAppointment('${bookingId}', '${clientEmail}', '${clientName || ''}', '${appointmentDate || ''}', '${appointmentTime || ''}', '${tattooType || ''}', '${tattooSize || ''}', '${tattooPlacement || ''}')" class="cancel-btn">Yes, Cancel Appointment</button>
                         <button onclick="window.location.href='index.html'" class="keep-btn">No, Keep Appointment</button>
                     </div>
                 </div>
             `;
         }
 
-        async function cancelAppointment(bookingId, clientEmail) {
+        async function cancelAppointment(bookingId, clientEmail, clientName, appointmentDate, appointmentTime, tattooType, tattooSize, tattooPlacement) {
             try {
                 // Send cancellation notification to shop
                 await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
                     to_name: "Chris",
                     from_name: "Cancellation System",
-                    to_email: "senghakmad@gmail.com",  
+                    to_email: "senghakmad@gmail.com",
                     reply_to: clientEmail,
                     message: `
 Appointment Cancellation Notice
 
-Booking ID: ${bookingId}
-Client Email: ${clientEmail}
+Client Information:
+- Booking ID: ${bookingId}
+- Name: ${clientName || 'Not provided'}
+- Email: ${clientEmail}
+
+Cancelled Appointment Details:
+- Date: ${appointmentDate || 'Not provided'}
+- Time: ${appointmentTime || 'Not provided'}
+
+Tattoo Details:
+- Type: ${tattooType || 'Not provided'}
+- Size: ${tattooSize || 'Not provided'}
+- Placement: ${tattooPlacement || 'Not provided'}
 
 This appointment has been cancelled by the client.
                     `
@@ -127,6 +149,11 @@ This appointment has been cancelled by the client.
         <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
             <h2 style="color: #333; margin-top: 0; font-size: 18px;">Cancelled Appointment Details</h2>
             <p style="margin: 10px 0;">Booking ID: ${bookingId}</p>
+            ${appointmentDate ? `<p style="margin: 10px 0;">Date: ${appointmentDate}</p>` : ''}
+            ${appointmentTime ? `<p style="margin: 10px 0;">Time: ${appointmentTime}</p>` : ''}
+            ${tattooType ? `<p style="margin: 10px 0;">Tattoo Type: ${tattooType}</p>` : ''}
+            ${tattooSize ? `<p style="margin: 10px 0;">Tattoo Size: ${tattooSize}</p>` : ''}
+            ${tattooPlacement ? `<p style="margin: 10px 0;">Tattoo Placement: ${tattooPlacement}</p>` : ''}
         </div>
 
         <div style="background-color: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0;">

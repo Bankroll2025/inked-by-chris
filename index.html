@@ -364,9 +364,17 @@
                     return;
                 }
 
-                // Generate booking ID and cancellation URL
+                // Generate booking ID and cancellation URL with all details
                 const bookingId = generateBookingId();
-                const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?id=${bookingId}&email=${encodeURIComponent(document.getElementById('client_email').value)}`;
+                const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?` + 
+                    `id=${bookingId}&` +
+                    `email=${encodeURIComponent(document.getElementById('client_email').value)}&` +
+                    `name=${encodeURIComponent(document.getElementById('client_name').value)}&` +
+                    `date=${encodeURIComponent(formatDate(document.getElementById('datePicker').value))}&` +
+                    `time=${encodeURIComponent(document.getElementById('timeSlot').value)}&` +
+                    `type=${encodeURIComponent(document.getElementById('tattooType').value)}&` +
+                    `size=${encodeURIComponent(document.getElementById('tattooSize').value)}&` +
+                    `placement=${encodeURIComponent(document.getElementById('tattoo_placement').value)}`;
 
                 // Calculate client's age
                 const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
