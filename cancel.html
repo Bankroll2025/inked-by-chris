@@ -6,6 +6,49 @@
     <title>Cancel Appointment - Inked by Chris</title>
     <link rel="stylesheet" href="styles.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        .cancellation-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .cancel-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .keep-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .error-message {
+            color: #dc3545;
+            margin: 20px 0;
+        }
+        .success-message {
+            color: #28a745;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -23,50 +66,84 @@
             emailjs.init("nqLDVniO3BUlQ-e1n");
         })();
 
-        // Get booking ID from URL
+        // Get booking ID and email from URL
         const urlParams = new URLSearchParams(window.location.search);
         const bookingId = urlParams.get('id');
+        const clientEmail = urlParams.get('email');
 
-        if (!bookingId) {
+        if (!bookingId || !clientEmail) {
             document.getElementById('cancellation-content').innerHTML = `
-                <p class="error">Invalid cancellation link. Please check your email for the correct link or contact us at senghakmad@gmail.com</p>
+                <p class="error-message">Invalid cancellation link. Please check your email for the correct link or contact us at senghakmad@gmail.com</p>
             `;
         } else {
             // Show confirmation dialog
             document.getElementById('cancellation-content').innerHTML = `
                 <div class="cancellation-confirmation">
-                    <p>Are you sure you want to cancel your appointment?</p>
+                    <p>Are you sure you want to cancel your appointment (Booking ID: ${bookingId})?</p>
                     <div class="button-group">
-                        <button onclick="cancelAppointment('${bookingId}')" class="cancel-btn">Yes, Cancel Appointment</button>
-                        <button onclick="window.close()" class="keep-btn">No, Keep Appointment</button>
+                        <button onclick="cancelAppointment('${bookingId}', '${clientEmail}')" class="cancel-btn">Yes, Cancel Appointment</button>
+                        <button onclick="window.location.href='index.html'" class="keep-btn">No, Keep Appointment</button>
                     </div>
                 </div>
             `;
         }
 
-        async function cancelAppointment(bookingId) {
+        async function cancelAppointment(bookingId, clientEmail) {
             try {
-                // Send cancellation notifications
-                await emailjs.send('service_3pilkcs', 'template_cancel', {
-                    booking_id: bookingId,
+                // Send cancellation notification to shop
+                await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
                     to_name: "Chris",
-                    shop_email: "senghakmad@gmail.com"
+                    from_name: "Cancellation System",
+                    reply_to: clientEmail,
+                    message: `
+Appointment Cancellation Notice
+
+Booking ID: ${bookingId}
+Client Email: ${clientEmail}
+
+This appointment has been cancelled by the client.
+                    `
+                });
+
+                // Send cancellation confirmation to client
+                await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                    to_name: "Client",
+                    from_name: "Inked by Chris",
+                    to_email: clientEmail,
+                    reply_to: "senghakmad@gmail.com",
+                    message: `
+Your appointment (Booking ID: ${bookingId}) has been successfully cancelled.
+
+Thank you for letting us know. If you'd like to book another appointment in the future, please visit our website.
+
+Best regards,
+Inked by Chris
+                    `
                 });
 
                 // Show success message
                 document.getElementById('cancellation-content').innerHTML = `
                     <div class="success-message">
+                        <h2>Appointment Cancelled</h2>
                         <p>Your appointment has been successfully cancelled.</p>
-                        <p>A confirmation email has been sent to you.</p>
+                        <p>A confirmation email has been sent to ${clientEmail}.</p>
                         <p>Thank you for letting us know. We hope to see you another time!</p>
+                        <div class="button-group">
+                            <button onclick="window.location.href='index.html'" class="keep-btn">Return to Homepage</button>
+                        </div>
                     </div>
                 `;
             } catch (error) {
-                console.error('FAILED...', error);
+                console.error('Failed to cancel appointment:', error);
                 document.getElementById('cancellation-content').innerHTML = `
                     <div class="error-message">
+                        <h2>Error</h2>
                         <p>Sorry, there was an error cancelling your appointment.</p>
                         <p>Please contact us at senghakmad@gmail.com</p>
+                        <p>Your booking ID is: ${bookingId}</p>
+                        <div class="button-group">
+                            <button onclick="window.location.href='index.html'" class="keep-btn">Return to Homepage</button>
+                        </div>
                     </div>
                 `;
             }

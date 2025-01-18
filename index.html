@@ -364,11 +364,9 @@
                     return;
                 }
 
-                // Generate booking ID
+                // Generate booking ID and cancellation URL
                 const bookingId = generateBookingId();
-
-                // Create cancellation link with full URL
-                const cancelUrl = `${window.location.origin}/cancel.html?id=${bookingId}`;
+                const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?id=${bookingId}&email=${encodeURIComponent(document.getElementById('client_email').value)}`;
 
                 // Calculate client's age
                 const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
@@ -446,61 +444,97 @@ ${cancelUrl}
                     booking_id: bookingId,
                     booking_date: formatDate(preferredDate),
                     booking_time: preferredTime,
+                    tattoo_type: tattooType,
+                    tattoo_size: tattooSize,
+                    tattoo_placement: tattooPlacement,
+                    color_preference: colorPreference,
+                    cancel_url: cancelUrl,
                     message: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-    <h1 style="color: #333; text-align: center;">Booking Confirmation</h1>
-    
-    <p style="font-size: 16px;">Dear ${clientName},</p>
-    
-    <p style="font-size: 16px;">Thank you for booking your tattoo appointment with Inked by Chris!</p>
-
-    <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-        <h2 style="color: #333; margin-top: 0;">Your Booking Details</h2>
-        <ul style="list-style: none; padding: 0;">
-            <li style="margin: 10px 0;">📋 Booking ID: ${bookingId}</li>
-            <li style="margin: 10px 0;">📅 Date: ${formatDate(preferredDate)}</li>
-            <li style="margin: 10px 0;">⏰ Time: ${preferredTime}</li>
-            <li style="margin: 10px 0;">📍 Location: 2395 7th St N, Saint Paul, MN 55109</li>
-        </ul>
+    <div style="text-align: center; padding: 20px 0;">
+        <h1 style="color: #333; margin: 0;">Booking Confirmation</h1>
+        <p style="font-size: 18px; color: #666;">Inked by Chris</p>
     </div>
 
-    <div style="background-color: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0;">
-        <h2 style="color: #333; margin-top: 0;">Important Notes</h2>
-        <ul style="padding-left: 20px;">
-            <li style="margin: 10px 0;">Please arrive 10-15 minutes before your appointment time</li>
-            <li style="margin: 10px 0;">Bring a valid government-issued photo ID</li>
-            <li style="margin: 10px 0;">If you have any reference images, please bring them with you</li>
-        </ul>
-    </div>
-
-    <div style="background-color: #f8d7da; padding: 20px; border-radius: 5px; margin: 20px 0;">
-        <h2 style="color: #333; margin-top: 0;">Cancellation Policy</h2>
-        <ul style="padding-left: 20px;">
-            <li style="margin: 10px 0;">Cancellations must be made at least 24 hours before your appointment</li>
-            <li style="margin: 10px 0;">For questions, email us at senghakmad@gmail.com</li>
-        </ul>
+    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+        <p style="font-size: 16px; margin-bottom: 20px;">Dear ${clientName},</p>
+        <p style="margin-bottom: 20px;">Thank you for booking your tattoo appointment with Inked by Chris! Here are your booking details:</p>
         
-        <div style="text-align: center; margin-top: 20px;">
-            <p style="margin-bottom: 15px;">Need to cancel or reschedule?</p>
-            <a href="${cancelUrl}" 
-               style="background-color: #dc3545; 
-                      color: white; 
-                      padding: 12px 25px; 
-                      text-decoration: none; 
-                      border-radius: 5px; 
-                      display: inline-block;
-                      font-weight: bold;">
-                Cancel Appointment
-            </a>
+        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Appointment Details</h2>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong>Booking ID:</strong> ${bookingId}
+                </li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong>Date:</strong> ${formatDate(preferredDate)}
+                </li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong>Time:</strong> ${preferredTime}
+                </li>
+                <li style="padding: 8px 0;">
+                    <strong>Location:</strong> 2395 7th St N, Saint Paul, MN 55109
+                </li>
+            </ul>
+        </div>
+
+        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Tattoo Details</h2>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong>Type:</strong> ${tattooType}
+                </li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong>Size:</strong> ${tattooSize}
+                </li>
+                <li style="padding: 8px 0; border-bottom: 1px solid #eee;">
+                    <strong>Placement:</strong> ${tattooPlacement}
+                </li>
+                <li style="padding: 8px 0;">
+                    <strong>Color Preference:</strong> ${colorPreference}
+                </li>
+            </ul>
+        </div>
+
+        <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Important Notes</h2>
+            <ul style="padding-left: 20px; margin: 10px 0;">
+                <li style="margin: 8px 0;">Please arrive 10-15 minutes before your appointment time</li>
+                <li style="margin: 8px 0;">Bring a valid government-issued photo ID</li>
+                <li style="margin: 8px 0;">If you have any reference images, please bring them with you</li>
+            </ul>
+        </div>
+
+        <div style="background-color: #fff3cd; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333; margin-top: 0; font-size: 18px;">Need to Cancel or Reschedule?</h2>
+            <p style="margin-bottom: 15px;">We understand plans can change. You can cancel your appointment up to 24 hours before the scheduled time.</p>
+            <div style="text-align: center;">
+                <a href="${cancelUrl}" 
+                   style="background-color: #dc3545; 
+                          color: white; 
+                          padding: 12px 25px; 
+                          text-decoration: none; 
+                          border-radius: 5px; 
+                          display: inline-block;
+                          font-weight: bold;">
+                    Cancel Appointment
+                </a>
+            </div>
         </div>
     </div>
 
     <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-        <p style="color: #666;">We look forward to seeing you!</p>
-        <p style="color: #666;">Best regards,<br>Inked by Chris</p>
+        <p style="color: #666; margin-bottom: 5px;">Questions? Contact us at:</p>
+        <p style="color: #666; margin-top: 0;">
+            Email: senghakmad@gmail.com<br>
+            Location: 2395 7th St N, Saint Paul, MN 55109
+        </p>
+        <p style="color: #666; font-size: 12px; margin-top: 20px;">
+            &copy; 2025 Inked by Chris. All rights reserved.
+        </p>
     </div>
 </div>`,
-                    html_message: true // Add this to indicate we're sending HTML
+                    html_message: true
                 };
 
                 console.log('Sending shop notification...');
