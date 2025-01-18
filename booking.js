@@ -2,6 +2,7 @@
 (function() {
     emailjs.init({
         publicKey: "nqLDVniO3BUlQ-e1n",
+        limitRate: true
     });
 })();
 
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 try {
                     // Send notification to shop
-                    await emailjs.send(
+                    const shopResponse = await emailjs.send(
                         "service_2e752is",
                         "template_tukgt7p",
                         {
@@ -144,9 +145,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             reply_to: data.clientEmail
                         }
                     );
+                    console.log('Shop notification sent:', shopResponse);
 
                     // Send confirmation to client
-                    await emailjs.send(
+                    const clientResponse = await emailjs.send(
                         "service_2e752is",
                         "template_gowinjb",
                         {
@@ -164,6 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             website_link: window.location.origin
                         }
                     );
+                    console.log('Client confirmation sent:', clientResponse);
 
                     // Show success message
                     const successDiv = document.createElement('div');
