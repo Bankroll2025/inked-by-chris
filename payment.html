@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment - Inked by Chris</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div class="cursor"></div>
+    <header>
+        <nav class="navbar">
+            <div class="logo">Inked by Chris</div>
+            <div class="nav-content">
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#gallery">Gallery</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="index.html#book" class="cta-button">Book Now</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="payment-section">
+            <div class="container">
+                <h1>Secure Deposit Payment</h1>
+                
+                <div class="security-info">
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure Payment</span>
+                    </div>
+                    <p>Your payment is processed securely by Stripe. We never store your card information.</p>
+                    <div class="security-features">
+                        <div class="feature">
+                            <i class="fas fa-lock"></i>
+                            <span>SSL Encrypted</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Card Not Stored</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Secure Platform</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-details">
+                    <h2>Booking Details</h2>
+                    <div class="booking-info">
+                        <p class="booking-id">Booking ID: <span id="bookingId">Loading...</span></p>
+                        <p class="deposit-amount">Deposit Amount: <span id="depositAmount">Loading...</span></p>
+                    </div>
+                </div>
+
+                <form id="payment-form" class="payment-form">
+                    <div id="payment-element">
+                        <!-- Stripe Elements will be inserted here -->
+                    </div>
+                    <button id="submit" class="payment-button">
+                        <div class="spinner hidden" id="spinner"></div>
+                        <span id="button-text">Pay Deposit</span>
+                    </button>
+                    <div id="payment-message" class="payment-message"></div>
+                </form>
+
+                <div class="payment-footer">
+                    <p>By proceeding with the payment, you agree to our <a href="terms.html">Terms & Conditions</a>.</p>
+                    <div class="cards-accepted">
+                        <img src="https://b.stripecdn.com/site-srv/assets/img/v3/payment_methods-e2a9993f6d4290a4cc6c.png" 
+                             alt="Accepted payment methods" 
+                             class="payment-methods-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+            </div>
+            <p>&copy; 2025 Inked by Chris. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="payment.js"></script>
+</body>
+</html>
