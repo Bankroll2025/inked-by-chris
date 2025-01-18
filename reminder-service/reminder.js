@@ -1,50 +1,40 @@
-const twilio = require('twilio');
 const nodemailer = require('nodemailer');
 const schedule = require('node-schedule');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 require('dotenv').config();
 
-// Configuration
-const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
-const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
-const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
-
-// Initialize Twilio client
-const twilioClient = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-
 // Initialize email transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'senghakmad@gmail.com',
-        pass: process.env.EMAIL_PASSWORD // Use Gmail App Password
+        pass: process.env.EMAIL_PASSWORD
     }
 });
 
 // Initialize database
-const db = new sqlite3.Database(path.join(__dirname, 'appointments.db'), (err) => {
-    if (err) {
-        console.error('Error opening database:', err);
-        return;
-    }
-    console.log('Connected to the appointments database.');
-});
+let db = null;
 
-// Function to send SMS
-async function sendSMS(to, message) {
-    try {
-        const result = await twilioClient.messages.create({
-            body: message,
-            to: to,
-            from: TWILIO_PHONE_NUMBER
+function initializeDatabase() {
+    return new Promise((resolve, reject) => {
+        if (db) {
+            db.close(() => {
+                db = null;
+                console.log('Closed existing database connection');
+            });
+        }
+
+        db = new sqlite3.Database(path.join(__dirname, 'appointments.db'), (err) => {
+            if (err) {
+                console.error('Error opening database:', err);
+                reject(err);
+                return;
+            }
+            console.log('Connected to the appointments database.');
+            resolve();
         });
-        console.log(`SMS sent successfully to ${to}. SID: ${result.sid}`);
-        return true;
-    } catch (error) {
-        console.error('Error sending SMS:', error);
-        return false;
-    }
+    });
 }
 
 // Function to send email
@@ -66,13 +56,6 @@ async function sendEmail(to, subject, text) {
 
 // Function to send reminders for an appointment
 async function sendReminders(appointment) {
-    const reminderSMS = `
-Reminder: You have a tattoo appointment tomorrow at ${appointment.appointment_time}
-Location: 2395 7th St N, Saint Paul, MN 55109
-
-Need to cancel? Please call or text: (555) 555-5555
-Booking ID: ${appointment.id}`;
-
     const reminderEmail = `
 Dear ${appointment.client_name},
 
@@ -91,82 +74,120 @@ Please remember:
 2. Bring a valid ID
 3. If you need to cancel, please do so at least 24 hours in advance
 
-Questions? Call or text: (555) 555-5555
+Questions? Please email us at senghakmad@gmail.com
 
 Best regards,
 Inked by Chris`;
 
-    await Promise.all([
-        sendSMS(appointment.client_phone, reminderSMS),
-        sendEmail(appointment.client_email, 'Tattoo Appointment Reminder', reminderEmail)
-    ]);
+    await sendEmail(appointment.client_email, 'Tattoo Appointment Reminder', reminderEmail);
 }
 
 // Function to check for appointments needing reminders
-function checkAppointments() {
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowDate = tomorrow.toISOString().split('T')[0];
-    
-    // Check for appointments tomorrow that haven't received 24h reminder
-    db.all(
-        `SELECT * FROM appointments 
-         WHERE appointment_date = ? 
-         AND reminded_24h = 0 
-         AND status = 'scheduled'`,
-        [tomorrowDate],
-        async (err, appointments) => {
-            if (err) {
-                console.error('Error checking for appointments:', err);
-                return;
-            }
+async function checkAppointments() {
+    try {
+        await initializeDatabase();
 
-            for (const appointment of appointments) {
-                try {
-                    await sendReminders(appointment);
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowDate = tomorrow.toISOString().split('T')[0];
+        const todayDate = now.toISOString().split('T')[0];
+
+        console.log(`Checking for appointments on ${tomorrowDate} (tomorrow) and ${todayDate} (today)`);
+
+        // Check for appointments tomorrow that haven't received 24h reminder
+        const tomorrowAppointments = await new Promise((resolve, reject) => {
+            db.all(
+                `SELECT * FROM appointments 
+                 WHERE appointment_date = ? 
+                 AND reminded_24h = 0 
+                 AND status = ?`,
+                [tomorrowDate, 'scheduled'],
+                (err, rows) => {
+                    if (err) {
+                        console.error('Error checking for tomorrow appointments:', err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows || []);
+                }
+            );
+        });
+
+        console.log(`Found ${tomorrowAppointments.length} appointments for tomorrow`);
+        for (const appointment of tomorrowAppointments) {
+            try {
+                await sendReminders(appointment);
+                await new Promise((resolve, reject) => {
                     db.run(
                         'UPDATE appointments SET reminded_24h = 1 WHERE id = ?',
-                        [appointment.id]
+                        [appointment.id],
+                        (err) => {
+                            if (err) {
+                                console.error(`Error updating reminded_24h for appointment ${appointment.id}:`, err);
+                                reject(err);
+                                return;
+                            }
+                            resolve();
+                        }
                     );
-                } catch (error) {
-                    console.error(`Error sending reminders for appointment ${appointment.id}:`, error);
-                }
+                });
+            } catch (error) {
+                console.error(`Error sending reminders for appointment ${appointment.id}:`, error);
             }
         }
-    );
 
-    // Check for appointments today that haven't received same-day reminder
-    const todayDate = now.toISOString().split('T')[0];
-    db.all(
-        `SELECT * FROM appointments 
-         WHERE appointment_date = ? 
-         AND reminded_day_of = 0 
-         AND status = 'scheduled'`,
-        [todayDate],
-        async (err, appointments) => {
-            if (err) {
-                console.error('Error checking for appointments:', err);
-                return;
-            }
+        // Check for appointments today that haven't received same-day reminder
+        const todayAppointments = await new Promise((resolve, reject) => {
+            db.all(
+                `SELECT * FROM appointments 
+                 WHERE appointment_date = ? 
+                 AND reminded_day_of = 0 
+                 AND status = ?`,
+                [todayDate, 'scheduled'],
+                (err, rows) => {
+                    if (err) {
+                        console.error('Error checking for today appointments:', err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows || []);
+                }
+            );
+        });
 
-            for (const appointment of appointments) {
-                try {
-                    await sendReminders(appointment);
+        console.log(`Found ${todayAppointments.length} appointments for today`);
+        for (const appointment of todayAppointments) {
+            try {
+                await sendReminders(appointment);
+                await new Promise((resolve, reject) => {
                     db.run(
                         'UPDATE appointments SET reminded_day_of = 1 WHERE id = ?',
-                        [appointment.id]
+                        [appointment.id],
+                        (err) => {
+                            if (err) {
+                                console.error(`Error updating reminded_day_of for appointment ${appointment.id}:`, err);
+                                reject(err);
+                                return;
+                            }
+                            resolve();
+                        }
                     );
-                } catch (error) {
-                    console.error(`Error sending reminders for appointment ${appointment.id}:`, error);
-                }
+                });
+            } catch (error) {
+                console.error(`Error sending reminders for appointment ${appointment.id}:`, error);
             }
         }
-    );
+    } catch (error) {
+        console.error('Error in checkAppointments:', error);
+    }
 }
 
 // Schedule reminder checks to run every hour
-schedule.scheduleJob('0 * * * *', checkAppointments);
+schedule.scheduleJob('0 * * * *', async () => {
+    console.log('Running scheduled appointment check');
+    await checkAppointments();
+});
 
 console.log('Reminder service started. Checking for appointments every hour.');
 

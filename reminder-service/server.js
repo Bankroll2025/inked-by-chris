@@ -32,11 +32,17 @@ const db = new sqlite3.Database(path.join(__dirname, 'appointments.db'), (err) =
             tattoo_type TEXT,
             tattoo_size TEXT,
             tattoo_placement TEXT,
-            reminded_24h BOOLEAN DEFAULT 0,
-            reminded_day_of BOOLEAN DEFAULT 0,
+            reminded_24h INTEGER DEFAULT 0,
+            reminded_day_of INTEGER DEFAULT 0,
             status TEXT DEFAULT 'scheduled'
         )
-    `);
+    `, (err) => {
+        if (err) {
+            console.error('Error creating table:', err);
+            return;
+        }
+        console.log('Appointments table ready');
+    });
 });
 
 // Admin authentication middleware
