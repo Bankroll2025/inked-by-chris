@@ -125,10 +125,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         template_id: "template_tukgt7p",
                         user_id: "nqLDVniO3BUlQ-e1n",
                         template_params: {
-                            from_name: data.clientName,
+                            client_name: data.clientName,
+                            client_email: data.clientEmail,
+                            client_phone: data.clientPhone,
+                            appointment_date: formattedDate,
+                            appointment_time: data.preferredTime,
+                            tattoo_type: data.tattooType,
+                            tattoo_size: data.tattooSize,
+                            tattoo_placement: data.tattooPlacement,
+                            tattoo_description: data.tattooDescription,
+                            color_preference: data.colorPreference,
+                            booking_id: data.originalBookingId,
+                            to_name: "Chris",
                             to_email: "senghakmad@gmail.com",
                             subject: "New Tattoo Appointment Request",
-                            message: `New Booking Request\n\nClient Information:\nName: ${data.clientName}\nEmail: ${data.clientEmail}\nPhone: ${data.clientPhone}\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nDescription: ${data.tattooDescription}`
+                            message: `New Booking Request\n\nClient Information:\nName: ${data.clientName}\nEmail: ${data.clientEmail}\nPhone: ${data.clientPhone}\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nDescription: ${data.tattooDescription}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}`
                         }
                     };
 
@@ -137,10 +148,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         template_id: "template_gowinjb",
                         user_id: "nqLDVniO3BUlQ-e1n",
                         template_params: {
+                            client_name: data.clientName,
+                            client_email: data.clientEmail,
+                            client_phone: data.clientPhone,
+                            appointment_date: formattedDate,
+                            appointment_time: data.preferredTime,
+                            tattoo_type: data.tattooType,
+                            tattoo_size: data.tattooSize,
+                            tattoo_placement: data.tattooPlacement,
+                            color_preference: data.colorPreference,
+                            booking_id: data.originalBookingId,
                             to_name: data.clientName,
                             to_email: data.clientEmail,
                             subject: "Your Tattoo Appointment Confirmation",
-                            message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}`
+                            message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}\n\nYou can manage your appointment using these links:\nReschedule: https://inkedbychris.com/?reschedule=${data.originalBookingId}#booking\nCancel: https://inkedbychris.com/cancel.html?id=${data.originalBookingId}`
                         }
                     };
 
@@ -184,13 +205,39 @@ document.addEventListener('DOMContentLoaded', function() {
                         successDiv.innerHTML = `
                             <h3>Booking Confirmed!</h3>
                             <p>Thank you for choosing Inked by Chris!</p>
+                            
                             <div class="confirmation-details">
                                 <h4>Appointment Details</h4>
                                 <ul>
                                     <li><strong>Date:</strong> ${formattedDate}</li>
                                     <li><strong>Time:</strong> ${data.preferredTime}</li>
+                                    <li><strong>Booking ID:</strong> ${data.originalBookingId}</li>
                                 </ul>
+                                
+                                <h4>Tattoo Details</h4>
+                                <ul>
+                                    <li><strong>Type:</strong> ${data.tattooType}</li>
+                                    <li><strong>Size:</strong> ${data.tattooSize}</li>
+                                    <li><strong>Placement:</strong> ${data.tattooPlacement}</li>
+                                    <li><strong>Color Preference:</strong> ${data.colorPreference}</li>
+                                </ul>
+                                
+                                <h4>Your Information</h4>
+                                <ul>
+                                    <li><strong>Name:</strong> ${data.clientName}</li>
+                                    <li><strong>Email:</strong> ${data.clientEmail}</li>
+                                    <li><strong>Phone:</strong> ${data.clientPhone}</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="appointment-actions">
+                                <h4>Manage Your Appointment</h4>
+                                <div class="action-buttons">
+                                    <a href="/?reschedule=${data.originalBookingId}#booking" class="reschedule-btn">Reschedule Appointment</a>
+                                    <a href="/cancel.html?id=${data.originalBookingId}" class="cancel-btn">Cancel Appointment</a>
+                                </div>
                             </div>`;
+                        
                         bookingForm.innerHTML = '';
                         bookingForm.appendChild(successDiv);
 
