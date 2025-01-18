@@ -124,27 +124,6 @@
                         <i class="fab fa-snapchat-ghost"></i> @sasuke_2k
                     </a>
                 </div>
-                <div class="contact-form">
-                    <form id="contact-form">
-                        <div class="form-group">
-                            <label for="name">Your Name:</label>
-                            <input type="text" id="name" name="user_name" required placeholder="Enter your name">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Your Email:</label>
-                            <input type="email" id="email" name="user_email" required placeholder="Enter your email">
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject:</label>
-                            <input type="text" id="subject" name="user_subject" required placeholder="e.g., Tattoo Inquiry">
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Your Message:</label>
-                            <textarea id="message" name="user_message" rows="5" required placeholder="Tell us about your tattoo idea..."></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">Send Message</button>
-                    </form>
-                </div>
             </div>
         </section>
 
@@ -153,25 +132,32 @@
                 <h2>Book a Consultation</h2>
                 <form id="bookingForm" class="booking-form">
                     <div class="form-group">
-                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="text" id="client_name" name="client_name" placeholder="Your Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" name="email" placeholder="Your Email" required>
+                        <input type="email" id="client_email" name="client_email" placeholder="Your Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" name="phone" placeholder="Your Phone Number" required>
+                        <input type="tel" id="client_phone" name="client_phone" placeholder="Your Phone Number" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="datePicker" name="date" placeholder="Select Date" required>
+                        <input type="text" id="datePicker" name="consultation_date" placeholder="Select Date" required>
                     </div>
                     <div class="form-group">
-                        <select name="timeSlot" id="timeSlot" required>
+                        <select name="consultation_time" id="timeSlot" required>
                             <option value="">Select Time</option>
-                            <!-- Time slots will be populated by JavaScript -->
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="1:00 PM">1:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="3:00 PM">3:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                            <option value="5:00 PM">5:00 PM</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <textarea name="description" placeholder="Describe your tattoo idea (size, style, placement)" required></textarea>
+                        <textarea id="tattoo_description" name="tattoo_description" placeholder="Describe your tattoo idea (size, style, placement)" required></textarea>
                     </div>
                     <button type="submit" class="submit-btn">Request Consultation</button>
                 </form>
@@ -191,39 +177,16 @@
             emailjs.init("nqLDVniO3BUlQ-e1n");
         })();
 
-        // Handle contact form submission
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show loading state
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
-
-            const templateParams = {
-                user_name: document.getElementById('name').value,
-                user_email: document.getElementById('email').value,
-                user_subject: document.getElementById('subject').value,
-                user_message: document.getElementById('message').value
-            };
-
-            emailjs.send('service_3pilkcs', 'template_zz78gfo', templateParams)
-                .then(
-                    function(response) {
-                        console.log('SUCCESS!', response);
-                        alert('Thank you for your message! We will get back to you soon about your tattoo inquiry.');
-                        document.getElementById('contact-form').reset();
-                    },
-                    function(error) {
-                        console.log('FAILED...', error);
-                        alert('Sorry, there was an error sending your message. Please try again or contact us directly.');
-                    }
-                )
-                .finally(function() {
-                    // Reset button state
-                    submitBtn.textContent = 'Send Message';
-                    submitBtn.disabled = false;
-                });
+        // Initialize Flatpickr date picker
+        flatpickr("#datePicker", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            disable: [
+                function(date) {
+                    // Disable Sundays and Mondays
+                    return (date.getDay() === 0 || date.getDay() === 1);
+                }
+            ]
         });
 
         // Handle booking form submission
@@ -233,36 +196,42 @@
             // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending Request...';
+            submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
 
+            // Prepare the template parameters
             const templateParams = {
-                user_name: this.querySelector('input[name="name"]').value,
-                user_email: this.querySelector('input[name="email"]').value,
-                user_phone: this.querySelector('input[name="phone"]').value,
-                user_date: this.querySelector('input[name="date"]').value,
-                user_time: this.querySelector('select[name="timeSlot"]').value,
-                user_description: this.querySelector('textarea[name="description"]').value,
-                user_subject: 'Tattoo Consultation Request'
+                client_name: document.getElementById('client_name').value,
+                client_email: document.getElementById('client_email').value,
+                client_phone: document.getElementById('client_phone').value,
+                consultation_date: document.getElementById('datePicker').value,
+                consultation_time: document.getElementById('timeSlot').value,
+                tattoo_description: document.getElementById('tattoo_description').value
             };
 
+            // Send the email using EmailJS
             emailjs.send('service_3pilkcs', 'template_zz78gfo', templateParams)
-                .then(
-                    function(response) {
-                        console.log('Booking request sent successfully:', response);
-                        alert('Thank you for your consultation request! We will review your request and contact you soon to confirm your appointment.');
-                        document.getElementById('bookingForm').reset();
-                    },
-                    function(error) {
-                        console.log('Booking request failed:', error);
-                        alert('Sorry, there was an error sending your booking request. Please try again or contact us directly at 651-592-5122.');
-                    }
-                )
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    alert('Thank you for your booking request! We will confirm your consultation time shortly.');
+                    document.getElementById('bookingForm').reset();
+                })
+                .catch(function(error) {
+                    console.log('FAILED...', error);
+                    alert('Sorry, there was an error sending your booking request. Please try again or contact us directly.');
+                })
                 .finally(function() {
                     // Reset button state
                     submitBtn.textContent = originalBtnText;
                     submitBtn.disabled = false;
                 });
+        });
+
+        // Add custom cursor effect
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.querySelector('.cursor');
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
     </script>
 
