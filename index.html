@@ -132,13 +132,16 @@
                 <h2>Book a Consultation</h2>
                 <form id="bookingForm" class="booking-form">
                     <div class="form-group">
-                        <input type="text" id="from_name" name="from_name" placeholder="Your Name" required>
+                        <input type="text" id="client_name" name="client_name" placeholder="Your Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="user_email" name="user_email" placeholder="Your Email" required>
+                        <input type="email" id="client_email" name="client_email" placeholder="Your Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="phone_number" name="phone_number" placeholder="Your Phone Number" required>
+                        <input type="tel" id="client_phone" name="client_phone" placeholder="Your Phone Number" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="client_age" name="client_age" placeholder="Your Age" required>
                     </div>
                     <div class="form-group">
                         <input type="text" id="datePicker" name="booking_date" placeholder="Select Date" required>
@@ -157,7 +160,43 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <textarea id="message" name="message" placeholder="Describe your tattoo idea (size, style, placement)" required></textarea>
+                        <select name="tattooType" id="tattooType" required>
+                            <option value="">Select Tattoo Type</option>
+                            <option value="Custom Design">Custom Design</option>
+                            <option value="Black & Grey">Black & Grey</option>
+                            <option value="Color Realism">Color Realism</option>
+                            <option value="Neo-Traditional">Neo-Traditional</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="tattooSize" id="tattooSize" required>
+                            <option value="">Select Tattoo Size</option>
+                            <option value="Small">Small</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Large">Large</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="tattoo_placement" id="tattoo_placement" required>
+                            <option value="">Select Tattoo Placement</option>
+                            <option value="Arm">Arm</option>
+                            <option value="Leg">Leg</option>
+                            <option value="Back">Back</option>
+                            <option value="Chest">Chest</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="colorPreference" id="colorPreference" required>
+                            <option value="">Select Color Preference</option>
+                            <option value="Black & Grey">Black & Grey</option>
+                            <option value="Color">Color</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="tattoo_description" name="tattoo_description" placeholder="Describe your tattoo idea" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="additional_notes" name="additional_notes" placeholder="Additional Notes"></textarea>
                     </div>
                     <button type="submit" class="submit-btn">Request Consultation</button>
                 </form>
@@ -190,43 +229,97 @@
         });
 
         // Handle booking form submission
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending...';
+            submitBtn.textContent = 'Sending Request...';
             submitBtn.disabled = true;
 
-            // Prepare the template parameters
-            const templateParams = {
-                from_name: document.getElementById('from_name').value,
-                user_email: document.getElementById('user_email').value,
-                phone_number: document.getElementById('phone_number').value,
-                booking_date: document.getElementById('datePicker').value,
-                booking_time: document.getElementById('timeSlot').value,
-                message: document.getElementById('message').value,
-                to_name: "Chris", // Added static recipient name
-                subject: "New Tattoo Consultation Request" // Added static subject
+            // Format the message for better readability
+            const formatDate = (dateStr) => {
+                return new Date(dateStr).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
             };
 
-            // Send the email using EmailJS
-            emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams)
-                .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
-                    alert('Thank you for your booking request! We will confirm your consultation time shortly.');
-                    document.getElementById('bookingForm').reset();
-                })
-                .catch(function(error) {
-                    console.log('FAILED...', error);
-                    alert('Sorry, there was an error sending your booking request. Please try again or contact us directly.');
-                })
-                .finally(function() {
-                    // Reset button state
-                    submitBtn.textContent = originalBtnText;
-                    submitBtn.disabled = false;
-                });
+            try {
+                // Prepare the template parameters
+                const templateParams = {
+                    // Client Information
+                    client_name: document.getElementById('client_name').value,
+                    client_email: document.getElementById('client_email').value,
+                    client_phone: document.getElementById('client_phone').value,
+                    client_age: document.getElementById('client_age').value,
+
+                    // Appointment Details
+                    preferred_date: formatDate(document.getElementById('datePicker').value),
+                    preferred_time: document.getElementById('timeSlot').value,
+
+                    // Tattoo Details
+                    tattoo_type: document.getElementById('tattooType').value,
+                    tattoo_size: document.getElementById('tattooSize').value,
+                    tattoo_placement: document.getElementById('tattoo_placement').value,
+                    color_preference: document.getElementById('colorPreference').value,
+                    tattoo_description: document.getElementById('tattoo_description').value,
+                    additional_notes: document.getElementById('additional_notes').value || 'None provided',
+
+                    // Static Values
+                    to_name: "Chris",
+                    shop_name: "Inked by Chris",
+                    shop_phone: "651-592-5122",
+                    shop_address: "2395 7th St N, Saint Paul, MN 55109",
+                    
+                    // Detailed message for shop owner
+                    booking_details: `
+                        Tattoo Type: ${document.getElementById('tattooType').value}
+                        Size: ${document.getElementById('tattooSize').value}
+                        Placement: ${document.getElementById('tattoo_placement').value}
+                        Color Preference: ${document.getElementById('colorPreference').value}
+                        Description: ${document.getElementById('tattoo_description').value}
+                        Additional Notes: ${document.getElementById('additional_notes').value || 'None provided'}
+                    `
+                };
+
+                // Send notification to shop owner
+                await emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams);
+
+                // Send confirmation to client
+                const clientParams = {
+                    to_email: document.getElementById('client_email').value,
+                    to_name: document.getElementById('client_name').value,
+                    booking_date: formatDate(document.getElementById('datePicker').value),
+                    booking_time: document.getElementById('timeSlot').value,
+                    phone_number: document.getElementById('client_phone').value,
+                    tattoo_type: document.getElementById('tattooType').value,
+                    shop_name: "Inked by Chris",
+                    shop_phone: "651-592-5122",
+                    shop_address: "2395 7th St N, Saint Paul, MN 55109",
+                    shop_email: "inkedbychris651@gmail.com"
+                };
+
+                // Send auto-response to client
+                await emailjs.send('service_3pilkcs', 'template_gowinjb', clientParams);
+
+                // Show success message
+                alert('Thank you for your booking request! We will review your details and contact you within 24-48 hours to confirm your consultation. Please check your email for a confirmation of your request.');
+                
+                // Reset form
+                document.getElementById('bookingForm').reset();
+
+            } catch (error) {
+                console.log('FAILED...', error);
+                alert('Sorry, there was an error sending your booking request. Please try again or contact us directly at 651-592-5122.');
+            } finally {
+                // Reset button state
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            }
         });
 
         // Add custom cursor effect
