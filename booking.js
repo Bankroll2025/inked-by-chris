@@ -1,8 +1,6 @@
 // Initialize EmailJS with your public key
 (function() {
-    emailjs.init({
-        publicKey: "nqLDVniO3BUlQ-e1n",
-    });
+    emailjs.init("nqLDVniO3BUlQ-e1n");
 })();
 
 // Available time slots (you can customize these)
@@ -124,19 +122,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         "service_2e752is",
                         "template_tukgt7p",
                         {
-                            to_name: "Chris",
                             from_name: data.clientName,
-                            message: `New tattoo appointment request:
-                                    Type: ${data.tattooType}
-                                    Size: ${data.tattooSize}
-                                    Placement: ${data.tattooPlacement}
-                                    Description: ${data.tattooDescription}`,
-                            client_name: data.clientName,
-                            client_email: data.clientEmail,
-                            client_phone: data.clientPhone,
-                            appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
-                            booking_id: data.originalBookingId
+                            to_name: "Chris",
+                            client_details: `
+                                Name: ${data.clientName}
+                                Email: ${data.clientEmail}
+                                Phone: ${data.clientPhone}
+                            `,
+                            appointment_details: `
+                                Date: ${formattedDate}
+                                Time: ${data.preferredTime}
+                                Tattoo Type: ${data.tattooType}
+                                Size: ${data.tattooSize}
+                                Placement: ${data.tattooPlacement}
+                                Description: ${data.tattooDescription}
+                            `,
+                            reply_to: data.clientEmail
                         }
                     );
                     console.log('Shop notification sent:', shopResponse);
@@ -147,16 +148,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         "template_gowinjb",
                         {
                             to_name: data.clientName,
-                            message: `Your tattoo appointment has been confirmed:
-                                    Date: ${formattedDate}
-                                    Time: ${data.preferredTime}
-                                    Type: ${data.tattooType}
-                                    Size: ${data.tattooSize}
-                                    Placement: ${data.tattooPlacement}`,
-                            appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
+                            from_name: "Inked by Chris",
+                            appointment_details: `
+                                Date: ${formattedDate}
+                                Time: ${data.preferredTime}
+                                Tattoo Type: ${data.tattooType}
+                                Size: ${data.tattooSize}
+                                Placement: ${data.tattooPlacement}
+                            `,
+                            reply_to: "senghakmad@gmail.com",
+                            to_email: data.clientEmail,
                             booking_id: data.originalBookingId,
-                            email: data.clientEmail
+                            reschedule_url: `${window.location.origin}/?reschedule=${data.originalBookingId}#booking`,
+                            cancel_url: `${window.location.origin}/cancel.html?id=${data.originalBookingId}`
                         }
                     );
                     console.log('Client confirmation sent:', clientResponse);
