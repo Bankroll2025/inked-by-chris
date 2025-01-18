@@ -192,7 +192,7 @@ app.get('/api/test-appointment', (req, res) => {
     const testAppointment = {
         id: 'TEST' + Date.now(),
         client_name: 'Test Client',
-        client_email: 'senghakmad@gmail.com',  // Your email for testing
+        client_email: process.env.EMAIL_USER,  // Use environment variable for testing
         client_phone: '6515925122',  // Your phone for testing
         appointment_date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Tomorrow
         appointment_time: '14:00',

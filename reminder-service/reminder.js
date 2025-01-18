@@ -8,7 +8,7 @@ require('dotenv').config();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'senghakmad@gmail.com',
+        user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
     }
 });
@@ -41,7 +41,7 @@ function initializeDatabase() {
 async function sendEmail(to, subject, text) {
     try {
         const result = await transporter.sendMail({
-            from: 'Inked by Chris <senghakmad@gmail.com>',
+            from: `Inked by Chris <${process.env.EMAIL_USER}>`,
             to: to,
             subject: subject,
             text: text
@@ -74,7 +74,7 @@ Please remember:
 2. Bring a valid ID
 3. If you need to cancel, please do so at least 24 hours in advance
 
-Questions? Please email us at senghakmad@gmail.com
+Questions? Please email us at ${process.env.EMAIL_USER}
 
 Best regards,
 Inked by Chris`;
