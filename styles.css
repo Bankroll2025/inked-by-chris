@@ -300,59 +300,168 @@ nav a:hover {
 /* Hero Section */
 .hero {
     height: 100vh;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                url('images/chris-tattoo-logo.jpg') center/cover no-repeat;
-    position: relative;
     overflow: hidden;
+    background-color: #000;
 }
 
-.hero::after {
-    content: '';
+.hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        linear-gradient(45deg, rgba(196, 30, 58, 0.1) 0%, transparent 100%),
-        radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(20,20,20,0.8) 100%);
+    z-index: 1;
+}
+
+.skull-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23ffffff' opacity='0.05' d='M50 0C36.7 0 25.8 9.7 25.8 21.7c0 4.3 1.5 8.3 4.1 11.7C24.1 37.5 20 42.5 20 48.3c0 4.4 2.5 8.3 6.4 11.3-1.1 1.5-1.7 3.3-1.7 5.2 0 4.8 3.9 8.7 8.7 8.7h33.2c4.8 0 8.7-3.9 8.7-8.7 0-1.9-0.6-3.7-1.7-5.2 3.9-3 6.4-6.9 6.4-11.3 0-5.8-4.1-10.8-9.9-14.9 2.6-3.4 4.1-7.4 4.1-11.7C74.2 9.7 63.3 0 50 0zm0 8.7c8.9 0 16.1 5.8 16.1 13 0 3.1-1.2 6-3.4 8.3l-2.8 2.8 3.5 1.9c5.6 3.1 9.1 7.3 9.1 12.3 0 3.1-1.9 5.9-5.2 8.1l-3.3 2.2 2.1 3.4c0.5 0.8 0.8 1.7 0.8 2.7 0 2.7-2.2 4.8-4.8 4.8H38.1c-2.7 0-4.8-2.2-4.8-4.8 0-1 0.3-1.9 0.8-2.7l2.1-3.4-3.3-2.2c-3.3-2.2-5.2-5-5.2-8.1 0-5 3.5-9.2 9.1-12.3l3.5-1.9-2.8-2.8c-2.2-2.3-3.4-5.2-3.4-8.3 0-7.2 7.2-13 16.1-13z'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    animation: skullFloat 30s linear infinite;
+    opacity: 0.1;
+}
+
+@keyframes skullFloat {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
-    animation: fadeInUp 1.5s ease-out forwards;
+    text-align: center;
+    max-width: 800px;
+    padding: 2rem;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.hero h1 {
-    font-size: 4rem;
-    margin-bottom: 1rem;
+.hero-title {
+    font-size: 4.5rem;
+    font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 5px;
-    text-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
-}
-
-.hero p {
-    font-size: 1.8rem;
+    margin: 0;
     color: var(--text-color);
+    letter-spacing: 4px;
+    text-shadow: 
+        0 0 10px rgba(196, 30, 58, 0.5),
+        0 0 20px rgba(196, 30, 58, 0.3),
+        0 0 30px rgba(196, 30, 58, 0.2);
+    animation: titlePulse 3s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(196, 30, 58, 0.5),
+            0 0 20px rgba(196, 30, 58, 0.3),
+            0 0 30px rgba(196, 30, 58, 0.2);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px rgba(196, 30, 58, 0.7),
+            0 0 30px rgba(196, 30, 58, 0.5),
+            0 0 40px rgba(196, 30, 58, 0.3);
+    }
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: var(--accent-color);
+    letter-spacing: 2px;
     text-transform: uppercase;
-    letter-spacing: 8px;
-    text-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
+    opacity: 0.9;
+}
+
+.hero-description {
+    margin: 2rem 0;
+}
+
+.hero-description p {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin: 0;
+}
+
+.hero-cta {
+    margin-top: 3rem;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-color);
+    background: var(--accent-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(196, 30, 58, 0.4);
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+.cta-button i {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .hero-description p {
+        font-size: 1rem;
+    }
 }
 
 /* Container */
