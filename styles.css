@@ -1383,3 +1383,22 @@ footer {
         align-items: center;
     }
 }
+
+/* Reschedule info message */
+.info-message {
+    background: #e3f2fd;
+    border-left: 5px solid #2196F3;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-message p {
+    margin: 0.5rem 0;
+    color: #1565c0;
+}
+
+.info-message p:first-child {
+    font-weight: bold;
+}
