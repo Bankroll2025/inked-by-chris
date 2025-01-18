@@ -552,16 +552,6 @@ body::before {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.booking-form input[type="number"] {
-    -moz-appearance: textfield;
-}
-
-.booking-form input[type="number"]::-webkit-outer-spin-button,
-.booking-form input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
 .booking-form textarea {
     min-height: 120px;
     resize: vertical;
