@@ -124,22 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         {
                             to_name: "Chris",
                             from_name: data.clientName,
-                            message: `New Booking Request\n\nClient Information:\n` +
-                                   `Name: ${data.clientName}\n` +
-                                   `Email: ${data.clientEmail}\n` +
-                                   `Phone: ${data.clientPhone}\n\n` +
-                                   `Appointment Details:\n` +
-                                   `Date: ${formattedDate}\n` +
-                                   `Time: ${data.preferredTime}\n\n` +
-                                   `Tattoo Details:\n` +
-                                   `Type: ${data.tattooType}\n` +
-                                   `Size: ${data.tattooSize}\n` +
-                                   `Placement: ${data.tattooPlacement}\n` +
-                                   `Description: ${data.tattooDescription}`,
-                            booking_id: data.originalBookingId,
+                            message: `New Booking Request\n\nClient Information:\nName: ${data.clientName}\nEmail: ${data.clientEmail}\nPhone: ${data.clientPhone}\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nDescription: ${data.tattooDescription}`,
                             reply_to: data.clientEmail
                         }
                     );
+                    console.log('Shop notification sent successfully');
 
                     // Send confirmation to client
                     const clientResponse = await emailjs.send(
@@ -148,18 +137,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         {
                             to_name: data.clientName,
                             from_name: "Inked by Chris",
-                            message: `Your tattoo appointment has been confirmed!\n\n` +
-                                   `Date: ${formattedDate}\n` +
-                                   `Time: ${data.preferredTime}\n\n` +
-                                   `Tattoo Details:\n` +
-                                   `Type: ${data.tattooType}\n` +
-                                   `Size: ${data.tattooSize}\n` +
-                                   `Placement: ${data.tattooPlacement}\n\n` +
-                                   `Booking ID: ${data.originalBookingId}`,
-                            booking_id: data.originalBookingId,
+                            message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}`,
                             reply_to: "senghakmad@gmail.com"
                         }
                     );
+                    console.log('Client confirmation sent successfully');
 
                     // Show success message
                     const successDiv = document.createElement('div');
