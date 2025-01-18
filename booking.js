@@ -40,55 +40,128 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle form submission
     const bookingForm = document.getElementById('bookingForm');
     if (bookingForm) {
-        bookingForm.addEventListener('submit', function(e) {
+        bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            console.log('Form submitted');
-
+            
             // Show loading state
             const submitButton = bookingForm.querySelector('button[type="submit"]');
             const originalButtonText = submitButton.textContent;
             submitButton.textContent = 'Sending...';
             submitButton.disabled = true;
 
-            // Get form values
-            const name = bookingForm.querySelector('input[name="name"]').value;
-            const email = bookingForm.querySelector('input[name="email"]').value;
-            const phone = bookingForm.querySelector('input[name="phone"]').value;
-            const date = bookingForm.querySelector('input[name="date"]').value;
-            const time = bookingForm.querySelector('select[name="timeSlot"]').value;
-            const description = bookingForm.querySelector('textarea[name="description"]').value;
+            try {
+                // Generate booking ID
+                const bookingId = generateBookingId();
+                
+                // Get form data
+                const formData = new FormData(this);
+                const clientName = formData.get('client_name');
+                const clientEmail = formData.get('client_email');
+                const clientPhone = formData.get('client_phone');
+                const appointmentDate = formData.get('appointment_date');
+                const appointmentTime = formData.get('appointment_time');
+                const tattooType = formData.get('tattoo_type');
+                const tattooSize = formData.get('tattoo_size');
+                const tattooPlacement = formData.get('tattoo_placement');
 
-            // Create template parameters
-            const templateParams = {
-                from_name: name,
-                from_email: email,
-                phone: phone,
-                date: date,
-                time: time,
-                message: description
-            };
+                // Send confirmation email to client
+                await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                    to_name: clientName,
+                    from_name: "Inked by Chris",
+                    to_email: clientEmail,
+                    message: `
+Your tattoo appointment has been confirmed!
 
-            console.log('Sending email with params:', templateParams);
+Appointment Details:
+- Booking ID: ${bookingId}
+- Date: ${appointmentDate}
+- Time: ${appointmentTime}
+- Type: ${tattooType}
+- Size: ${tattooSize}
+- Placement: ${tattooPlacement}
 
-            // Send email using EmailJS
-            emailjs.send('service_3pilkcs', 'template_otj2ita', templateParams)
-                .then(function(response) {
-                    console.log('Email sent successfully:', response);
-                    // Show success message
-                    alert('Booking request sent successfully! We will contact you shortly to confirm your appointment.');
-                    bookingForm.reset();
-                    submitButton.textContent = originalButtonText;
-                    submitButton.disabled = false;
-                })
-                .catch(function(error) {
-                    console.error('EmailJS error:', error);
-                    // Show error message
-                    alert('Sorry, there was an error sending your booking request. Please try again or contact us directly.');
-                    submitButton.textContent = originalButtonText;
-                    submitButton.disabled = false;
-                });
+Important Information:
+1. Please arrive 10 minutes before your appointment time
+2. Bring a valid ID
+3. Stay hydrated and eat before your appointment
+
+Need to cancel?
+Use this link to cancel your appointment:
+${window.location.origin}/cancel.html?id=${bookingId}
+
+Questions or need to reschedule?
+Email: senghakmad@gmail.com
+Phone/Text: (651) 592-5122
+
+We look forward to creating your tattoo!
+
+Best regards,
+Inked by Chris`,
+                    reply_to: "senghakmad@gmail.com"
+                }, 'nqLDVniO3BUlQ-e1n');
+
+                // Send notification to shop
+                await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
+                    to_name: "Chris",
+                    from_name: "Booking System",
+                    to_email: "senghakmad@gmail.com",
+                    message: `
+New Appointment Booking
+
+Client Information:
+- Booking ID: ${bookingId}
+- Name: ${clientName}
+- Email: ${clientEmail}
+- Phone: ${clientPhone}
+
+Appointment Details:
+- Date: ${appointmentDate}
+- Time: ${appointmentTime}
+- Type: ${tattooType}
+- Size: ${tattooSize}
+- Placement: ${tattooPlacement}`,
+                    reply_to: clientEmail
+                }, 'nqLDVniO3BUlQ-e1n');
+
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <h3>Booking Confirmed!</h3>
+                    <p>Thank you for booking with Inked by Chris!</p>
+                    <p>Your booking ID is: ${bookingId}</p>
+                    <p>A confirmation email has been sent to ${clientEmail}</p>
+                    <p>Please check your email for appointment details and cancellation instructions.</p>`;
+                
+                // Replace form with success message
+                bookingForm.innerHTML = '';
+                bookingForm.appendChild(successMessage);
+
+            } catch (error) {
+                console.error('Booking error:', error);
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+
+                // Show error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = `
+                    <p>Sorry, there was an error processing your booking.</p>
+                    <p>Please try again or contact us directly:</p>
+                    <p>Email: senghakmad@gmail.com</p>
+                    <p>Phone: (651) 592-5122</p>`;
+                
+                // Insert error message before the submit button
+                submitButton.parentNode.insertBefore(errorDiv, submitButton);
+            }
         });
     } else {
         console.error('Booking form not found');
     }
 });
+
+function generateBookingId() {
+    // Implement your own booking ID generation logic here
+    // For demonstration purposes, a simple random ID is generated
+    return Math.random().toString(36).substr(2, 9);
+}
