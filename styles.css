@@ -155,8 +155,7 @@ nav a:hover {
 /* Navbar Styles */
 .navbar {
     background: rgba(0, 0, 0, 0.95);
-    border-bottom: 2px solid var(--accent-color);
-    padding: 1rem 5%;
+    padding: 1rem 2rem;
     position: fixed;
     width: 100%;
     top: 0;
@@ -164,51 +163,94 @@ nav a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 20px rgba(196, 30, 58, 0.2);
+    border-bottom: 1px solid rgba(196, 30, 58, 0.2);
 }
 
 .logo {
+    color: var(--text-color);
     font-size: 2rem;
     font-weight: bold;
-    color: var(--accent-color);
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(196, 30, 58, 0.5);
+}
+
+.nav-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.payment-methods-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.payment-methods-header .payment-method {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.payment-methods-header .payment-method:hover {
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.payment-methods-header .payment-method i {
+    filter: drop-shadow(0 0 8px rgba(196, 30, 58, 0.3));
 }
 
 .nav-links {
     display: flex;
-    list-style: none;
     gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .nav-links a {
     color: var(--text-color);
     text-decoration: none;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
-    position: relative;
-    padding: 5px 0;
-}
-
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--accent-color);
-    transition: width 0.3s ease;
-}
-
-.nav-links a:hover::after {
-    width: 100%;
+    transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
     color: var(--accent-color);
+}
+
+@media (max-width: 968px) {
+    .nav-content {
+        gap: 1rem;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .nav-content {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .payment-methods-header {
+        justify-content: center;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 /* Hero Section */
