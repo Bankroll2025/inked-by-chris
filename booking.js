@@ -1,8 +1,6 @@
 // Initialize EmailJS
 (function() {
-    emailjs.init({
-        publicKey: "nqLDVniO3BUlQ-e1n"
-    });
+    emailjs.init("nqLDVniO3BUlQ-e1n");
 })();
 
 // Available time slots (you can customize these)
@@ -79,8 +77,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     age--;
                 }
 
-                // Format the notification message
-                const notificationMessage = `
+                let emailSuccess = false;
+                let notificationSuccess = false;
+
+                try {
+                    // Send notification to shop first
+                    await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
+                        to_name: "Chris",
+                        from_name: "Booking System",
+                        to_email: "senghakmad@gmail.com",
+                        subject: `New Booking Request - ${clientName}`,
+                        message: `
 New Booking Request
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -104,40 +111,49 @@ Additional Notes: ${additionalNotes}
 Booking ID: ${bookingId}
 
 Cancellation Link:
-If needed, the client can cancel using this link:
 ${window.location.origin}/cancel.html?id=${bookingId}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
-
-                try {
-                    // Send notification to shop
-                    await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
-                        to_name: "Chris",
-                        from_name: "Booking System",
-                        to_email: "senghakmad@gmail.com",
-                        subject: `New Booking Request - ${clientName}`,
-                        message: notificationMessage,
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
                         reply_to: clientEmail
                     }, 'nqLDVniO3BUlQ-e1n');
+                    notificationSuccess = true;
 
                     // Send confirmation to client
                     await emailjs.send('service_3pilkcs', 'template_gowinjb', {
                         to_name: clientName,
                         from_name: "Inked by Chris",
                         to_email: clientEmail,
+                        subject: "Your Tattoo Appointment Confirmation",
                         message: `
-Thank you for booking with Inked by Chris!
+Dear ${clientName},
 
-Your appointment has been confirmed:
-- Date: ${new Date(preferredDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-- Time: ${preferredTime}
+Thank you for booking with Inked by Chris! Your appointment has been confirmed.
 
-Important Information:
-1. Please arrive 10 minutes before your appointment time
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+APPOINTMENT DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Date: ${new Date(preferredDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+Time: ${preferredTime}
+Booking ID: ${bookingId}
+
+Your Tattoo Details:
+• Type: ${tattooType}
+• Size: ${tattooSize}
+• Placement: ${tattooPlacement}
+• Color Preference: ${colorPreference}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMPORTANT INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Please arrive 10 minutes before your appointment
 2. Bring a valid ID
 3. Stay hydrated and eat before your appointment
+4. Get a good night's sleep
+5. Wear comfortable clothing
 
-Need to cancel or reschedule?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NEED TO CANCEL OR RESCHEDULE?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Use this link to cancel your appointment:
 ${window.location.origin}/cancel.html?id=${bookingId}
 
@@ -151,36 +167,67 @@ Best regards,
 Inked by Chris`,
                         reply_to: "senghakmad@gmail.com"
                     }, 'nqLDVniO3BUlQ-e1n');
+                    emailSuccess = true;
 
-                    // Show success message
-                    const successMessage = document.createElement('div');
-                    successMessage.className = 'success-message';
-                    successMessage.innerHTML = `
-                        <h3>Booking Confirmed!</h3>
-                        <p>Thank you for booking with Inked by Chris!</p>
-                        <p>Your booking ID is: ${bookingId}</p>
-                        <p>A confirmation email has been sent to ${clientEmail}</p>
-                        <p>Please check your email for appointment details and cancellation instructions.</p>`;
+                    // Show success message with option to book another appointment
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'success-message';
+                    successDiv.innerHTML = `
+                        <h3>Booking Confirmed! 🎉</h3>
+                        <p>Thank you for choosing Inked by Chris!</p>
+                        <div class="confirmation-details">
+                            <p><strong>Appointment Details:</strong></p>
+                            <ul>
+                                <li>Date: ${new Date(preferredDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</li>
+                                <li>Time: ${preferredTime}</li>
+                                <li>Booking ID: ${bookingId}</li>
+                            </ul>
+                            <p>A confirmation email has been sent to ${clientEmail}</p>
+                        </div>
+                        <div class="next-steps">
+                            <p><strong>What's Next?</strong></p>
+                            <ol>
+                                <li>Check your email for detailed appointment information</li>
+                                <li>Save your booking ID: ${bookingId}</li>
+                                <li>Mark your calendar for ${new Date(preferredDate).toLocaleDateString()}</li>
+                            </ol>
+                        </div>
+                        <div class="booking-options">
+                            <button onclick="window.location.reload()" class="book-another-btn">Book Another Appointment</button>
+                            <button onclick="window.location.href='index.html'" class="home-btn">Return to Homepage</button>
+                        </div>`;
                     
                     // Replace form with success message
                     bookingForm.innerHTML = '';
-                    bookingForm.appendChild(successMessage);
+                    bookingForm.appendChild(successDiv);
 
                 } catch (error) {
                     console.error('Email error:', error);
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-message';
                     errorDiv.innerHTML = `
-                        <h3>Booking Saved</h3>
-                        <p>Your appointment was saved but there was an error sending notifications.</p>
-                        <p>Please contact us to confirm your appointment:</p>
-                        <p>Email: senghakmad@gmail.com</p>
-                        <p>Phone: (651) 592-5122</p>
-                        <p>Your booking ID is: ${bookingId}</p>`;
+                        <h3>Appointment Saved</h3>
+                        <p>Your appointment has been saved, but there was an error sending notifications.</p>
+                        <div class="booking-details">
+                            <p><strong>Important: Save Your Booking Information</strong></p>
+                            <ul>
+                                <li>Booking ID: ${bookingId}</li>
+                                <li>Date: ${new Date(preferredDate).toLocaleDateString()}</li>
+                                <li>Time: ${preferredTime}</li>
+                            </ul>
+                        </div>
+                        <div class="contact-info">
+                            <p>Please contact us to confirm your appointment:</p>
+                            <p>📧 Email: senghakmad@gmail.com</p>
+                            <p>📞 Phone: (651) 592-5122</p>
+                        </div>
+                        <div class="booking-options">
+                            <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
+                            <button onclick="window.location.href='index.html'" class="home-btn">Return to Homepage</button>
+                        </div>`;
                     
                     submitButton.parentNode.insertBefore(errorDiv, submitButton);
-                    submitButton.textContent = originalButtonText;
-                    submitButton.disabled = false;
+                    submitButton.style.display = 'none';
                 }
 
             } catch (error) {
@@ -191,12 +238,15 @@ Inked by Chris`,
                     <h3>Booking Error</h3>
                     <p>Sorry, there was an error processing your booking.</p>
                     <p>Please try again or contact us directly:</p>
-                    <p>Email: senghakmad@gmail.com</p>
-                    <p>Phone: (651) 592-5122</p>`;
+                    <p>📧 Email: senghakmad@gmail.com</p>
+                    <p>📞 Phone: (651) 592-5122</p>
+                    <div class="booking-options">
+                        <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
+                        <button onclick="window.location.href='index.html'" class="home-btn">Return to Homepage</button>
+                    </div>`;
                 
                 submitButton.parentNode.insertBefore(errorDiv, submitButton);
-                submitButton.textContent = originalButtonText;
-                submitButton.disabled = false;
+                submitButton.style.display = 'none';
             }
         });
     } else {

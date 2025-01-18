@@ -1245,6 +1245,111 @@ input[readonly] {
     color: var(--text-color);
 }
 
+/* Booking confirmation and error messages */
+.success-message,
+.error-message {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 600px;
+    text-align: left;
+}
+
+.success-message h3,
+.error-message h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.success-message {
+    border-left: 5px solid #4CAF50;
+}
+
+.error-message {
+    border-left: 5px solid #f44336;
+}
+
+.confirmation-details,
+.booking-details,
+.contact-info,
+.next-steps {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 5px;
+}
+
+.confirmation-details ul,
+.booking-details ul,
+.next-steps ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.confirmation-details li,
+.booking-details li,
+.next-steps li {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+
+.booking-options {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.book-another-btn,
+.home-btn,
+.retry-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.book-another-btn {
+    background: #4CAF50;
+    color: white;
+}
+
+.home-btn {
+    background: #2196F3;
+    color: white;
+}
+
+.retry-btn {
+    background: #FF9800;
+    color: white;
+}
+
+.book-another-btn:hover,
+.home-btn:hover,
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.book-another-btn:active,
+.home-btn:active,
+.retry-btn:active {
+    transform: translateY(0);
+}
+
+/* Emoji icons in contact info */
+.contact-info p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
 /* Footer */
 footer {
     background: #1a1a1a;
