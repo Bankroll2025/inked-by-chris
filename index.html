@@ -451,7 +451,7 @@ We look forward to seeing you!
 
                 console.log('Sending shop notification...');
                 // Send notification to shop owner
-                const shopResponse = await emailjs.sendForm(
+                const shopResponse = await emailjs.send(
                     'service_3pilkcs',
                     'template_tukgt7p',
                     shopTemplateParams
@@ -460,7 +460,7 @@ We look forward to seeing you!
 
                 console.log('Sending client confirmation...');
                 // Send confirmation to client
-                const clientResponse = await emailjs.sendForm(
+                const clientResponse = await emailjs.send(
                     'service_3pilkcs',
                     'template_gowinjb',
                     clientTemplateParams
