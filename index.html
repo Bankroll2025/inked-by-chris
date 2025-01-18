@@ -391,6 +391,22 @@
                 const shopTemplateParams = {
                     to_name: "Chris",
                     from_name: clientName,
+                    reply_to: clientEmail,
+                    client_name: clientName,
+                    client_email: clientEmail,
+                    client_phone: clientPhone,
+                    client_gender: formatGender(clientGender),
+                    client_age: clientAge,
+                    client_birthdate: formatDate(birthDate),
+                    preferred_date: formatDate(preferredDate),
+                    preferred_time: preferredTime,
+                    tattoo_type: tattooType,
+                    tattoo_size: tattooSize,
+                    tattoo_placement: tattooPlacement,
+                    color_preference: colorPreference,
+                    tattoo_description: tattooDescription,
+                    additional_notes: additionalNotes,
+                    cancel_url: cancelUrl,
                     message: `
 New Booking Request (ID: ${bookingId})
 
@@ -399,7 +415,8 @@ Client Information:
 - Email: ${clientEmail}
 - Phone: ${clientPhone}
 - Gender: ${formatGender(clientGender)}
-- Age: ${clientAge} (DOB: ${formatDate(birthDate)})
+- Age: ${clientAge}
+- Date of Birth: ${formatDate(birthDate)}
 
 Appointment Details:
 - Date: ${formatDate(preferredDate)}
@@ -417,14 +434,18 @@ ${additionalNotes}
 
 Cancellation Link:
 ${cancelUrl}
-                    `,
-                    reply_to: clientEmail
+                    `
                 };
 
                 // Prepare the template parameters for client notification
                 const clientTemplateParams = {
                     to_name: clientName,
                     from_name: "Inked by Chris",
+                    reply_to: "senghakmad@gmail.com",
+                    to_email: clientEmail,  
+                    booking_id: bookingId,
+                    booking_date: formatDate(preferredDate),
+                    booking_time: preferredTime,
                     message: `
 Thank you for booking your tattoo appointment with Inked by Chris!
 
@@ -445,12 +466,11 @@ Cancellation Policy:
 - For questions, email us at senghakmad@gmail.com
 
 We look forward to seeing you!
-                    `,
-                    reply_to: "senghakmad@gmail.com"
+                    `
                 };
 
                 console.log('Sending shop notification...');
-                // Send notification to shop owner
+                // Send notification to shop owner (to your email)
                 const shopResponse = await emailjs.send(
                     'service_3pilkcs',
                     'template_tukgt7p',
@@ -459,7 +479,7 @@ We look forward to seeing you!
                 console.log('Shop notification sent:', shopResponse);
 
                 console.log('Sending client confirmation...');
-                // Send confirmation to client
+                // Send confirmation to client (to their email)
                 const clientResponse = await emailjs.send(
                     'service_3pilkcs',
                     'template_gowinjb',
