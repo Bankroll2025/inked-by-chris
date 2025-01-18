@@ -2,7 +2,6 @@
 (function() {
     emailjs.init({
         publicKey: "nqLDVniO3BUlQ-e1n",
-        limitRate: true
     });
 })();
 
@@ -127,22 +126,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         {
                             to_name: "Chris",
                             from_name: data.clientName,
+                            message: `New tattoo appointment request:
+                                    Type: ${data.tattooType}
+                                    Size: ${data.tattooSize}
+                                    Placement: ${data.tattooPlacement}
+                                    Description: ${data.tattooDescription}`,
                             client_name: data.clientName,
-                            client_gender: data.clientGender,
-                            client_age: age,
                             client_email: data.clientEmail,
                             client_phone: data.clientPhone,
-                            preferred_date: formattedDate,
-                            preferred_time: data.preferredTime,
-                            tattoo_type: data.tattooType,
-                            tattoo_size: data.tattooSize,
-                            tattoo_placement: data.tattooPlacement,
-                            tattoo_description: data.tattooDescription,
-                            color_preference: data.colorPreference,
-                            additional_notes: data.additionalNotes,
-                            booking_id: data.originalBookingId,
-                            is_reschedule: data.isReschedule,
-                            reply_to: data.clientEmail
+                            appointment_date: formattedDate,
+                            appointment_time: data.preferredTime,
+                            booking_id: data.originalBookingId
                         }
                     );
                     console.log('Shop notification sent:', shopResponse);
@@ -153,17 +147,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         "template_gowinjb",
                         {
                             to_name: data.clientName,
-                            to_email: data.clientEmail,
+                            message: `Your tattoo appointment has been confirmed:
+                                    Date: ${formattedDate}
+                                    Time: ${data.preferredTime}
+                                    Type: ${data.tattooType}
+                                    Size: ${data.tattooSize}
+                                    Placement: ${data.tattooPlacement}`,
                             appointment_date: formattedDate,
                             appointment_time: data.preferredTime,
                             booking_id: data.originalBookingId,
-                            tattoo_type: data.tattooType,
-                            tattoo_size: data.tattooSize,
-                            tattoo_placement: data.tattooPlacement,
-                            color_preference: data.colorPreference,
-                            cancellation_link: `${window.location.origin}/cancel.html?id=${data.originalBookingId}`,
-                            reschedule_link: `${window.location.origin}/?reschedule=${data.originalBookingId}#booking`,
-                            website_link: window.location.origin
+                            email: data.clientEmail
                         }
                     );
                     console.log('Client confirmation sent:', clientResponse);

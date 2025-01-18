@@ -441,35 +441,6 @@
                 const tattooDescription = document.getElementById('tattooDescription').value;
                 const additionalNotes = document.getElementById('additionalNotes').value || 'None provided';
 
-                // Save appointment to database
-                try {
-                    const response = await fetch('http://localhost:3000/api/save-appointment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            id: bookingId,
-                            client_name: clientName,
-                            client_email: clientEmail,
-                            client_phone: clientPhone,
-                            appointment_date: formatDate(preferredDate),
-                            appointment_time: preferredTime,
-                            tattoo_type: tattooType,
-                            tattoo_size: tattooSize,
-                            tattoo_placement: tattooPlacement,
-                            status: 'scheduled'
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to save appointment');
-                    }
-                    console.log('Appointment saved to database successfully');
-                } catch (error) {
-                    console.error('Error saving appointment:', error);
-                }
-
                 // Send email and SMS notifications
                 try {
                     // Send confirmation email to client
