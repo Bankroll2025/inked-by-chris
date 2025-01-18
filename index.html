@@ -14,12 +14,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <!-- EmailJS Setup Instructions:
-    1. Replace YOUR_PUBLIC_KEY below with the public key from your EmailJS account
-    2. Replace YOUR_SERVICE_ID with the Service ID from your email service
-    3. Replace YOUR_TEMPLATE_ID with the Template ID from your email template
-    -->
+    <script type="text/javascript">
+        (function() {
+            emailjs.init({
+                publicKey: "nqLDVniO3BUlQ-e1n"
+            });
+        })();
+    </script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
@@ -369,56 +373,98 @@
                 // Calculate client's age
                 const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
 
-                // Prepare the template parameters
-                const templateParams = {
-                    booking_id: bookingId,
-                    client_name: document.getElementById('client_name').value,
-                    client_email: document.getElementById('client_email').value,
-                    client_phone: document.getElementById('client_phone').value,
-                    client_gender: formatGender(document.getElementById('client_gender').value),
-                    client_birthdate: formatDate(birthDate),
-                    client_age: clientAge,
-                    preferred_date: formatDate(document.getElementById('datePicker').value),
-                    preferred_time: document.getElementById('timeSlot').value,
-                    tattoo_type: document.getElementById('tattooType').value,
-                    tattoo_size: document.getElementById('tattooSize').value,
-                    tattoo_placement: document.getElementById('tattoo_placement').value,
-                    color_preference: document.getElementById('colorPreference').value,
-                    tattoo_description: document.getElementById('tattoo_description').value,
-                    additional_notes: document.getElementById('additional_notes').value || 'None provided',
+                // Get form values
+                const clientName = document.getElementById('client_name').value;
+                const clientEmail = document.getElementById('client_email').value;
+                const clientPhone = document.getElementById('client_phone').value;
+                const clientGender = document.getElementById('client_gender').value;
+                const preferredDate = document.getElementById('datePicker').value;
+                const preferredTime = document.getElementById('timeSlot').value;
+                const tattooType = document.getElementById('tattooType').value;
+                const tattooSize = document.getElementById('tattooSize').value;
+                const tattooPlacement = document.getElementById('tattoo_placement').value;
+                const colorPreference = document.getElementById('colorPreference').value;
+                const tattooDescription = document.getElementById('tattoo_description').value;
+                const additionalNotes = document.getElementById('additional_notes').value || 'None provided';
+
+                // Prepare the template parameters for shop notification
+                const shopTemplateParams = {
                     to_name: "Chris",
-                    shop_name: "Inked by Chris",
-                    shop_phone: "651-592-5122",
-                    shop_address: "2395 7th St N, Saint Paul, MN 55109",
-                    shop_email: "senghakmad@gmail.com",
-                    cancellation_policy: `
-                        • Cancellations must be made at least 24 hours before your appointment
-                        • Click the cancellation link below to cancel your appointment
-                        • For any questions, please email us at senghakmad@gmail.com
+                    from_name: clientName,
+                    message: `
+New Booking Request (ID: ${bookingId})
+
+Client Information:
+- Name: ${clientName}
+- Email: ${clientEmail}
+- Phone: ${clientPhone}
+- Gender: ${formatGender(clientGender)}
+- Age: ${clientAge} (DOB: ${formatDate(birthDate)})
+
+Appointment Details:
+- Date: ${formatDate(preferredDate)}
+- Time: ${preferredTime}
+- Tattoo Type: ${tattooType}
+- Size: ${tattooSize}
+- Placement: ${tattooPlacement}
+- Color Preference: ${colorPreference}
+
+Tattoo Description:
+${tattooDescription}
+
+Additional Notes:
+${additionalNotes}
+
+Cancellation Link:
+${cancelUrl}
                     `,
-                    cancel_url: cancelUrl,
-                    cancel_button_text: "Cancel Appointment",
-                    cancel_instructions: "To cancel your appointment, click the button below:"
+                    reply_to: clientEmail
                 };
 
+                // Prepare the template parameters for client notification
+                const clientTemplateParams = {
+                    to_name: clientName,
+                    from_name: "Inked by Chris",
+                    message: `
+Thank you for booking your tattoo appointment with Inked by Chris!
+
+Your Booking Details:
+- Booking ID: ${bookingId}
+- Date: ${formatDate(preferredDate)}
+- Time: ${preferredTime}
+- Location: 2395 7th St N, Saint Paul, MN 55109
+
+Important Notes:
+- Please arrive 10-15 minutes before your appointment time
+- Bring a valid government-issued photo ID
+- If you have any reference images, please bring them with you
+
+Cancellation Policy:
+- Cancellations must be made at least 24 hours before your appointment
+- Use this link to cancel if needed: ${cancelUrl}
+- For questions, email us at senghakmad@gmail.com
+
+We look forward to seeing you!
+                    `,
+                    reply_to: "senghakmad@gmail.com"
+                };
+
+                console.log('Sending shop notification...');
                 // Send notification to shop owner
-                const shopResponse = await emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams);
+                const shopResponse = await emailjs.sendForm(
+                    'service_3pilkcs',
+                    'template_tukgt7p',
+                    shopTemplateParams
+                );
                 console.log('Shop notification sent:', shopResponse);
 
+                console.log('Sending client confirmation...');
                 // Send confirmation to client
-                const clientResponse = await emailjs.send('service_3pilkcs', 'template_gowinjb', {
-                    booking_id: templateParams.booking_id,
-                    to_name: templateParams.client_name,
-                    booking_date: templateParams.preferred_date,
-                    booking_time: templateParams.preferred_time,
-                    shop_name: templateParams.shop_name,
-                    shop_email: templateParams.shop_email,
-                    shop_address: templateParams.shop_address,
-                    cancel_url: templateParams.cancel_url,
-                    cancel_button_text: templateParams.cancel_button_text,
-                    cancel_instructions: templateParams.cancel_instructions,
-                    cancellation_policy: templateParams.cancellation_policy
-                });
+                const clientResponse = await emailjs.sendForm(
+                    'service_3pilkcs',
+                    'template_gowinjb',
+                    clientTemplateParams
+                );
                 console.log('Client confirmation sent:', clientResponse);
 
                 // Show success message
@@ -427,7 +473,8 @@
 
             } catch (error) {
                 console.error('Failed to send email:', error);
-                alert(`Sorry, there was an error sending your booking request: ${error.message}\nPlease try again or contact us directly at 651-592-5122.`);
+                const errorMessage = error.text || error.message || 'Unknown error';
+                alert(`Sorry, there was an error sending your booking request: ${errorMessage}\nPlease try again or contact us directly at 651-592-5122.`);
             } finally {
                 // Reset button state
                 submitBtn.textContent = originalBtnText;
