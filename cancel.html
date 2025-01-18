@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Appointment - Inked by Chris</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="cancellation-container">
+            <h1>Cancel Appointment</h1>
+            <div id="cancellation-content">
+                <p>Loading appointment details...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("nqLDVniO3BUlQ-e1n");
+        })();
+
+        // Get booking ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('id');
+
+        if (!bookingId) {
+            document.getElementById('cancellation-content').innerHTML = `
+                <p class="error">Invalid cancellation link. Please check your email for the correct link or contact us directly.</p>
+                <div class="contact-info">
+                    <p>Phone: 651-592-5122</p>
+                    <p>Email: senghakmad@gmail.com</p>
+                </div>
+            `;
+        } else {
+            // Show confirmation dialog
+            document.getElementById('cancellation-content').innerHTML = `
+                <div class="cancellation-confirmation">
+                    <p>Are you sure you want to cancel your appointment?</p>
+                    <div class="button-group">
+                        <button onclick="cancelAppointment('${bookingId}')" class="cancel-btn">Yes, Cancel Appointment</button>
+                        <button onclick="window.close()" class="keep-btn">No, Keep Appointment</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function cancelAppointment(bookingId) {
+            try {
+                // Send cancellation notifications
+                await emailjs.send('service_3pilkcs', 'template_cancel', {
+                    booking_id: bookingId,
+                    to_name: "Chris",
+                    shop_email: "senghakmad@gmail.com"
+                });
+
+                // Show success message
+                document.getElementById('cancellation-content').innerHTML = `
+                    <div class="success-message">
+                        <p>Your appointment has been successfully cancelled.</p>
+                        <p>A confirmation email has been sent to you.</p>
+                        <p>Thank you for letting us know. We hope to see you another time!</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('FAILED...', error);
+                document.getElementById('cancellation-content').innerHTML = `
+                    <div class="error-message">
+                        <p>Sorry, there was an error cancelling your appointment.</p>
+                        <p>Please contact us directly:</p>
+                        <div class="contact-info">
+                            <p>Phone: 651-592-5122</p>
+                            <p>Email: senghakmad@gmail.com</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

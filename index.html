@@ -257,20 +257,16 @@
                         <div class="policy-content">
                             <p>Please read our cancellation policy carefully:</p>
                             <ul>
-                                <li>Appointments must be cancelled at least 24 hours before the scheduled time.</li>
-                                <li>To cancel your appointment, please contact us at:</li>
+                                <li>We understand that plans can change. If you need to cancel or reschedule your appointment, please do so at least 24 hours in advance.</li>
+                                <li>You can easily cancel your appointment through:</li>
                                 <ul>
+                                    <li>The cancellation link in your confirmation email</li>
                                     <li>Phone: 651-592-5122</li>
                                     <li>Email: senghakmad@gmail.com</li>
                                 </ul>
-                                <li>Emergency situations will be handled on a case-by-case basis.</li>
+                                <li>Early notification allows us to accommodate other clients who may be waiting for an appointment.</li>
+                                <li>We appreciate your consideration and understanding.</li>
                             </ul>
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="policy_agreement" name="policy_agreement" required>
-                                I understand and agree to the cancellation policy
-                            </label>
                         </div>
                     </div>
 
@@ -286,11 +282,16 @@
         </div>
     </footer>
 
-    <script type="text/javascript">
+    <script>
         // Initialize EmailJS
         (function() {
             emailjs.init("nqLDVniO3BUlQ-e1n");
         })();
+
+        // Generate a unique booking ID
+        function generateBookingId() {
+            return 'BK' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
 
         // Age verification function
         function isOver18(birthDate) {
@@ -327,6 +328,9 @@
                 return;
             }
 
+            // Generate booking ID
+            const bookingId = generateBookingId();
+
             // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
@@ -344,8 +348,12 @@
                     });
                 };
 
+                // Create cancellation link
+                const cancelUrl = `${window.location.origin}/cancel.html?id=${bookingId}`;
+
                 // Prepare the template parameters
                 const templateParams = {
+                    booking_id: bookingId,
                     client_name: document.getElementById('client_name').value,
                     client_email: document.getElementById('client_email').value,
                     client_phone: document.getElementById('client_phone').value,
@@ -363,12 +371,16 @@
                     shop_phone: "651-592-5122",
                     shop_address: "2395 7th St N, Saint Paul, MN 55109",
                     shop_email: "senghakmad@gmail.com",
-                    cancellation_policy: "Please note that cancellations must be made at least 24 hours before your appointment."
+                    cancellation_policy: "Please note that cancellations must be made at least 24 hours before your appointment.",
+                    cancel_url: cancelUrl
                 };
 
-                // Send emails
+                // Send notification to shop owner
                 await emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams);
+
+                // Send confirmation to client with cancellation link
                 await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                    booking_id: templateParams.booking_id,
                     reply_to: templateParams.client_email,
                     to_name: templateParams.client_name,
                     booking_date: templateParams.preferred_date,
@@ -377,6 +389,7 @@
                     shop_phone: templateParams.shop_phone,
                     shop_address: templateParams.shop_address,
                     shop_email: templateParams.shop_email,
+                    cancel_url: templateParams.cancel_url,
                     cancellation_policy: templateParams.cancellation_policy
                 });
 
