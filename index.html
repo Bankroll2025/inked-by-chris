@@ -346,77 +346,67 @@
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Age verification
-            const birthDate = document.getElementById('client_birthdate').value;
-            if (!isOver18(birthDate)) {
-                alert('Sorry, you must be 18 or older to book an appointment.');
-                return;
-            }
-
-            // Verify appointment time is not within 24 hours
-            const appointmentDate = new Date(document.getElementById('datePicker').value + ' ' + document.getElementById('timeSlot').value);
-            const now = new Date();
-            const hoursDiff = (appointmentDate - now) / (1000 * 60 * 60);
-            
-            if (hoursDiff < 24) {
-                alert('Appointments must be booked at least 24 hours in advance. Please select a later date/time.');
-                return;
-            }
-
-            // Generate booking ID
-            const bookingId = generateBookingId();
-
-            // Create cancellation link with full URL
-            const cancelUrl = `${window.location.origin}/cancel.html?id=${bookingId}`;
-
-            // Calculate client's age
-            const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
-
-            // Prepare the template parameters
-            const templateParams = {
-                // Client Information
-                booking_id: bookingId,
-                client_name: document.getElementById('client_name').value,
-                client_email: document.getElementById('client_email').value,
-                client_phone: document.getElementById('client_phone').value,
-                client_gender: formatGender(document.getElementById('client_gender').value),
-                client_birthdate: formatDate(birthDate),
-                client_age: clientAge,
-                
-                // Appointment Details
-                preferred_date: formatDate(document.getElementById('datePicker').value),
-                preferred_time: document.getElementById('timeSlot').value,
-                tattoo_type: document.getElementById('tattooType').value,
-                tattoo_size: document.getElementById('tattooSize').value,
-                tattoo_placement: document.getElementById('tattoo_placement').value,
-                color_preference: document.getElementById('colorPreference').value,
-                tattoo_description: document.getElementById('tattoo_description').value,
-                additional_notes: document.getElementById('additional_notes').value || 'None provided',
-                
-                // Shop Information
-                to_name: "Chris",
-                shop_name: "Inked by Chris",
-                shop_phone: "651-592-5122",
-                shop_address: "2395 7th St N, Saint Paul, MN 55109",
-                shop_email: "senghakmad@gmail.com",
-                
-                // Cancellation Information
-                cancellation_policy: `
-                    • Cancellations must be made at least 24 hours before your appointment
-                    • Click the cancellation link below to cancel your appointment
-                    • For any questions, please email us at senghakmad@gmail.com
-                `,
-                cancel_url: cancelUrl,
-                cancel_button_text: "Cancel Appointment",
-                cancel_instructions: "To cancel your appointment, click the button below:"
-            };
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending Request...';
+            submitBtn.disabled = true;
 
             try {
-                // Send notification to shop owner with all details
-                await emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams);
+                // Age verification
+                const birthDate = document.getElementById('client_birthdate').value;
+                if (!isOver18(birthDate)) {
+                    alert('Sorry, you must be 18 or older to book an appointment.');
+                    return;
+                }
 
-                // Send confirmation to client with necessary details
-                await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                // Generate booking ID
+                const bookingId = generateBookingId();
+
+                // Create cancellation link with full URL
+                const cancelUrl = `${window.location.origin}/cancel.html?id=${bookingId}`;
+
+                // Calculate client's age
+                const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
+
+                // Prepare the template parameters
+                const templateParams = {
+                    booking_id: bookingId,
+                    client_name: document.getElementById('client_name').value,
+                    client_email: document.getElementById('client_email').value,
+                    client_phone: document.getElementById('client_phone').value,
+                    client_gender: formatGender(document.getElementById('client_gender').value),
+                    client_birthdate: formatDate(birthDate),
+                    client_age: clientAge,
+                    preferred_date: formatDate(document.getElementById('datePicker').value),
+                    preferred_time: document.getElementById('timeSlot').value,
+                    tattoo_type: document.getElementById('tattooType').value,
+                    tattoo_size: document.getElementById('tattooSize').value,
+                    tattoo_placement: document.getElementById('tattoo_placement').value,
+                    color_preference: document.getElementById('colorPreference').value,
+                    tattoo_description: document.getElementById('tattoo_description').value,
+                    additional_notes: document.getElementById('additional_notes').value || 'None provided',
+                    to_name: "Chris",
+                    shop_name: "Inked by Chris",
+                    shop_phone: "651-592-5122",
+                    shop_address: "2395 7th St N, Saint Paul, MN 55109",
+                    shop_email: "senghakmad@gmail.com",
+                    cancellation_policy: `
+                        • Cancellations must be made at least 24 hours before your appointment
+                        • Click the cancellation link below to cancel your appointment
+                        • For any questions, please email us at senghakmad@gmail.com
+                    `,
+                    cancel_url: cancelUrl,
+                    cancel_button_text: "Cancel Appointment",
+                    cancel_instructions: "To cancel your appointment, click the button below:"
+                };
+
+                // Send notification to shop owner
+                const shopResponse = await emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams);
+                console.log('Shop notification sent:', shopResponse);
+
+                // Send confirmation to client
+                const clientResponse = await emailjs.send('service_3pilkcs', 'template_gowinjb', {
                     booking_id: templateParams.booking_id,
                     to_name: templateParams.client_name,
                     booking_date: templateParams.preferred_date,
@@ -429,20 +419,17 @@
                     cancel_instructions: templateParams.cancel_instructions,
                     cancellation_policy: templateParams.cancellation_policy
                 });
+                console.log('Client confirmation sent:', clientResponse);
 
                 // Show success message
-                alert('Thank you for your booking request! We will review your details and contact you within 24-48 hours to confirm your consultation. Please check your email for a confirmation of your request.');
-                
-                // Reset form
+                alert('Booking request sent successfully! Please check your email for confirmation.');
                 this.reset();
 
             } catch (error) {
-                console.error('FAILED...', error);
-                alert('Sorry, there was an error sending your booking request. Please try again or contact us directly at 651-592-5122.');
+                console.error('Failed to send email:', error);
+                alert(`Sorry, there was an error sending your booking request: ${error.message}\nPlease try again or contact us directly at 651-592-5122.`);
             } finally {
                 // Reset button state
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalBtnText = submitBtn.textContent;
                 submitBtn.textContent = originalBtnText;
                 submitBtn.disabled = false;
             }
