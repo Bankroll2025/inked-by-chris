@@ -374,6 +374,7 @@
 
             // Prepare the template parameters
             const templateParams = {
+                // Client Information
                 booking_id: bookingId,
                 client_name: document.getElementById('client_name').value,
                 client_email: document.getElementById('client_email').value,
@@ -381,6 +382,8 @@
                 client_gender: formatGender(document.getElementById('client_gender').value),
                 client_birthdate: formatDate(birthDate),
                 client_age: clientAge,
+                
+                // Appointment Details
                 preferred_date: formatDate(document.getElementById('datePicker').value),
                 preferred_time: document.getElementById('timeSlot').value,
                 tattoo_type: document.getElementById('tattooType').value,
@@ -389,11 +392,15 @@
                 color_preference: document.getElementById('colorPreference').value,
                 tattoo_description: document.getElementById('tattoo_description').value,
                 additional_notes: document.getElementById('additional_notes').value || 'None provided',
+                
+                // Shop Information
                 to_name: "Chris",
                 shop_name: "Inked by Chris",
                 shop_phone: "651-592-5122",
                 shop_address: "2395 7th St N, Saint Paul, MN 55109",
                 shop_email: "senghakmad@gmail.com",
+                
+                // Cancellation Information
                 cancellation_policy: `
                     • Cancellations must be made at least 24 hours before your appointment
                     • Click the cancellation link below to cancel your appointment
@@ -404,20 +411,13 @@
                 cancel_instructions: "To cancel your appointment, click the button below:"
             };
 
-            // Show loading state
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending Request...';
-            submitBtn.disabled = true;
-
             try {
-                // Send notification to shop owner
+                // Send notification to shop owner with all details
                 await emailjs.send('service_3pilkcs', 'template_tukgt7p', templateParams);
 
-                // Send confirmation to client
+                // Send confirmation to client with necessary details
                 await emailjs.send('service_3pilkcs', 'template_gowinjb', {
                     booking_id: templateParams.booking_id,
-                    reply_to: templateParams.client_email,
                     to_name: templateParams.client_name,
                     booking_date: templateParams.preferred_date,
                     booking_time: templateParams.preferred_time,
@@ -441,6 +441,8 @@
                 alert('Sorry, there was an error sending your booking request. Please try again or contact us directly at 651-592-5122.');
             } finally {
                 // Reset button state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.textContent;
                 submitBtn.textContent = originalBtnText;
                 submitBtn.disabled = false;
             }
