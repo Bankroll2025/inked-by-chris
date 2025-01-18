@@ -17,8 +17,8 @@ const twilioClient = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'senghakmad@gmail.com',
-        pass: process.env.EMAIL_PASSWORD // Use Gmail App Password
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
     }
 });
 
@@ -50,13 +50,16 @@ async function sendSMS(to, message) {
 // Function to send email
 async function sendEmail(to, subject, text) {
     try {
-        const result = await transporter.sendMail({
-            from: 'Inked by Chris <senghakmad@gmail.com>',
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
             to: to,
             subject: subject,
-            text: text
-        });
-        console.log(`Email sent successfully to ${to}`);
+            text: text,
+            html: text.replace(/\n/g, '<br>')
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully:', info.response);
         return true;
     } catch (error) {
         console.error('Error sending email:', error);
