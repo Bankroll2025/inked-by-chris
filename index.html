@@ -245,26 +245,32 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <select name="tattoo_placement" id="tattoo_placement" required>
-                                <option value="">Select Tattoo Placement</option>
+                            <select name="tattooPlacement" id="tattooPlacement" required>
+                                <option value="">Select Placement</option>
                                 <option value="Arm">Arm</option>
                                 <option value="Leg">Leg</option>
                                 <option value="Back">Back</option>
                                 <option value="Chest">Chest</option>
+                                <option value="Shoulder">Shoulder</option>
+                                <option value="Ankle">Ankle</option>
+                                <option value="Wrist">Wrist</option>
+                                <option value="Other">Other (specify in description)</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <select name="colorPreference" id="colorPreference" required>
+                            <select name="colorPreference" id="colorPreference">
                                 <option value="">Select Color Preference</option>
-                                <option value="Black & Grey">Black & Grey</option>
-                                <option value="Color">Color</option>
+                                <option value="Black and Grey">Black and Grey</option>
+                                <option value="Full Color">Full Color</option>
+                                <option value="Black Work">Black Work</option>
+                                <option value="Not Sure">Not Sure (Will discuss)</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <textarea id="tattoo_description" name="tattoo_description" placeholder="Describe your tattoo idea" required></textarea>
+                            <textarea id="tattooDescription" name="tattooDescription" placeholder="Describe your tattoo idea in detail" required></textarea>
                         </div>
                         <div class="form-group">
-                            <textarea id="additional_notes" name="additional_notes" placeholder="Additional Notes"></textarea>
+                            <textarea name="additionalNotes" id="additionalNotes" placeholder="Any additional notes or special requests?"></textarea>
                         </div>
                     </div>
 
@@ -415,7 +421,7 @@
                     `time=${encodeURIComponent(document.getElementById('timeSlot').value)}&` +
                     `type=${encodeURIComponent(document.getElementById('tattooType').value)}&` +
                     `size=${encodeURIComponent(document.getElementById('tattooSize').value)}&` +
-                    `placement=${encodeURIComponent(document.getElementById('tattoo_placement').value)}&` +
+                    `placement=${encodeURIComponent(document.getElementById('tattooPlacement').value)}&` +
                     `phone=${encodeURIComponent(document.getElementById('client_phone').value)}`;
 
                 // Calculate client's age
@@ -430,10 +436,10 @@
                 const preferredTime = document.getElementById('timeSlot').value;
                 const tattooType = document.getElementById('tattooType').value;
                 const tattooSize = document.getElementById('tattooSize').value;
-                const tattooPlacement = document.getElementById('tattoo_placement').value;
+                const tattooPlacement = document.getElementById('tattooPlacement').value;
                 const colorPreference = document.getElementById('colorPreference').value;
-                const tattooDescription = document.getElementById('tattoo_description').value;
-                const additionalNotes = document.getElementById('additional_notes').value || 'None provided';
+                const tattooDescription = document.getElementById('tattooDescription').value;
+                const additionalNotes = document.getElementById('additionalNotes').value || 'None provided';
 
                 // Save appointment to database
                 try {
