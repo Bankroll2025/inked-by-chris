@@ -82,98 +82,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 try {
                     // Send notification to shop first
-                    await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
-                        to_name: "Chris",
-                        from_name: "Booking System",
-                        to_email: "senghakmad@gmail.com",
-                        subject: `New Booking Request - ${clientName}`,
-                        message: `
-New Booking Request
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Client Information:
-Name: ${clientName}
-Gender: ${clientGender}
-Age: ${age} (DOB: ${new Date(clientBirthdate).toLocaleDateString()})
-Email: ${clientEmail}
-Phone: ${clientPhone}
-
-Appointment Details:
-Date: ${new Date(preferredDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-Time: ${preferredTime}
-Tattoo Type: ${tattooType}
-Size: ${tattooSize}
-Placement: ${tattooPlacement}
-Color Preference: ${colorPreference}
-Tattoo Description: ${tattooDescription}
-Additional Notes: ${additionalNotes}
-
-Booking ID: ${bookingId}
-
-Cancellation Link:
-${window.location.origin}/cancel.html?id=${bookingId}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-                        reply_to: clientEmail
-                    }, 'nqLDVniO3BUlQ-e1n');
+                    await emailjs.send("service_3pilkcs", "template_tukgt7p", {
+                        client_name: clientName,
+                        client_gender: clientGender,
+                        client_age: age,
+                        client_email: clientEmail,
+                        client_phone: clientPhone,
+                        preferred_date: new Date(preferredDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+                        preferred_time: preferredTime,
+                        tattoo_type: tattooType,
+                        tattoo_size: tattooSize,
+                        tattoo_placement: tattooPlacement,
+                        tattoo_description: tattooDescription,
+                        color_preference: colorPreference,
+                        additional_notes: additionalNotes,
+                        booking_id: bookingId,
+                        cancellation_link: `${window.location.origin}/cancel.html?id=${bookingId}`,
+                        reply_to: clientEmail,
+                    });
                     notificationSuccess = true;
 
                     // Send confirmation to client
-                    await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                    await emailjs.send("service_3pilkcs", "template_gowinjb", {
                         to_name: clientName,
-                        from_name: "Inked by Chris",
+                        appointment_date: new Date(preferredDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+                        appointment_time: preferredTime,
+                        booking_id: bookingId,
+                        tattoo_type: tattooType,
+                        tattoo_size: tattooSize,
+                        tattoo_placement: tattooPlacement,
+                        color_preference: colorPreference,
+                        cancellation_link: `${window.location.origin}/cancel.html?id=${bookingId}`,
+                        reschedule_link: `${window.location.origin}/?reschedule=${bookingId}#booking`,
+                        website_link: window.location.origin,
                         to_email: clientEmail,
-                        subject: "Your Tattoo Appointment Confirmation",
-                        message: `
-Dear ${clientName},
-
-Thank you for booking with Inked by Chris! Your appointment has been confirmed.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-APPOINTMENT DETAILS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Date: ${new Date(preferredDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-Time: ${preferredTime}
-Booking ID: ${bookingId}
-
-Your Tattoo Details:
-• Type: ${tattooType}
-• Size: ${tattooSize}
-• Placement: ${tattooPlacement}
-• Color Preference: ${colorPreference}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-IMPORTANT INFORMATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. Please arrive 10 minutes before your appointment
-2. Bring a valid ID
-3. Stay hydrated and eat before your appointment
-4. Get a good night's sleep
-5. Wear comfortable clothing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-NEED TO CANCEL OR RESCHEDULE?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Use this link to cancel your appointment:
-${window.location.origin}/cancel.html?id=${bookingId}
-
-Questions? Contact us:
-Email: senghakmad@gmail.com
-Phone: (651) 592-5122
-
-We look forward to creating your tattoo!
-
-Best regards,
-Inked by Chris`,
-                        reply_to: "senghakmad@gmail.com"
-                    }, 'nqLDVniO3BUlQ-e1n');
+                    });
                     emailSuccess = true;
 
                     // Show success message with option to book another appointment
                     const successDiv = document.createElement('div');
                     successDiv.className = 'success-message';
                     successDiv.innerHTML = `
-                        <h3>Booking Confirmed! 🎉</h3>
+                        <h3>Booking Confirmed! </h3>
                         <p>Thank you for choosing Inked by Chris!</p>
                         <div class="confirmation-details">
                             <p><strong>Appointment Details:</strong></p>
@@ -218,8 +168,8 @@ Inked by Chris`,
                         </div>
                         <div class="contact-info">
                             <p>Please contact us to confirm your appointment:</p>
-                            <p>📧 Email: senghakmad@gmail.com</p>
-                            <p>📞 Phone: (651) 592-5122</p>
+                            <p> Email: senghakmad@gmail.com</p>
+                            <p> Phone: (651) 592-5122</p>
                         </div>
                         <div class="booking-options">
                             <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
@@ -238,8 +188,8 @@ Inked by Chris`,
                     <h3>Booking Error</h3>
                     <p>Sorry, there was an error processing your booking.</p>
                     <p>Please try again or contact us directly:</p>
-                    <p>📧 Email: senghakmad@gmail.com</p>
-                    <p>📞 Phone: (651) 592-5122</p>
+                    <p> Email: senghakmad@gmail.com</p>
+                    <p> Phone: (651) 592-5122</p>
                     <div class="booking-options">
                         <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
                         <button onclick="window.location.href='index.html'" class="home-btn">Return to Homepage</button>
