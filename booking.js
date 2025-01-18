@@ -122,25 +122,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         "service_2e752is",
                         "template_tukgt7p",
                         {
-                            from_name: data.clientName,
                             to_name: "Chris",
-                            client_details: `
-                                Name: ${data.clientName}
-                                Email: ${data.clientEmail}
-                                Phone: ${data.clientPhone}
-                            `,
-                            appointment_details: `
-                                Date: ${formattedDate}
-                                Time: ${data.preferredTime}
-                                Tattoo Type: ${data.tattooType}
-                                Size: ${data.tattooSize}
-                                Placement: ${data.tattooPlacement}
-                                Description: ${data.tattooDescription}
-                            `,
+                            from_name: data.clientName,
+                            message: `New Booking Request\n\nClient Information:\n` +
+                                   `Name: ${data.clientName}\n` +
+                                   `Email: ${data.clientEmail}\n` +
+                                   `Phone: ${data.clientPhone}\n\n` +
+                                   `Appointment Details:\n` +
+                                   `Date: ${formattedDate}\n` +
+                                   `Time: ${data.preferredTime}\n\n` +
+                                   `Tattoo Details:\n` +
+                                   `Type: ${data.tattooType}\n` +
+                                   `Size: ${data.tattooSize}\n` +
+                                   `Placement: ${data.tattooPlacement}\n` +
+                                   `Description: ${data.tattooDescription}`,
+                            booking_id: data.originalBookingId,
                             reply_to: data.clientEmail
                         }
                     );
-                    console.log('Shop notification sent:', shopResponse);
 
                     // Send confirmation to client
                     const clientResponse = await emailjs.send(
@@ -149,21 +148,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         {
                             to_name: data.clientName,
                             from_name: "Inked by Chris",
-                            appointment_details: `
-                                Date: ${formattedDate}
-                                Time: ${data.preferredTime}
-                                Tattoo Type: ${data.tattooType}
-                                Size: ${data.tattooSize}
-                                Placement: ${data.tattooPlacement}
-                            `,
-                            reply_to: "senghakmad@gmail.com",
-                            to_email: data.clientEmail,
+                            message: `Your tattoo appointment has been confirmed!\n\n` +
+                                   `Date: ${formattedDate}\n` +
+                                   `Time: ${data.preferredTime}\n\n` +
+                                   `Tattoo Details:\n` +
+                                   `Type: ${data.tattooType}\n` +
+                                   `Size: ${data.tattooSize}\n` +
+                                   `Placement: ${data.tattooPlacement}\n\n` +
+                                   `Booking ID: ${data.originalBookingId}`,
                             booking_id: data.originalBookingId,
-                            reschedule_url: `${window.location.origin}/?reschedule=${data.originalBookingId}#booking`,
-                            cancel_url: `${window.location.origin}/cancel.html?id=${data.originalBookingId}`
+                            reply_to: "senghakmad@gmail.com"
                         }
                     );
-                    console.log('Client confirmation sent:', clientResponse);
 
                     // Show success message
                     const successDiv = document.createElement('div');
