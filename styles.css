@@ -675,7 +675,7 @@ nav a:hover {
     position: relative;
     padding: 6rem 2rem;
     overflow: hidden;
-    background-color: var(--bg-color);
+    background: linear-gradient(135deg, #000000, #1a0000);
 }
 
 .contact-background {
@@ -685,11 +685,12 @@ nav a:hover {
     right: 0;
     bottom: 0;
     background: 
-        linear-gradient(45deg, rgba(196, 30, 58, 0.1), transparent),
-        radial-gradient(circle at 20% 30%, rgba(196, 30, 58, 0.15), transparent 70%),
-        radial-gradient(circle at 80% 70%, rgba(196, 30, 58, 0.15), transparent 70%);
+        radial-gradient(circle at 20% 30%, rgba(196, 30, 58, 0.3), transparent 70%),
+        radial-gradient(circle at 80% 70%, rgba(196, 30, 58, 0.3), transparent 70%);
+    opacity: 0.5;
     z-index: 0;
     pointer-events: none;
+    transition: transform 0.3s ease;
 }
 
 .contact-container {
@@ -733,79 +734,29 @@ nav a:hover {
 }
 
 .contact-card {
-    background: rgba(20, 20, 20, 0.8);
-    border: 1px solid rgba(196, 30, 58, 0.2);
-    border-radius: 15px;
-    padding: 2rem;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
+    background: rgba(20, 0, 0, 0.8);
+    border: 1px solid rgba(196, 30, 58, 0.3);
+    box-shadow: 0 0 20px rgba(196, 30, 58, 0.1);
 }
 
 .contact-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(196, 30, 58, 0.3), transparent 120px);
 }
 
 .contact-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.contact-card:hover::before {
-    opacity: 0.1;
+    border-color: rgba(196, 30, 58, 0.8);
+    box-shadow: 0 10px 30px rgba(196, 30, 58, 0.2);
 }
 
 .contact-card .icon-wrapper {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 1.5rem;
-    background: var(--accent-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: white;
-    position: relative;
-    z-index: 1;
+    background: linear-gradient(45deg, #c41e3a, #ff1f4c);
+    box-shadow: 0 0 20px rgba(196, 30, 58, 0.4);
 }
 
 .contact-card .icon-wrapper::after {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: var(--accent-color);
-    border-radius: 50%;
-    z-index: -1;
-    opacity: 0.3;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        opacity: 0.3;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 0.1;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0.3;
-    }
+    background: linear-gradient(45deg, #c41e3a, #ff1f4c);
+    opacity: 0.4;
 }
 
 .contact-card h3 {
@@ -841,24 +792,8 @@ nav a:hover {
     flex-direction: column;
     align-items: center;
     padding: 2rem;
-    background: rgba(20, 20, 20, 0.8);
+    background: rgba(20, 0, 0, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    text-decoration: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.social-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
 .social-link.instagram::before {
@@ -866,16 +801,39 @@ nav a:hover {
 }
 
 .social-link.snapchat::before {
-    background: #FFFC00;
+    background: linear-gradient(45deg, #FFFC00, #FFE300);
 }
 
 .social-link:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.social-link:hover::before {
-    opacity: 0.1;
+.social-link.instagram:hover {
+    border-color: #e1306c;
+    box-shadow: 0 10px 30px rgba(225, 48, 108, 0.3);
+}
+
+.social-link.snapchat:hover {
+    border-color: #FFFC00;
+    box-shadow: 0 10px 30px rgba(255, 252, 0, 0.3);
+}
+
+.social-link.instagram:hover::before {
+    opacity: 0.15;
+}
+
+.social-link.snapchat:hover::before {
+    opacity: 0.15;
+}
+
+.social-link.instagram:hover i,
+.social-link.instagram:hover span {
+    color: #e1306c;
+}
+
+.social-link.snapchat:hover i,
+.social-link.snapchat:hover span {
+    color: #FFFC00;
 }
 
 .social-link i {
@@ -905,6 +863,21 @@ nav a:hover {
 .social-link:hover i,
 .social-link:hover span {
     color: var(--accent-color);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.2;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
 }
 
 @media (max-width: 992px) {
