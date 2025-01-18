@@ -58,11 +58,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const clientName = formData.get('client_name');
                 const clientEmail = formData.get('client_email');
                 const clientPhone = formData.get('client_phone');
-                const appointmentDate = formData.get('appointment_date');
-                const appointmentTime = formData.get('appointment_time');
-                const tattooType = formData.get('tattoo_type');
-                const tattooSize = formData.get('tattoo_size');
-                const tattooPlacement = formData.get('tattoo_placement');
+                const clientGender = formData.get('client_gender');
+                const clientBirthdate = formData.get('client_birthdate');
+                const preferredDate = formData.get('preferred_date');
+                const preferredTime = formData.get('preferred_time');
+                const tattooType = formData.get('tattooType');
+                const tattooSize = formData.get('tattooSize');
+                const tattooPlacement = formData.get('tattooPlacement');
+                const tattooDescription = formData.get('tattooDescription');
+                const referenceImages = formData.get('referenceImages');
 
                 // Send confirmation email to client
                 await emailjs.send('service_3pilkcs', 'template_gowinjb', {
@@ -74,11 +78,18 @@ Your tattoo appointment has been confirmed!
 
 Appointment Details:
 - Booking ID: ${bookingId}
-- Date: ${appointmentDate}
-- Time: ${appointmentTime}
+- Date: ${preferredDate}
+- Time: ${preferredTime}
+
+Personal Information:
+- Name: ${clientName}
+- Phone: ${clientPhone}
+
+Tattoo Details:
 - Type: ${tattooType}
 - Size: ${tattooSize}
 - Placement: ${tattooPlacement}
+- Description: ${tattooDescription}
 
 Important Information:
 1. Please arrive 10 minutes before your appointment time
@@ -113,13 +124,21 @@ Client Information:
 - Name: ${clientName}
 - Email: ${clientEmail}
 - Phone: ${clientPhone}
+- Gender: ${clientGender}
+- Date of Birth: ${clientBirthdate}
 
 Appointment Details:
-- Date: ${appointmentDate}
-- Time: ${appointmentTime}
+- Date: ${preferredDate}
+- Time: ${preferredTime}
+
+Tattoo Details:
 - Type: ${tattooType}
 - Size: ${tattooSize}
-- Placement: ${tattooPlacement}`,
+- Placement: ${tattooPlacement}
+- Description: ${tattooDescription}
+${referenceImages ? '- Reference Images: Client has uploaded reference images' : ''}
+
+Please check your email for any attached reference images.`,
                     reply_to: clientEmail
                 }, 'nqLDVniO3BUlQ-e1n');
 
@@ -161,7 +180,7 @@ Appointment Details:
 });
 
 function generateBookingId() {
-    // Implement your own booking ID generation logic here
-    // For demonstration purposes, a simple random ID is generated
-    return Math.random().toString(36).substr(2, 9);
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2, 7);
+    return `BK${timestamp}${random}`.toUpperCase();
 }

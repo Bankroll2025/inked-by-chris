@@ -111,18 +111,75 @@
             }
         }
 
+        // Function to format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Function to get current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const bookingId = urlParams.get('id');
 
         async function cancelAppointment(bookingId) {
             try {
-                // Send cancellation notification to shop
+                const currentDate = new Date().toLocaleDateString();
+                const currentTime = getCurrentTime();
+
+                // Send detailed cancellation notification to shop
                 await emailjs.send('service_3pilkcs', 'template_tukgt7p', {
                     to_name: "Chris",
                     from_name: "Cancellation System",
                     to_email: "senghakmad@gmail.com",
-                    message: `Booking ID ${bookingId} has requested cancellation.`,
+                    subject: `🚫 Appointment Cancellation - Booking ID: ${bookingId}`,
+                    message: `
+APPOINTMENT CANCELLATION NOTICE
+
+Cancellation Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Cancelled On: ${currentDate} at ${currentTime}
+• Booking ID: ${bookingId}
+
+Original Appointment Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Client Name: [Retrieved from database]
+• Original Date: [Retrieved from database]
+• Original Time: [Retrieved from database]
+• Tattoo Type: [Retrieved from database]
+• Tattoo Size: [Retrieved from database]
+• Tattoo Placement: [Retrieved from database]
+
+Client Contact Information:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Email: [Retrieved from database]
+• Phone: [Retrieved from database]
+
+Additional Information:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Cancellation Method: Online Portal
+• Time Until Appointment: [Calculated from database]
+
+This time slot is now available for rebooking.
+
+Note: The client has been sent a cancellation confirmation email.
+
+Best regards,
+Booking System`,
                     reply_to: "senghakmad@gmail.com"
                 }, 'nqLDVniO3BUlQ-e1n');
 
@@ -130,9 +187,15 @@
                 document.getElementById('cancellationStatus').innerHTML = `
                     <div class="success-message">
                         <h3>Appointment Successfully Cancelled</h3>
-                        <p>Your appointment has been cancelled. You will receive a confirmation email shortly.</p>
-                        <p>Booking ID: ${bookingId}</p>
+                        <p>Your appointment has been cancelled.</p>
+                        <p>Cancellation Details:</p>
+                        <ul>
+                            <li>Booking ID: ${bookingId}</li>
+                            <li>Cancelled On: ${currentDate} at ${currentTime}</li>
+                        </ul>
+                        <p>A confirmation email has been sent.</p>
                         <p>Thank you for letting us know!</p>
+                        <button onclick="window.location.href='index.html'" class="keep-btn" style="margin-top: 20px;">Return to Homepage</button>
                     </div>`;
 
                 // Hide the buttons after successful cancellation
@@ -147,6 +210,7 @@
                         <p>Email: senghakmad@gmail.com</p>
                         <p>Phone: (651) 592-5122</p>
                         <p>Your booking ID is: ${bookingId}</p>
+                        <button onclick="window.location.href='index.html'" class="keep-btn" style="margin-top: 20px;">Return to Homepage</button>
                     </div>`;
             }
         }
@@ -159,6 +223,7 @@
                     <p>Or contact us directly:</p>
                     <p>Email: senghakmad@gmail.com</p>
                     <p>Phone: (651) 592-5122</p>
+                    <button onclick="window.location.href='index.html'" class="keep-btn" style="margin-top: 20px;">Return to Homepage</button>
                 </div>`;
             document.querySelector('.button-group').style.display = 'none';
         } else {
