@@ -132,19 +132,19 @@
                 <h2>Book a Consultation</h2>
                 <form id="bookingForm" class="booking-form">
                     <div class="form-group">
-                        <input type="text" id="client_name" name="client_name" placeholder="Your Name" required>
+                        <input type="text" id="from_name" name="from_name" placeholder="Your Name" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="client_email" name="client_email" placeholder="Your Email" required>
+                        <input type="email" id="user_email" name="user_email" placeholder="Your Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="client_phone" name="client_phone" placeholder="Your Phone Number" required>
+                        <input type="tel" id="phone_number" name="phone_number" placeholder="Your Phone Number" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="datePicker" name="consultation_date" placeholder="Select Date" required>
+                        <input type="text" id="datePicker" name="booking_date" placeholder="Select Date" required>
                     </div>
                     <div class="form-group">
-                        <select name="consultation_time" id="timeSlot" required>
+                        <select name="booking_time" id="timeSlot" required>
                             <option value="">Select Time</option>
                             <option value="10:00 AM">10:00 AM</option>
                             <option value="11:00 AM">11:00 AM</option>
@@ -157,7 +157,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <textarea id="tattoo_description" name="tattoo_description" placeholder="Describe your tattoo idea (size, style, placement)" required></textarea>
+                        <textarea id="message" name="message" placeholder="Describe your tattoo idea (size, style, placement)" required></textarea>
                     </div>
                     <button type="submit" class="submit-btn">Request Consultation</button>
                 </form>
@@ -201,12 +201,14 @@
 
             // Prepare the template parameters
             const templateParams = {
-                client_name: document.getElementById('client_name').value,
-                client_email: document.getElementById('client_email').value,
-                client_phone: document.getElementById('client_phone').value,
-                consultation_date: document.getElementById('datePicker').value,
-                consultation_time: document.getElementById('timeSlot').value,
-                tattoo_description: document.getElementById('tattoo_description').value
+                from_name: document.getElementById('from_name').value,
+                user_email: document.getElementById('user_email').value,
+                phone_number: document.getElementById('phone_number').value,
+                booking_date: document.getElementById('datePicker').value,
+                booking_time: document.getElementById('timeSlot').value,
+                message: document.getElementById('message').value,
+                to_name: "Chris", // Added static recipient name
+                subject: "New Tattoo Consultation Request" // Added static subject
             };
 
             // Send the email using EmailJS
