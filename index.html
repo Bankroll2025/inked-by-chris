@@ -178,7 +178,16 @@
                             <input type="email" id="client_email" name="client_email" placeholder="Email Address" required>
                         </div>
                         <div class="form-group">
-                            <input type="tel" id="client_phone" name="client_phone" placeholder="Phone Number" required>
+                            <input type="tel" id="client_phone" name="client_phone" placeholder="Phone Number (xxx-xxx-xxxx)" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="client_gender" name="client_gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer_not_to_say">Prefer not to say</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <input type="date" id="client_birthdate" name="client_birthdate" required>
@@ -365,6 +374,7 @@
                     client_name: document.getElementById('client_name').value,
                     client_email: document.getElementById('client_email').value,
                     client_phone: document.getElementById('client_phone').value,
+                    client_gender: document.getElementById('client_gender').value,
                     client_birthdate: formatDate(birthDate),
                     client_age: clientAge,
                     preferred_date: formatDate(document.getElementById('datePicker').value),
@@ -442,6 +452,19 @@
             disableMobile: false, // Enable custom calendar on mobile
             static: true,
             theme: "dark"
+        });
+    </script>
+
+    <script>
+        // Add phone number formatting
+        document.getElementById('client_phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove all non-digits
+            if (value.length >= 3 && value.length < 6) {
+                value = value.slice(0,3) + '-' + value.slice(3);
+            } else if (value.length >= 6) {
+                value = value.slice(0,3) + '-' + value.slice(3,6) + '-' + value.slice(6,10);
+            }
+            e.target.value = value;
         });
     </script>
 
