@@ -2,9 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -41,7 +42,7 @@ const db = new sqlite3.Database(path.join(__dirname, 'appointments.db'), (err) =
 // Admin authentication middleware
 const adminAuth = (req, res, next) => {
     const apiKey = req.headers['x-api-key'];
-    if (apiKey === 'your-secret-admin-key') { // Change this to a secure key
+    if (apiKey === process.env.ADMIN_API_KEY) {
         next();
     } else {
         res.status(401).json({ error: 'Unauthorized' });
