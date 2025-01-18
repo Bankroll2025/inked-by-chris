@@ -356,6 +356,9 @@
                 // Create cancellation link
                 const cancelUrl = `${window.location.origin}/cancel.html?id=${bookingId}`;
 
+                // Calculate client's age
+                const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
+
                 // Prepare the template parameters
                 const templateParams = {
                     booking_id: bookingId,
@@ -363,6 +366,7 @@
                     client_email: document.getElementById('client_email').value,
                     client_phone: document.getElementById('client_phone').value,
                     client_birthdate: formatDate(birthDate),
+                    client_age: clientAge,
                     preferred_date: formatDate(document.getElementById('datePicker').value),
                     preferred_time: document.getElementById('timeSlot').value,
                     tattoo_type: document.getElementById('tattooType').value,
