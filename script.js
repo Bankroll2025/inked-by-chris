@@ -70,3 +70,38 @@ document.addEventListener('mousemove', (e) => {
         section.style.setProperty('--mouse-y', `${y}%`);
     });
 });
+
+// Contact cards interactive glow effect
+document.querySelectorAll('.contact-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / card.clientWidth) * 100;
+        const y = ((e.clientY - rect.top) / card.clientHeight) * 100;
+        
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+    });
+});
+
+// Add parallax effect to contact background
+const contactSection = document.querySelector('.contact-section');
+const contactBackground = document.querySelector('.contact-background');
+
+if (contactSection && contactBackground) {
+    contactSection.addEventListener('mousemove', e => {
+        const { clientX, clientY } = e;
+        const { left, top, width, height } = contactSection.getBoundingClientRect();
+        
+        const x = (clientX - left) / width;
+        const y = (clientY - top) / height;
+        
+        const moveX = (x - 0.5) * 20;
+        const moveY = (y - 0.5) * 20;
+        
+        contactBackground.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+
+    contactSection.addEventListener('mouseleave', () => {
+        contactBackground.style.transform = 'translate(0, 0)';
+    });
+}
