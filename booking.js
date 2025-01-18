@@ -149,7 +149,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         user_id: "nqLDVniO3BUlQ-e1n",
                         template_params: {
                             to_name: data.clientName,
-                            email: data.clientEmail,  
+                            reply_to: data.clientEmail,
+                            to: data.clientEmail,
                             from_name: "Inked by Chris",
                             subject: "Your Tattoo Appointment Confirmation",
                             message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}\n\nYou can manage your appointment using these links:\nReschedule: https://inkedbychris.com/?reschedule=${data.originalBookingId}#booking\nCancel: https://inkedbychris.com/cancel.html?id=${data.originalBookingId}`
