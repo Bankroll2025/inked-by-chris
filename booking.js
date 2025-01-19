@@ -140,7 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_description: data.tattooDescription,
                             color_preference: data.colorPreference,
                             booking_id: data.originalBookingId
-                        }
+                        },
+                        "nqLDVniO3BUlQ-e1n"
                     );
                     console.log('Shop notification response:', shopResponse);
                     console.log('Shop notification sent successfully');
@@ -163,7 +164,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_placement: data.tattooPlacement,
                             color_preference: data.colorPreference,
                             booking_id: data.originalBookingId
-                        }
+                        },
+                        "nqLDVniO3BUlQ-e1n"
                     );
                     console.log('Client notification response:', clientResponse);
                     console.log('Client confirmation sent successfully');
