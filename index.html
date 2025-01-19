@@ -229,12 +229,12 @@
                         <input type="text" id="client_last_name" name="client_last_name" required>
                     </div>
                     <div class="form-group">
-                        <label for="client_email">Email</label>
-                        <input type="email" id="client_email" name="client_email" required>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="client_phone">Phone Number</label>
-                        <input type="tel" id="client_phone" name="client_phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
                         <small>Format: 123-456-7890</small>
                     </div>
                     <div class="form-group">
@@ -248,19 +248,19 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="client_birthdate">Birth Date</label>
-                        <input type="date" id="client_birthdate" name="client_birthdate" required>
+                        <label for="birthdate">Birth Date</label>
+                        <input type="date" id="birthdate" name="birthdate" required>
                         <small class="age-notice">You must be 18 or older to book an appointment</small>
                     </div>
 
                     <h3>Preferred Appointment</h3>
                     <div class="form-group">
-                        <label for="preferred_date">Preferred Date</label>
-                        <input type="date" id="preferred_date" name="preferred_date" required>
+                        <label for="appointment_date">Preferred Date</label>
+                        <input type="date" id="appointment_date" name="appointment_date" required>
                     </div>
                     <div class="form-group">
-                        <label for="preferred_time">Preferred Time</label>
-                        <select id="preferred_time" name="preferred_time" required>
+                        <label for="appointment_time">Preferred Time</label>
+                        <select id="appointment_time" name="appointment_time" required>
                             <option value="">Select Time</option>
                             <option value="10:00 AM">10:00 AM</option>
                             <option value="11:00 AM">11:00 AM</option>
@@ -398,13 +398,26 @@
             try {
                 // Get form data
                 const formData = new FormData(this);
-                const bookingData = Object.fromEntries(formData.entries());
+                const bookingData = {
+                    client_first_name: formData.get('client_first_name'),
+                    client_last_name: formData.get('client_last_name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    birthdate: formData.get('birthdate'),
+                    appointment_date: formData.get('appointment_date'),
+                    appointment_time: formData.get('appointment_time'),
+                    tattooType: formData.get('tattooType'),
+                    tattooSize: formData.get('tattooSize'),
+                    tattooPlacement: formData.get('tattooPlacement'),
+                    tattooDescription: formData.get('tattooDescription'),
+                    additionalNotes: formData.get('additionalNotes')
+                };
                 
                 // Add booking ID
                 bookingData.bookingId = generateBookingId();
                 
                 // Validate age
-                const birthDate = new Date(bookingData.client_birthdate);
+                const birthDate = new Date(bookingData.birthdate);
                 if (!isOver18(birthDate)) {
                     alert('You must be 18 or older to book an appointment.');
                     return;
@@ -413,25 +426,31 @@
                 // Generate cancel URL
                 const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?` + 
                     `id=${bookingData.bookingId}&` +
-                    `email=${encodeURIComponent(bookingData.client_email)}&` +
+                    `email=${encodeURIComponent(bookingData.email)}&` +
                     `name=${encodeURIComponent(bookingData.client_first_name + ' ' + bookingData.client_last_name)}&` +
-                    `date=${encodeURIComponent(formatDate(bookingData.preferred_date))}&` +
-                    `time=${encodeURIComponent(bookingData.preferred_time)}`;
+                    `date=${encodeURIComponent(formatDate(bookingData.appointment_date))}&` +
+                    `time=${encodeURIComponent(bookingData.appointment_time)}`;
 
                 // Send email using EmailJS
-                await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                const emailResponse = await emailjs.send('service_3pilkcs', 'template_gowinjb', {
                     to_name: `${bookingData.client_first_name} ${bookingData.client_last_name}`,
                     from_name: "Inked by Chris",
-                    to_email: bookingData.client_email,
+                    to_email: bookingData.email,
                     reply_to: "senghakmad@gmail.com",
                     booking_id: bookingData.bookingId,
-                    booking_date: formatDate(bookingData.preferred_date),
-                    booking_time: bookingData.preferred_time,
+                    booking_date: formatDate(bookingData.appointment_date),
+                    booking_time: bookingData.appointment_time,
                     tattoo_type: bookingData.tattooType,
                     tattoo_size: bookingData.tattooSize,
                     tattoo_placement: bookingData.tattooPlacement,
+                    tattoo_description: bookingData.tattooDescription,
+                    additional_notes: bookingData.additionalNotes || 'None provided',
                     cancel_url: cancelUrl
                 });
+
+                if (emailResponse.status !== 200) {
+                    throw new Error('Failed to send email confirmation');
+                }
 
                 // Show success message and reset form
                 alert('Booking request sent successfully! Please check your email for confirmation.');
@@ -456,7 +475,7 @@
 
     <script>
         // Initialize Flatpickr
-        const datePicker = flatpickr("#preferred_date", {
+        const datePicker = flatpickr("#appointment_date", {
             minDate: "today",
             dateFormat: "Y-m-d",
             disable: [
@@ -476,7 +495,7 @@
 
     <script>
         // Add phone number formatting
-        document.getElementById('client_phone').addEventListener('input', function(e) {
+        document.getElementById('phone').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, ''); // Remove all non-digits
             if (value.length >= 3 && value.length < 6) {
                 value = value.slice(0,3) + '-' + value.slice(3);
