@@ -1406,7 +1406,7 @@ footer {
 
 /* Legal Pages Styles */
 .legal-content {
-    padding-top: 120px; /* Increased padding to account for fixed header */
+    padding-top: 120px;
     padding-bottom: 80px;
     background: var(--bg-color);
     min-height: calc(100vh - 200px);
@@ -1423,8 +1423,8 @@ footer {
     font-size: 2.5em;
     margin-bottom: 30px;
     text-align: center;
-    position: relative; /* Ensure it's above other elements */
-    z-index: 1; /* Prevent overlap with header */
+    position: relative;
+    z-index: 1;
 }
 
 .legal-content h2 {
@@ -1454,17 +1454,30 @@ footer {
 .legal-content li {
     margin: 10px 0;
     line-height: 1.6;
+    position: relative;
 }
 
-.legal-content a {
+.policy-section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 77, 77, 0.1);
+}
+
+.policy-section:last-child {
+    margin-bottom: 0;
+}
+
+.policy-section h2 {
+    margin-top: 0;
+}
+
+.last-updated {
+    text-align: center;
     color: var(--accent-color);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.legal-content a:hover {
-    color: var(--accent-hover);
-    text-decoration: underline;
+    margin-bottom: 40px;
+    font-style: italic;
 }
 
 /* Update footer links spacing */
