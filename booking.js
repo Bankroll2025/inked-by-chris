@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     );
                     console.log('Client confirmation sent successfully');
 
-                    // Show success message
+                    // Both emails sent successfully, show success message
                     const successDiv = document.createElement('div');
                     successDiv.className = 'success-message';
                     successDiv.innerHTML = `
@@ -176,6 +176,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 } catch (error) {
                     console.error('Email error details:', error);
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.innerHTML = `
+                        <h3>Email Notification Error</h3>
+                        <p>Your appointment has been saved, but there was an error sending email notifications.</p>
+                        <p>Please save your booking information:</p>
+                        <div class="booking-details">
+                            <p><strong>Booking ID:</strong> ${data.originalBookingId}</p>
+                            <p><strong>Date:</strong> ${formattedDate}</p>
+                            <p><strong>Time:</strong> ${data.preferredTime}</p>
+                        </div>
+                        <p>Contact us to confirm your appointment:</p>
+                        <p><strong>Email:</strong> senghakmad@gmail.com</p>
+                        <p><strong>Phone:</strong> (651) 592-5122</p>`;
+                    
+                    bookingForm.replaceWith(errorDiv);
                     throw new Error('Email sending failed: ' + error.message);
                 }
 
