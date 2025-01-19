@@ -1973,3 +1973,11 @@ label[for="additionalNotes"]::after {
     box-shadow: 0 5px 15px rgba(196, 30, 58, 0.3);
     background: #a01830;
 }
+
+.age-notice {
+    display: block;
+    color: var(--accent-color);
+    font-size: 0.9em;
+    margin-top: 5px;
+    font-style: italic;
+}

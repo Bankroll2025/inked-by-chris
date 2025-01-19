@@ -61,6 +61,29 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 // Get form data
                 const formData = new FormData(bookingForm);
+                
+                // Calculate age
+                const birthDate = new Date(formData.get('client_birthdate'));
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                // Check if client is 18 or older
+                if (age < 18) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.innerHTML = `
+                        <h3>Age Restriction</h3>
+                        <p>You must be 18 or older to book a tattoo appointment.</p>
+                        <button onclick="location.reload()" class="refresh-button">Try Again</button>
+                    `;
+                    bookingForm.replaceWith(errorDiv);
+                    return;
+                }
+
                 const data = {
                     clientFirstName: formData.get('client_first_name'),
                     clientLastName: formData.get('client_last_name'),
@@ -68,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     clientPhone: formData.get('client_phone'),
                     clientGender: formData.get('client_gender'),
                     clientBirthdate: formData.get('client_birthdate'),
+                    clientAge: age,
                     preferredDate: formData.get('preferred_date'),
                     preferredTime: formData.get('preferred_time'),
                     tattooType: formData.get('tattooType'),
@@ -85,9 +109,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     month: 'long',
                     day: 'numeric'
                 });
-                
+
                 try {
-                    // First send notification to shop
+                    // Send notification to shop
                     console.log('Sending shop notification...');
                     const shopResponse = await emailjs.send(
                         "service_2e752is",
@@ -96,10 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             to_name: "Chris",
                             from_name: `${data.clientFirstName} ${data.clientLastName}`,
                             to_email: "senghakmad@gmail.com",
-                            reply_to: data.clientEmail,
                             client_name: `${data.clientFirstName} ${data.clientLastName}`,
                             client_email: data.clientEmail,
                             client_phone: data.clientPhone,
+                            client_gender: data.clientGender,
+                            client_age: data.clientAge,
                             appointment_date: formattedDate,
                             appointment_time: data.preferredTime,
                             tattoo_type: data.tattooType,
@@ -107,13 +132,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_placement: data.tattooPlacement,
                             tattoo_description: data.tattooDescription,
                             color_preference: data.colorPreference,
+                            additional_notes: data.additionalNotes,
                             booking_id: data.bookingId
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
                     console.log('Shop notification sent successfully');
 
-                    // Then send confirmation to client
+                    // Send confirmation to client's email only
                     console.log('Sending client confirmation...');
                     const clientResponse = await emailjs.send(
                         "service_2e752is",
@@ -150,12 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 } catch (error) {
                     console.error('Email error details:', error);
-                    console.error('Error name:', error.name);
-                    console.error('Error message:', error.message);
-                    if (error.response) {
-                        console.error('Error response:', await error.response.text());
-                    }
-
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-message';
                     errorDiv.innerHTML = `
