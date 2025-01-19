@@ -120,22 +120,21 @@ document.addEventListener('DOMContentLoaded', function() {
                             to_name: "Chris",
                             from_name: `${data.clientFirstName} ${data.clientLastName}`,
                             to_email: "senghakmad@gmail.com",
-                            appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
                             client_name: `${data.clientFirstName} ${data.clientLastName}`,
                             client_email: data.clientEmail,
                             client_phone: data.clientPhone,
                             client_gender: data.clientGender,
                             client_age: data.clientAge,
+                            appointment_date: formattedDate,
+                            appointment_time: data.preferredTime,
                             tattoo_type: data.tattooType,
                             tattoo_size: data.tattooSize,
                             tattoo_placement: data.tattooPlacement,
                             tattoo_description: data.tattooDescription || 'Not provided',
                             color_preference: data.colorPreference,
-                            additional_notes: data.additionalNotes,
+                            additional_notes: data.additionalNotes || 'None',
                             booking_id: data.bookingId,
-                            subject: `APPOINTMENT: ${formattedDate} at ${data.preferredTime} - ${data.clientFirstName} ${data.clientLastName}`,
-                            message: `NEW APPOINTMENT SCHEDULED\n\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nClient: ${data.clientFirstName} ${data.clientLastName}`
+                            subject: `APPOINTMENT: ${formattedDate} at ${data.preferredTime} - ${data.clientFirstName} ${data.clientLastName}`
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
@@ -159,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             color_preference: data.colorPreference,
                             booking_id: data.bookingId,
                             website_link: "https://inkedbychris.netlify.app",
-                            subject: `Your Tattoo Appointment - ${formattedDate} at ${data.preferredTime}`
+                            subject: `Your Tattoo Appointment Confirmed - ${formattedDate} at ${data.preferredTime}`
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
