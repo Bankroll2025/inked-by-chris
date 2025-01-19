@@ -1406,127 +1406,81 @@ footer {
 
 /* Legal Pages Styles */
 .legal-content {
-    padding: 8rem 2rem 4rem;
-    min-height: 100vh;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.98));
-    position: relative;
-}
-
-.legal-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, var(--glow-color) 0%, transparent 70%),
-        radial-gradient(circle at 80% 70%, var(--glow-color) 0%, transparent 70%);
-    opacity: 0.05;
-    pointer-events: none;
+    padding: 80px 0;
+    background: var(--bg-color);
+    min-height: calc(100vh - 200px);
 }
 
 .legal-content .container {
-    position: relative;
-    max-width: 900px;
+    max-width: 800px;
     margin: 0 auto;
-    background: rgba(10, 10, 10, 0.8);
-    padding: 3rem;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 77, 77, 0.1);
-    backdrop-filter: blur(10px);
+    padding: 0 20px;
 }
 
 .legal-content h1 {
-    font-size: 2.5rem;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.last-updated {
-    text-align: center;
     color: var(--accent-color);
-    margin-bottom: 3rem;
-    font-style: italic;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-align: center;
 }
 
-.policy-section {
-    margin-bottom: 3rem;
-}
-
-.policy-section:last-child {
-    margin-bottom: 0;
-}
-
-.policy-section h2 {
-    color: var(--accent-color);
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 77, 77, 0.2);
-}
-
-.policy-section p {
+.legal-content h2 {
     color: var(--text-color);
-    margin-bottom: 1rem;
+    font-size: 1.8em;
+    margin: 40px 0 20px;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+.legal-content h3 {
+    color: var(--accent-color);
+    font-size: 1.4em;
+    margin: 30px 0 15px;
+}
+
+.legal-content p {
+    margin: 15px 0;
     line-height: 1.6;
 }
 
-.policy-section ul {
-    list-style: none;
-    padding-left: 1.5rem;
+.legal-content ul {
+    margin: 15px 0;
+    padding-left: 20px;
 }
 
-.policy-section ul li {
-    color: var(--text-color);
-    margin-bottom: 0.5rem;
-    position: relative;
+.legal-content li {
+    margin: 10px 0;
+    line-height: 1.6;
 }
 
-.policy-section ul li::before {
-    content: '•';
+.legal-content a {
     color: var(--accent-color);
-    position: absolute;
-    left: -1.5rem;
-    font-size: 1.2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
+.legal-content a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* Update footer links spacing */
 .footer-links {
     display: flex;
+    gap: 20px;
     justify-content: center;
-    gap: 2rem;
-    margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
 .footer-links a {
     color: var(--text-color);
     text-decoration: none;
     transition: color 0.3s ease;
+    font-size: 0.9em;
 }
 
 .footer-links a:hover {
     color: var(--accent-color);
-}
-
-@media (max-width: 768px) {
-    .legal-content {
-        padding: 6rem 1rem 2rem;
-    }
-
-    .legal-content .container {
-        padding: 2rem;
-    }
-
-    .legal-content h1 {
-        font-size: 2rem;
-    }
-
-    .policy-section h2 {
-        font-size: 1.3rem;
-    }
 }
 
 /* Payment Page Styles */
