@@ -228,128 +228,126 @@
         <section id="book" class="booking">
             <div class="container">
                 <h2>Book a Consultation</h2>
-                <form id="bookingForm" class="booking-form">
-                    <div class="form-section">
-                        <h3>Personal Information</h3>
-                        <div class="form-group">
-                            <input type="text" id="client_name" name="client_name" placeholder="Full Name" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="client_email" name="client_email" placeholder="Email Address" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="client_phone">Phone Number*</label>
-                            <input type="tel" id="client_phone" name="client_phone" required
-                                placeholder="123-456-7890"
-                                pattern="[0-9]{3}-?[0-9]{3}-?[0-9]{4}"
-                                title="Please enter a valid phone number in the format: 123-456-7890"
-                                maxlength="12">
-                        </div>
-                        <div class="form-group">
-                            <select id="client_gender" name="client_gender" required>
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                                <option value="prefer_not_to_say">Prefer not to say</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="date" id="client_birthdate" name="client_birthdate" required>
-                            <label for="client_birthdate" class="date-label">Date of Birth (Must be 18 or older)</label>
-                        </div>
+                <form id="bookingForm">
+                    <h3>Personal Information</h3>
+                    <div class="form-group">
+                        <label for="client_first_name">First Name*</label>
+                        <input type="text" id="client_first_name" name="client_first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client_last_name">Last Name*</label>
+                        <input type="text" id="client_last_name" name="client_last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client_email">Email Address*</label>
+                        <input type="email" id="client_email" name="client_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="client_phone">Phone Number*</label>
+                        <input type="tel" id="client_phone" name="client_phone" required
+                            placeholder="123-456-7890"
+                            pattern="[0-9]{3}-?[0-9]{3}-?[0-9]{4}"
+                            title="Please enter a valid phone number in the format: 123-456-7890"
+                            maxlength="12">
+                    </div>
+                    <div class="form-group">
+                        <label for="client_gender">Gender*</label>
+                        <select id="client_gender" name="client_gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer_not_to_say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="client_birthdate">Date of Birth*</label>
+                        <input type="date" id="client_birthdate" name="client_birthdate" required>
                     </div>
 
-                    <div class="form-section">
-                        <h3>Preferred Appointment</h3>
-                        <div class="form-group">
-                            <input type="text" id="datePicker" name="preferred_date" placeholder="Select Date" required readonly>
-                            <div class="input-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <select name="preferred_time" id="timeSlot" required>
-                                <option value="">Select Time</option>
-                                <option value="10:00 AM">10:00 AM</option>
-                                <option value="11:00 AM">11:00 AM</option>
-                                <option value="12:00 PM">12:00 PM</option>
-                                <option value="1:00 PM">1:00 PM</option>
-                                <option value="2:00 PM">2:00 PM</option>
-                                <option value="3:00 PM">3:00 PM</option>
-                                <option value="4:00 PM">4:00 PM</option>
-                                <option value="5:00 PM">5:00 PM</option>
-                            </select>
-                        </div>
+                    <h3>Preferred Appointment</h3>
+                    <div class="form-group">
+                        <label for="datePicker">Preferred Date*</label>
+                        <input type="text" id="datePicker" name="preferred_date" placeholder="Select Date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeSlot">Preferred Time*</label>
+                        <select id="timeSlot" name="preferred_time" required>
+                            <option value="">Select Time</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="1:00 PM">1:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="3:00 PM">3:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                            <option value="5:00 PM">5:00 PM</option>
+                        </select>
                     </div>
 
-                    <div class="form-section">
-                        <h3>Tattoo Details</h3>
-                        <div class="form-group">
-                            <select name="tattooType" id="tattooType" required>
-                                <option value="">Select Tattoo Type</option>
-                                <option value="Custom Design">Custom Design</option>
-                                <option value="Black & Grey">Black & Grey</option>
-                                <option value="Color Realism">Color Realism</option>
-                                <option value="Neo-Traditional">Neo-Traditional</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <select name="tattooSize" id="tattooSize" required>
-                                <option value="">Select Tattoo Size</option>
-                                <option value="Small">Small</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Large">Large</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <select name="tattooPlacement" id="tattooPlacement" required>
-                                <option value="">Select Placement</option>
-                                <option value="Arm">Arm</option>
-                                <option value="Leg">Leg</option>
-                                <option value="Back">Back</option>
-                                <option value="Chest">Chest</option>
-                                <option value="Shoulder">Shoulder</option>
-                                <option value="Ankle">Ankle</option>
-                                <option value="Wrist">Wrist</option>
-                                <option value="Other">Other (specify in description)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <select name="colorPreference" id="colorPreference">
-                                <option value="">Select Color Preference</option>
-                                <option value="Black and Grey">Black and Grey</option>
-                                <option value="Full Color">Full Color</option>
-                                <option value="Black Work">Black Work</option>
-                                <option value="Not Sure">Not Sure (Will discuss)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="tattooDescription" name="tattooDescription" placeholder="Describe your tattoo idea in detail" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <textarea name="additionalNotes" id="additionalNotes" placeholder="Any additional notes or special requests?"></textarea>
-                        </div>
+                    <h3>Tattoo Details</h3>
+                    <div class="form-group">
+                        <label for="tattooType">Type of Tattoo*</label>
+                        <select id="tattooType" name="tattooType" required>
+                            <option value="">Select Type</option>
+                            <option value="traditional">Traditional</option>
+                            <option value="realism">Realism</option>
+                            <option value="japanese">Japanese</option>
+                            <option value="tribal">Tribal</option>
+                            <option value="watercolor">Watercolor</option>
+                            <option value="blackwork">Blackwork</option>
+                            <option value="other">Other (Please describe below)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tattooSize">Approximate Size*</label>
+                        <select id="tattooSize" name="tattooSize" required>
+                            <option value="">Select Size</option>
+                            <option value="small">Small (2-3 inches)</option>
+                            <option value="medium">Medium (4-6 inches)</option>
+                            <option value="large">Large (7-10 inches)</option>
+                            <option value="extra_large">Extra Large (11+ inches)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tattooPlacement">Placement on Body*</label>
+                        <select id="tattooPlacement" name="tattooPlacement" required>
+                            <option value="">Select Placement</option>
+                            <option value="arm">Arm</option>
+                            <option value="forearm">Forearm</option>
+                            <option value="upper_arm">Upper Arm</option>
+                            <option value="shoulder">Shoulder</option>
+                            <option value="chest">Chest</option>
+                            <option value="back">Back</option>
+                            <option value="leg">Leg</option>
+                            <option value="thigh">Thigh</option>
+                            <option value="calf">Calf</option>
+                            <option value="ankle">Ankle</option>
+                            <option value="other">Other (Please specify in description)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tattooDescription">Description of Tattoo*</label>
+                        <textarea id="tattooDescription" name="tattooDescription" rows="4" required
+                            placeholder="Please describe your tattoo idea in detail, including any reference images or specific elements you'd like to include."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="colorPreference">Color Preference*</label>
+                        <select id="colorPreference" name="colorPreference" required>
+                            <option value="">Select Preference</option>
+                            <option value="color">Full Color</option>
+                            <option value="black_and_grey">Black and Grey</option>
+                            <option value="black_only">Black Only</option>
+                            <option value="undecided">Undecided (Will discuss with artist)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="additionalNotes">Additional Notes (Optional)</label>
+                        <textarea id="additionalNotes" name="additionalNotes" rows="3"
+                            placeholder="Any additional information you'd like to share (e.g., scheduling flexibility, specific concerns, etc.)"></textarea>
                     </div>
 
-                    <div class="form-section policy-section">
-                        <h3>Cancellation Policy</h3>
-                        <div class="policy-text">
-                            <p>Please read our cancellation policy carefully:</p>
-                            <ul>
-                                <li>A 24-hour notice is required for all cancellations.</li>
-                                <li>To cancel your appointment, use the cancellation link provided in your confirmation email.</li>
-                                <li>For questions or rescheduling, contact us at senghakmad@gmail.com or call/text (651) 592-5122.</li>
-                                <li>We appreciate your courtesy in notifying us of any changes to your appointment.</li>
-                            </ul>
-                        </div>
-                        <div class="form-group policy-agreement">
-                            <input type="checkbox" name="policy_agreement" id="policy_agreement" required>
-                            <label for="policy_agreement">I understand and agree to the cancellation policy</label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn">Request Consultation</button>
+                    <button type="submit">Book Appointment</button>
                 </form>
             </div>
         </section>
@@ -473,7 +471,7 @@
                 const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?` + 
                     `id=${bookingId}&` +
                     `email=${encodeURIComponent(document.getElementById('client_email').value)}&` +
-                    `name=${encodeURIComponent(document.getElementById('client_name').value)}&` +
+                    `name=${encodeURIComponent(document.getElementById('client_first_name').value + ' ' + document.getElementById('client_last_name').value)}&` +
                     `date=${encodeURIComponent(formatDate(document.getElementById('datePicker').value))}&` +
                     `time=${encodeURIComponent(document.getElementById('timeSlot').value)}&` +
                     `type=${encodeURIComponent(document.getElementById('tattooType').value)}&` +
@@ -485,7 +483,7 @@
                 const clientAge = isOver18(birthDate) ? Math.floor((new Date() - new Date(birthDate)) / (365.25 * 24 * 60 * 60 * 1000)) : 'Under 18';
 
                 // Get form values
-                const clientName = document.getElementById('client_name').value;
+                const clientName = document.getElementById('client_first_name').value + ' ' + document.getElementById('client_last_name').value;
                 const clientEmail = document.getElementById('client_email').value;
                 const clientPhone = document.getElementById('client_phone').value;
                 const clientGender = document.getElementById('client_gender').value;
