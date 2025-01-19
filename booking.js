@@ -119,12 +119,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     console.log('Preparing to send emails...');
 
-                    // Prepare template parameters
-                    const shopTemplateParams = {
-                        service_id: "service_2e752is",
-                        template_id: "template_tukgt7p",
-                        user_id: "nqLDVniO3BUlQ-e1n",
-                        template_params: {
+                    // Send notification to shop first
+                    console.log('Sending shop notification...');
+                    await emailjs.send(
+                        "service_2e752is",
+                        "template_tukgt7p",
+                        {
                             client_name: data.clientName,
                             client_email: data.clientEmail,
                             client_phone: data.clientPhone,
@@ -141,13 +141,16 @@ document.addEventListener('DOMContentLoaded', function() {
                             subject: "New Tattoo Appointment Request",
                             message: `New Booking Request\n\nClient Information:\nName: ${data.clientName}\nEmail: ${data.clientEmail}\nPhone: ${data.clientPhone}\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nDescription: ${data.tattooDescription}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}`
                         }
-                    };
+                    );
+                    console.log('Shop notification sent successfully');
 
-                    const clientTemplateParams = {
-                        service_id: "service_2e752is",
-                        template_id: "template_gowinjb",
-                        user_id: "nqLDVniO3BUlQ-e1n",
-                        template_params: {
+                    // Then send confirmation to client
+                    console.log('Sending client confirmation...');
+                    console.log('Client email:', data.clientEmail);
+                    await emailjs.send(
+                        "service_2e752is",
+                        "template_gowinjb",
+                        {
                             to_name: data.clientName,
                             to_email: data.clientEmail,
                             from_name: "Inked by Chris",
@@ -155,63 +158,42 @@ document.addEventListener('DOMContentLoaded', function() {
                             subject: "Your Tattoo Appointment Confirmation",
                             message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}\n\nYou can manage your appointment using these links:\nReschedule: https://inkedbychris.com/?reschedule=${data.originalBookingId}#booking\nCancel: https://inkedbychris.com/cancel.html?id=${data.originalBookingId}`
                         }
-                    };
+                    );
+                    console.log('Client confirmation sent successfully');
 
-                    try {
-                        // Send notification to shop first
-                        console.log('Sending shop notification...');
-                        await emailjs.sendForm(
-                            'service_2e752is',
-                            'template_tukgt7p',
-                            shopTemplateParams.template_params,
-                            'nqLDVniO3BUlQ-e1n'
-                        );
-                        console.log('Shop notification sent successfully');
-
-                        // Then send confirmation to client
-                        console.log('Sending client confirmation...');
-                        console.log('Client email:', data.clientEmail);
-                        await emailjs.sendForm(
-                            'service_2e752is',
-                            'template_gowinjb',
-                            clientTemplateParams.template_params,
-                            'nqLDVniO3BUlQ-e1n'
-                        );
-                        console.log('Client confirmation sent successfully');
-
-                        // Show success message
-                        const successDiv = document.createElement('div');
-                        successDiv.className = 'success-message';
-                        successDiv.innerHTML = `
-                            <h3>Booking Successful!</h3>
-                            <p>Your appointment has been scheduled for ${formattedDate} at ${data.preferredTime}.</p>
-                            <p>A confirmation email has been sent to ${data.clientEmail}.</p>
-                            <p>Your booking ID is: ${data.originalBookingId}</p>
-                        `;
-                        bookingForm.replaceWith(successDiv);
-
-                    } catch (error) {
-                        console.error('Email error details:', error);
-                        throw new Error('Email sending failed: ' + error.message);
-                    }
+                    // Show success message
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'success-message';
+                    successDiv.innerHTML = `
+                        <h3>Booking Successful!</h3>
+                        <p>Your appointment has been scheduled for ${formattedDate} at ${data.preferredTime}.</p>
+                        <p>A confirmation email has been sent to ${data.clientEmail}.</p>
+                        <p>Your booking ID is: ${data.originalBookingId}</p>
+                    `;
+                    bookingForm.replaceWith(successDiv);
 
                 } catch (error) {
-                    console.error('Full error details:', error);
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'error-message';
-                    errorDiv.innerHTML = `
-                        <h3>Booking Error</h3>
-                        <p>Sorry, there was an error processing your booking: ${error.message}</p>
-                        <p>Please try again or contact us directly:</p>
-                        <p><strong>Email:</strong> senghakmad@gmail.com</p>
-                        <p><strong>Phone:</strong> (651) 592-5122</p>
-                        <div class="booking-options">
-                            <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
-                        </div>`;
-                    
-                    submitButton.parentNode.insertBefore(errorDiv, submitButton);
-                    submitButton.style.display = 'none';
+                    console.error('Email error details:', error);
+                    throw new Error('Email sending failed: ' + error.message);
                 }
+
+            } catch (error) {
+                console.error('Full error details:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.innerHTML = `
+                    <h3>Booking Error</h3>
+                    <p>Sorry, there was an error processing your booking: ${error.message}</p>
+                    <p>Please try again or contact us directly:</p>
+                    <p><strong>Email:</strong> senghakmad@gmail.com</p>
+                    <p><strong>Phone:</strong> (651) 592-5122</p>
+                    <div class="booking-options">
+                        <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
+                    </div>`;
+                
+                submitButton.parentNode.insertBefore(errorDiv, submitButton);
+                submitButton.style.display = 'none';
+            }
 
             } catch (error) {
                 console.error('Booking error:', error);
