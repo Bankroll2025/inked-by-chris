@@ -157,94 +157,40 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     };
 
-                    console.log('Shop template params:', shopTemplateParams);
-                    console.log('Client template params:', clientTemplateParams);
-
                     try {
-                        // Send notification to shop using fetch directly
+                        // Send notification to shop first
                         console.log('Sending shop notification...');
-                        const shopResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(shopTemplateParams)
-                        });
-                        
-                        if (!shopResponse.ok) {
-                            const errorText = await shopResponse.text();
-                            console.error('Shop email error response:', errorText);
-                            throw new Error(`Shop email failed: ${errorText || shopResponse.statusText}`);
-                        }
+                        await emailjs.send(
+                            shopTemplateParams.service_id,
+                            shopTemplateParams.template_id,
+                            shopTemplateParams.template_params
+                        );
                         console.log('Shop notification sent successfully');
 
-                        // Send confirmation to client using fetch directly
+                        // Then send confirmation to client
                         console.log('Sending client confirmation...');
                         console.log('Client email:', data.clientEmail);
-                        console.log('Full client template params:', JSON.stringify(clientTemplateParams, null, 2));
-                        
-                        const clientResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(clientTemplateParams)
-                        });
-
-                        if (!clientResponse.ok) {
-                            const errorText = await clientResponse.text();
-                            console.error('Client email error response:', errorText);
-                            throw new Error(`Client email failed: ${errorText || clientResponse.statusText}`);
-                        }
+                        await emailjs.send(
+                            clientTemplateParams.service_id,
+                            clientTemplateParams.template_id,
+                            clientTemplateParams.template_params
+                        );
                         console.log('Client confirmation sent successfully');
 
                         // Show success message
                         const successDiv = document.createElement('div');
                         successDiv.className = 'success-message';
                         successDiv.innerHTML = `
-                            <h3>Booking Confirmed!</h3>
-                            <p>Thank you for choosing Inked by Chris!</p>
-                            
-                            <div class="confirmation-details">
-                                <h4>Appointment Details</h4>
-                                <ul>
-                                    <li><strong>Date:</strong> ${formattedDate}</li>
-                                    <li><strong>Time:</strong> ${data.preferredTime}</li>
-                                    <li><strong>Booking ID:</strong> ${data.originalBookingId}</li>
-                                </ul>
-                                
-                                <h4>Tattoo Details</h4>
-                                <ul>
-                                    <li><strong>Type:</strong> ${data.tattooType}</li>
-                                    <li><strong>Size:</strong> ${data.tattooSize}</li>
-                                    <li><strong>Placement:</strong> ${data.tattooPlacement}</li>
-                                    <li><strong>Color Preference:</strong> ${data.colorPreference}</li>
-                                </ul>
-                                
-                                <h4>Your Information</h4>
-                                <ul>
-                                    <li><strong>Name:</strong> ${data.clientName}</li>
-                                    <li><strong>Email:</strong> ${data.clientEmail}</li>
-                                    <li><strong>Phone:</strong> ${data.clientPhone}</li>
-                                </ul>
-                            </div>
-                            
-                            <div class="appointment-actions">
-                                <h4>Manage Your Appointment</h4>
-                                <div class="action-buttons">
-                                    <a href="/?reschedule=${data.originalBookingId}#booking" class="reschedule-btn">Reschedule Appointment</a>
-                                    <a href="/cancel.html?id=${data.originalBookingId}" class="cancel-btn">Cancel Appointment</a>
-                                </div>
-                            </div>`;
-                        
-                        bookingForm.innerHTML = '';
-                        bookingForm.appendChild(successDiv);
+                            <h3>Booking Successful!</h3>
+                            <p>Your appointment has been scheduled for ${formattedDate} at ${data.preferredTime}.</p>
+                            <p>A confirmation email has been sent to ${data.clientEmail}.</p>
+                            <p>Your booking ID is: ${data.originalBookingId}</p>
+                        `;
+                        bookingForm.replaceWith(successDiv);
 
-                    } catch (emailError) {
-                        console.error('Email error details:', emailError);
-                        const errorResponse = await emailError.response?.text();
-                        console.error('Email API response:', errorResponse);
-                        throw new Error(`Email sending failed: ${emailError.message}`);
+                    } catch (error) {
+                        console.error('Email error details:', error);
+                        throw new Error('Email sending failed: ' + error.message);
                     }
 
                 } catch (error) {
