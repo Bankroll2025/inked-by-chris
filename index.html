@@ -238,7 +238,12 @@
                             <input type="email" id="client_email" name="client_email" placeholder="Email Address" required>
                         </div>
                         <div class="form-group">
-                            <input type="tel" id="client_phone" name="client_phone" placeholder="Phone Number (xxx-xxx-xxxx)" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12" required>
+                            <label for="client_phone">Phone Number*</label>
+                            <input type="tel" id="client_phone" name="client_phone" required
+                                placeholder="123-456-7890"
+                                pattern="[0-9]{3}-?[0-9]{3}-?[0-9]{4}"
+                                title="Please enter a valid phone number in the format: 123-456-7890"
+                                maxlength="12">
                         </div>
                         <div class="form-group">
                             <select id="client_gender" name="client_gender" required>

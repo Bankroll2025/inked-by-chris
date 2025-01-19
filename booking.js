@@ -11,6 +11,45 @@ const timeSlots = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Phone number formatting
+    const phoneInput = document.getElementById('client_phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = value;
+                } else if (value.length <= 6) {
+                    value = value.slice(0, 3) + '-' + value.slice(3);
+                } else {
+                    value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6, 10);
+                }
+            }
+            e.target.value = value;
+        });
+
+        phoneInput.addEventListener('keydown', function(e) {
+            const cursorPosition = e.target.selectionStart;
+            const value = e.target.value;
+            
+            // Allow backspace when cursor is after a dash
+            if (e.key === 'Backspace' && value[cursorPosition - 1] === '-') {
+                e.preventDefault();
+                const newValue = value.slice(0, cursorPosition - 2) + value.slice(cursorPosition);
+                e.target.value = newValue;
+                e.target.setSelectionRange(cursorPosition - 2, cursorPosition - 2);
+            }
+            
+            // Allow delete when cursor is before a dash
+            if (e.key === 'Delete' && value[cursorPosition] === '-') {
+                e.preventDefault();
+                const newValue = value.slice(0, cursorPosition) + value.slice(cursorPosition + 2);
+                e.target.value = newValue;
+                e.target.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        });
+    }
+
     // Check for reschedule or cancel parameters
     const urlParams = new URLSearchParams(window.location.search);
     const rescheduleId = urlParams.get('reschedule');
