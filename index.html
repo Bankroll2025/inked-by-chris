@@ -371,14 +371,19 @@
         }
 
         // Format date for display
-        const formatDate = (dateStr) => {
-            return new Date(dateStr).toLocaleDateString('en-US', {
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return '';
+            
+            const options = { 
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
-            });
-        };
+            };
+            return date.toLocaleDateString('en-US', options);
+        }
 
         // Format gender for display
         const formatGender = (gender) => {
@@ -412,6 +417,12 @@
                     tattooDescription: formData.get('tattooDescription'),
                     additionalNotes: formData.get('additionalNotes')
                 };
+
+                // Validate required fields
+                if (!bookingData.appointment_date || !bookingData.appointment_time) {
+                    alert('Please select both appointment date and time');
+                    return;
+                }
                 
                 // Add booking ID
                 bookingData.bookingId = generateBookingId();
@@ -423,12 +434,19 @@
                     return;
                 }
 
+                // Format dates for display
+                const formattedAppointmentDate = formatDate(bookingData.appointment_date);
+                if (!formattedAppointmentDate) {
+                    alert('Invalid appointment date selected');
+                    return;
+                }
+
                 // Generate cancel URL
                 const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?` + 
                     `id=${bookingData.bookingId}&` +
                     `email=${encodeURIComponent(bookingData.email)}&` +
                     `name=${encodeURIComponent(bookingData.client_first_name + ' ' + bookingData.client_last_name)}&` +
-                    `date=${encodeURIComponent(formatDate(bookingData.appointment_date))}&` +
+                    `date=${encodeURIComponent(formattedAppointmentDate)}&` +
                     `time=${encodeURIComponent(bookingData.appointment_time)}`;
 
                 // Send email using EmailJS
@@ -438,7 +456,7 @@
                     to_email: bookingData.email,
                     reply_to: "senghakmad@gmail.com",
                     booking_id: bookingData.bookingId,
-                    booking_date: formatDate(bookingData.appointment_date),
+                    booking_date: formattedAppointmentDate,
                     booking_time: bookingData.appointment_time,
                     tattoo_type: bookingData.tattooType,
                     tattoo_size: bookingData.tattooSize,
@@ -462,18 +480,6 @@
             }
         });
 
-        // Format helpers
-        function formatPhoneNumber(phone) {
-            const cleaned = phone.toString().replace(/\D/g, '');
-            const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-            if (match) {
-                return '(' + match[1] + ') ' + match[2] + '-' + match[3];
-            }
-            return phone;
-        }
-    </script>
-
-    <script>
         // Initialize Flatpickr
         const datePicker = flatpickr("#appointment_date", {
             minDate: "today",
@@ -481,15 +487,20 @@
             disable: [
                 function(date) {
                     // Disable Sundays and Mondays
-                    return (date.getDay() === 0 || date.getDay() === 1);
+                    return date.getDay() === 0 || date.getDay() === 1;
                 }
             ],
-            locale: {
-                firstDayOfWeek: 1 // Start week on Monday
-            },
-            disableMobile: false, // Enable custom calendar on mobile
-            static: true,
-            theme: "dark"
+            onChange: function(selectedDates, dateStr, instance) {
+                // Validate selected date
+                if (selectedDates[0]) {
+                    const selected = selectedDates[0];
+                    const today = new Date();
+                    if (selected < today) {
+                        instance.clear();
+                        alert('Please select a future date');
+                    }
+                }
+            }
         });
     </script>
 
