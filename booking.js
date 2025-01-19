@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Send confirmation to client's email only
                     console.log('Sending client confirmation...');
+                    console.log('Client email:', data.clientEmail);
                     const clientResponse = await emailjs.send(
                         "service_2e752is",
                         "template_gowinjb",
@@ -157,12 +158,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_placement: data.tattooPlacement,
                             color_preference: data.colorPreference,
                             booking_id: data.bookingId,
-                            website_link: "https://inkedbychris.netlify.app",
-                            subject: `Your Tattoo Appointment Confirmed - ${formattedDate} at ${data.preferredTime}`
+                            website_link: "https://inkedbychris.com",  // Update website URL
+                            subject: `Your Tattoo Appointment Confirmed - ${formattedDate} at ${data.preferredTime}`,
+                            email_to: data.clientEmail
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
-                    console.log('Client confirmation sent successfully');
+                    console.log('Client confirmation sent successfully to:', data.clientEmail);
 
                     // Show success message
                     const successDiv = document.createElement('div');
