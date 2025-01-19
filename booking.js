@@ -87,8 +87,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 try {
+                    // First send notification to shop
+                    console.log('Sending shop notification...');
+                    const shopResponse = await emailjs.send(
+                        "service_2e752is",
+                        "template_tukgt7p",
+                        {
+                            to_name: "Chris",
+                            from_name: `${data.clientFirstName} ${data.clientLastName}`,
+                            to_email: "senghakmad@gmail.com",
+                            reply_to: data.clientEmail,
+                            client_name: `${data.clientFirstName} ${data.clientLastName}`,
+                            client_email: data.clientEmail,
+                            client_phone: data.clientPhone,
+                            appointment_date: formattedDate,
+                            appointment_time: data.preferredTime,
+                            tattoo_type: data.tattooType,
+                            tattoo_size: data.tattooSize,
+                            tattoo_placement: data.tattooPlacement,
+                            tattoo_description: data.tattooDescription,
+                            color_preference: data.colorPreference,
+                            booking_id: data.bookingId
+                        },
+                        "nqLDVniO3BUlQ-e1n"
+                    );
+                    console.log('Shop notification sent successfully');
+
+                    // Then send confirmation to client
                     console.log('Sending client confirmation...');
-                    console.log('Client email:', data.clientEmail);
                     const clientResponse = await emailjs.send(
                         "service_2e752is",
                         "template_gowinjb",
@@ -104,11 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_placement: data.tattooPlacement,
                             color_preference: data.colorPreference,
                             booking_id: data.bookingId,
-                            website_link: "https://inkedbychris.com"
+                            website_link: "https://inkedbychris.netlify.app"
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
-                    console.log('Client notification response:', clientResponse);
                     console.log('Client confirmation sent successfully');
 
                     // Show success message
