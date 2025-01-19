@@ -121,7 +121,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Send notification to shop first
                     console.log('Sending shop notification...');
-                    await emailjs.send(
+                    console.log('Shop template params:', {
+                        service_id: "service_2e752is",
+                        template_id: "template_tukgt7p",
+                        user_id: "nqLDVniO3BUlQ-e1n",
+                        template_params: {
+                            client_name: data.clientName,
+                            client_email: data.clientEmail,
+                            client_phone: data.clientPhone,
+                            appointment_date: formattedDate,
+                            appointment_time: data.preferredTime,
+                            tattoo_type: data.tattooType,
+                            tattoo_size: data.tattooSize,
+                            tattoo_placement: data.tattooPlacement,
+                            tattoo_description: data.tattooDescription,
+                            color_preference: data.colorPreference,
+                            booking_id: data.originalBookingId,
+                            to_name: "Chris",
+                            to_email: "senghakmad@gmail.com",
+                            subject: "New Tattoo Appointment Request"
+                        }
+                    });
+
+                    const shopResponse = await emailjs.send(
                         "service_2e752is",
                         "template_tukgt7p",
                         {
@@ -143,12 +165,26 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
+                    console.log('Shop notification response:', shopResponse);
                     console.log('Shop notification sent successfully');
 
                     // Then send confirmation to client
                     console.log('Sending client confirmation...');
                     console.log('Client email:', data.clientEmail);
-                    await emailjs.send(
+                    console.log('Client template params:', {
+                        service_id: "service_2e752is",
+                        template_id: "template_gowinjb",
+                        user_id: "nqLDVniO3BUlQ-e1n",
+                        template_params: {
+                            to_name: data.clientName,
+                            to_email: data.clientEmail,
+                            from_name: "Inked by Chris",
+                            reply_to: "senghakmad@gmail.com",
+                            subject: "Your Tattoo Appointment Confirmation"
+                        }
+                    });
+
+                    const clientResponse = await emailjs.send(
                         "service_2e752is",
                         "template_gowinjb",
                         {
@@ -161,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
+                    console.log('Client notification response:', clientResponse);
                     console.log('Client confirmation sent successfully');
 
                     // Both emails sent successfully, show success message
@@ -176,6 +213,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 } catch (error) {
                     console.error('Email error details:', error);
+                    console.error('Error name:', error.name);
+                    console.error('Error message:', error.message);
+                    if (error.response) {
+                        console.error('Error response:', await error.response.text());
+                    }
+
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-message';
                     errorDiv.innerHTML = `
