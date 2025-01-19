@@ -160,20 +160,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     try {
                         // Send notification to shop first
                         console.log('Sending shop notification...');
-                        await emailjs.send(
-                            shopTemplateParams.service_id,
-                            shopTemplateParams.template_id,
-                            shopTemplateParams.template_params
+                        await emailjs.sendForm(
+                            'service_2e752is',
+                            'template_tukgt7p',
+                            shopTemplateParams.template_params,
+                            'nqLDVniO3BUlQ-e1n'
                         );
                         console.log('Shop notification sent successfully');
 
                         // Then send confirmation to client
                         console.log('Sending client confirmation...');
                         console.log('Client email:', data.clientEmail);
-                        await emailjs.send(
-                            clientTemplateParams.service_id,
-                            clientTemplateParams.template_id,
-                            clientTemplateParams.template_params
+                        await emailjs.sendForm(
+                            'service_2e752is',
+                            'template_gowinjb',
+                            clientTemplateParams.template_params,
+                            'nqLDVniO3BUlQ-e1n'
                         );
                         console.log('Client confirmation sent successfully');
 
