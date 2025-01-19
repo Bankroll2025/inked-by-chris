@@ -410,34 +410,28 @@
                     return;
                 }
 
-                // Format data for email
-                const emailData = {
-                    bookingId: bookingData.bookingId,
-                    clientName: `${bookingData.client_first_name} ${bookingData.client_last_name}`,
-                    clientEmail: bookingData.client_email,
-                    clientPhone: bookingData.client_phone,
-                    appointmentDate: formatDate(bookingData.preferred_date),
-                    appointmentTime: bookingData.preferred_time,
-                    tattooDescription: bookingData.tattooDescription,
-                    tattooSize: bookingData.tattooSize,
-                    tattooPlacement: bookingData.tattooPlacement,
-                    gender: formatGender(bookingData.client_gender),
-                    birthdate: formatDate(bookingData.client_birthdate),
-                    additionalInfo: bookingData.additionalNotes || 'None provided'
-                };
+                // Generate cancel URL
+                const cancelUrl = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'))}/cancel.html?` + 
+                    `id=${bookingData.bookingId}&` +
+                    `email=${encodeURIComponent(bookingData.client_email)}&` +
+                    `name=${encodeURIComponent(bookingData.client_first_name + ' ' + bookingData.client_last_name)}&` +
+                    `date=${encodeURIComponent(formatDate(bookingData.preferred_date))}&` +
+                    `time=${encodeURIComponent(bookingData.preferred_time)}`;
 
-                // Send booking confirmation email
-                const emailResponse = await fetch('/send-booking-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(emailData)
+                // Send email using EmailJS
+                await emailjs.send('service_3pilkcs', 'template_gowinjb', {
+                    to_name: `${bookingData.client_first_name} ${bookingData.client_last_name}`,
+                    from_name: "Inked by Chris",
+                    to_email: bookingData.client_email,
+                    reply_to: "senghakmad@gmail.com",
+                    booking_id: bookingData.bookingId,
+                    booking_date: formatDate(bookingData.preferred_date),
+                    booking_time: bookingData.preferred_time,
+                    tattoo_type: bookingData.tattooType,
+                    tattoo_size: bookingData.tattooSize,
+                    tattoo_placement: bookingData.tattooPlacement,
+                    cancel_url: cancelUrl
                 });
-
-                if (!emailResponse.ok) {
-                    throw new Error('Failed to send email confirmation');
-                }
 
                 // Show success message and reset form
                 alert('Booking request sent successfully! Please check your email for confirmation.');
@@ -445,7 +439,7 @@
                 window.location.href = '#home';
             } catch (error) {
                 console.error('Error processing booking:', error);
-                alert('There was an error processing your booking. Please try again or contact us directly.');
+                alert('There was an error sending your booking confirmation. Please try again or contact us directly.');
             }
         });
 
