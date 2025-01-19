@@ -19,9 +19,18 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            emailjs.init({
-                publicKey: "nqLDVniO3BUlQ-e1n",
-            });
+            try {
+                emailjs.init({
+                    publicKey: "nqLDVniO3BUlQ-e1n",
+                    blockHeadless: false,
+                    limitRate: {
+                        throttle: 10000 // 10s
+                    }
+                });
+                console.log('EmailJS initialized successfully');
+            } catch (error) {
+                console.error('EmailJS initialization error:', error);
+            }
         })();
     </script>
     
@@ -354,9 +363,18 @@
     <script>
         // Initialize EmailJS
         (function() {
-            emailjs.init({
-                publicKey: "nqLDVniO3BUlQ-e1n",
-            });
+            try {
+                emailjs.init({
+                    publicKey: "nqLDVniO3BUlQ-e1n",
+                    blockHeadless: false,
+                    limitRate: {
+                        throttle: 10000 // 10s
+                    }
+                });
+                console.log('EmailJS initialized successfully');
+            } catch (error) {
+                console.error('EmailJS initialization error:', error);
+            }
         })();
 
         // Generate a unique booking ID

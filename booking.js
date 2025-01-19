@@ -121,32 +121,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Send notification to shop first
                     console.log('Sending shop notification...');
-                    console.log('Shop template params:', {
-                        service_id: "service_2e752is",
-                        template_id: "template_tukgt7p",
-                        user_id: "nqLDVniO3BUlQ-e1n",
-                        template_params: {
-                            client_name: data.clientName,
-                            client_email: data.clientEmail,
-                            client_phone: data.clientPhone,
-                            appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
-                            tattoo_type: data.tattooType,
-                            tattoo_size: data.tattooSize,
-                            tattoo_placement: data.tattooPlacement,
-                            tattoo_description: data.tattooDescription,
-                            color_preference: data.colorPreference,
-                            booking_id: data.originalBookingId,
-                            to_name: "Chris",
-                            to_email: "senghakmad@gmail.com",
-                            subject: "New Tattoo Appointment Request"
-                        }
-                    });
-
                     const shopResponse = await emailjs.send(
                         "service_2e752is",
                         "template_tukgt7p",
                         {
+                            to_name: "Chris",
+                            to_email: "senghakmad@gmail.com",
+                            from_name: data.clientName,
+                            reply_to: data.clientEmail,
                             client_name: data.clientName,
                             client_email: data.clientEmail,
                             client_phone: data.clientPhone,
@@ -157,13 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_placement: data.tattooPlacement,
                             tattoo_description: data.tattooDescription,
                             color_preference: data.colorPreference,
-                            booking_id: data.originalBookingId,
-                            to_name: "Chris",
-                            to_email: "senghakmad@gmail.com",
-                            subject: "New Tattoo Appointment Request",
-                            message: `New Booking Request\n\nClient Information:\nName: ${data.clientName}\nEmail: ${data.clientEmail}\nPhone: ${data.clientPhone}\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nDescription: ${data.tattooDescription}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}`
-                        },
-                        "nqLDVniO3BUlQ-e1n"
+                            booking_id: data.originalBookingId
+                        }
                     );
                     console.log('Shop notification response:', shopResponse);
                     console.log('Shop notification sent successfully');
@@ -171,19 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Then send confirmation to client
                     console.log('Sending client confirmation...');
                     console.log('Client email:', data.clientEmail);
-                    console.log('Client template params:', {
-                        service_id: "service_2e752is",
-                        template_id: "template_gowinjb",
-                        user_id: "nqLDVniO3BUlQ-e1n",
-                        template_params: {
-                            to_name: data.clientName,
-                            to_email: data.clientEmail,
-                            from_name: "Inked by Chris",
-                            reply_to: "senghakmad@gmail.com",
-                            subject: "Your Tattoo Appointment Confirmation"
-                        }
-                    });
-
                     const clientResponse = await emailjs.send(
                         "service_2e752is",
                         "template_gowinjb",
@@ -192,10 +156,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             to_email: data.clientEmail,
                             from_name: "Inked by Chris",
                             reply_to: "senghakmad@gmail.com",
-                            subject: "Your Tattoo Appointment Confirmation",
-                            message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}\n\nYou can manage your appointment using these links:\nReschedule: https://inkedbychris.com/?reschedule=${data.originalBookingId}#booking\nCancel: https://inkedbychris.com/cancel.html?id=${data.originalBookingId}`
-                        },
-                        "nqLDVniO3BUlQ-e1n"
+                            appointment_date: formattedDate,
+                            appointment_time: data.preferredTime,
+                            tattoo_type: data.tattooType,
+                            tattoo_size: data.tattooSize,
+                            tattoo_placement: data.tattooPlacement,
+                            color_preference: data.colorPreference,
+                            booking_id: data.originalBookingId
+                        }
                     );
                     console.log('Client notification response:', clientResponse);
                     console.log('Client confirmation sent successfully');
