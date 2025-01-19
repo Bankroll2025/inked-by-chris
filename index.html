@@ -19,18 +19,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            try {
-                emailjs.init({
-                    publicKey: "nqLDVniO3BUlQ-e1n",
-                    blockHeadless: false,
-                    limitRate: {
-                        throttle: 10000 // 10s
-                    }
-                });
-                console.log('EmailJS initialized successfully');
-            } catch (error) {
-                console.error('EmailJS initialization error:', error);
-            }
+            emailjs.init("nqLDVniO3BUlQ-e1n");
         })();
     </script>
     
