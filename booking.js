@@ -140,7 +140,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             to_email: "senghakmad@gmail.com",
                             subject: "New Tattoo Appointment Request",
                             message: `New Booking Request\n\nClient Information:\nName: ${data.clientName}\nEmail: ${data.clientEmail}\nPhone: ${data.clientPhone}\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nDescription: ${data.tattooDescription}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}`
-                        }
+                        },
+                        "nqLDVniO3BUlQ-e1n"
                     );
                     console.log('Shop notification sent successfully');
 
@@ -157,7 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             reply_to: "senghakmad@gmail.com",
                             subject: "Your Tattoo Appointment Confirmation",
                             message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}\n\nYou can manage your appointment using these links:\nReschedule: https://inkedbychris.com/?reschedule=${data.originalBookingId}#booking\nCancel: https://inkedbychris.com/cancel.html?id=${data.originalBookingId}`
-                        }
+                        },
+                        "nqLDVniO3BUlQ-e1n"
                     );
                     console.log('Client confirmation sent successfully');
 
