@@ -134,7 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             color_preference: data.colorPreference,
                             additional_notes: data.additionalNotes,
                             booking_id: data.bookingId,
-                            subject: `New Booking Request - ${data.clientFirstName} ${data.clientLastName} - ${formattedDate} at ${data.preferredTime}`
+                            subject: `New Booking - ${data.clientFirstName} ${data.clientLastName} - ${formattedDate} at ${data.preferredTime}`,
+                            appointment_details: `Date: ${formattedDate}\nTime: ${data.preferredTime}`
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
