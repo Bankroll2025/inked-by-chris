@@ -149,9 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         user_id: "nqLDVniO3BUlQ-e1n",
                         template_params: {
                             to_name: data.clientName,
-                            reply_to: data.clientEmail,
-                            to: data.clientEmail,
+                            to_email: data.clientEmail,
                             from_name: "Inked by Chris",
+                            reply_to: "senghakmad@gmail.com",
                             subject: "Your Tattoo Appointment Confirmation",
                             message: `Your tattoo appointment has been confirmed!\n\nAppointment Details:\nDate: ${formattedDate}\nTime: ${data.preferredTime}\n\nTattoo Details:\nType: ${data.tattooType}\nSize: ${data.tattooSize}\nPlacement: ${data.tattooPlacement}\nColor Preference: ${data.colorPreference}\n\nBooking ID: ${data.originalBookingId}\n\nYou can manage your appointment using these links:\nReschedule: https://inkedbychris.com/?reschedule=${data.originalBookingId}#booking\nCancel: https://inkedbychris.com/cancel.html?id=${data.originalBookingId}`
                         }
@@ -172,13 +172,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                         
                         if (!shopResponse.ok) {
-                            throw new Error(`Shop email failed: ${shopResponse.statusText}`);
+                            const errorText = await shopResponse.text();
+                            console.error('Shop email error response:', errorText);
+                            throw new Error(`Shop email failed: ${errorText || shopResponse.statusText}`);
                         }
                         console.log('Shop notification sent successfully');
 
                         // Send confirmation to client using fetch directly
                         console.log('Sending client confirmation...');
-                        console.log('Client email:', data.clientEmail); 
+                        console.log('Client email:', data.clientEmail);
+                        console.log('Full client template params:', JSON.stringify(clientTemplateParams, null, 2));
+                        
                         const clientResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
                             method: 'POST',
                             headers: {
