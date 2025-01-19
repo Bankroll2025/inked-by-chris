@@ -1406,7 +1406,8 @@ footer {
 
 /* Legal Pages Styles */
 .legal-content {
-    padding: 80px 0;
+    padding-top: 120px; /* Increased padding to account for fixed header */
+    padding-bottom: 80px;
     background: var(--bg-color);
     min-height: calc(100vh - 200px);
 }
@@ -1422,6 +1423,8 @@ footer {
     font-size: 2.5em;
     margin-bottom: 30px;
     text-align: center;
+    position: relative; /* Ensure it's above other elements */
+    z-index: 1; /* Prevent overlap with header */
 }
 
 .legal-content h2 {
