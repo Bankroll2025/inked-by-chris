@@ -130,10 +130,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_type: data.tattooType,
                             tattoo_size: data.tattooSize,
                             tattoo_placement: data.tattooPlacement,
-                            tattoo_description: data.tattooDescription,
+                            tattoo_description: data.tattooDescription || 'Not provided',
                             color_preference: data.colorPreference,
                             additional_notes: data.additionalNotes,
-                            booking_id: data.bookingId
+                            booking_id: data.bookingId,
+                            subject: `New Booking Request - ${data.clientFirstName} ${data.clientLastName} - ${formattedDate} at ${data.preferredTime}`
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
@@ -156,7 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_placement: data.tattooPlacement,
                             color_preference: data.colorPreference,
                             booking_id: data.bookingId,
-                            website_link: "https://inkedbychris.netlify.app"
+                            website_link: "https://inkedbychris.netlify.app",
+                            subject: `Booking Confirmation - ${formattedDate} at ${data.preferredTime}`
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
