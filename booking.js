@@ -11,100 +11,44 @@ const timeSlots = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize flatpickr
+    const datePicker = flatpickr("#preferred_date", {
+        minDate: "today",
+        disable: [
+            function(date) {
+                return (date.getDay() === 0); // Disable Sundays
+            }
+        ],
+        dateFormat: "Y-m-d"
+    });
+
     // Phone number formatting
     const phoneInput = document.getElementById('client_phone');
     if (phoneInput) {
         phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 0) {
-                if (value.length <= 3) {
-                    value = value;
-                } else if (value.length <= 6) {
-                    value = value.slice(0, 3) + '-' + value.slice(3);
-                } else {
-                    value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6, 10);
-                }
+            let value = e.target.value.replace(/\D/g, '').substring(0, 10);
+            if (value.length >= 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{3})(\d{0,3})/, "$1-$2");
             }
             e.target.value = value;
         });
 
         phoneInput.addEventListener('keydown', function(e) {
-            const cursorPosition = e.target.selectionStart;
-            const value = e.target.value;
-            
-            // Allow backspace when cursor is after a dash
-            if (e.key === 'Backspace' && value[cursorPosition - 1] === '-') {
-                e.preventDefault();
-                const newValue = value.slice(0, cursorPosition - 2) + value.slice(cursorPosition);
-                e.target.value = newValue;
-                e.target.setSelectionRange(cursorPosition - 2, cursorPosition - 2);
-            }
-            
-            // Allow delete when cursor is before a dash
-            if (e.key === 'Delete' && value[cursorPosition] === '-') {
-                e.preventDefault();
-                const newValue = value.slice(0, cursorPosition) + value.slice(cursorPosition + 2);
-                e.target.value = newValue;
-                e.target.setSelectionRange(cursorPosition, cursorPosition);
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                let value = e.target.value;
+                if (value.length === 8 || value.length === 4) { // Position right after a dash
+                    if (e.key === 'Backspace') {
+                        e.target.value = value.slice(0, -1);
+                        e.preventDefault();
+                    }
+                }
             }
         });
     }
 
-    // Check for reschedule or cancel parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const rescheduleId = urlParams.get('reschedule');
-    const cancelId = urlParams.get('cancel');
-    
-    if (rescheduleId) {
-        // Handle reschedule
-        const bookingSection = document.getElementById('booking');
-        if (bookingSection) {
-            bookingSection.scrollIntoView({ behavior: 'smooth' });
-            const message = document.createElement('div');
-            message.className = 'info-message';
-            message.innerHTML = `
-                <p>You're rescheduling appointment: ${rescheduleId}</p>
-                <p>Please select your new preferred date and time below.</p>
-            `;
-            const bookingForm = document.getElementById('bookingForm');
-            if (bookingForm) {
-                bookingForm.insertBefore(message, bookingForm.firstChild);
-            }
-        }
-    } else if (cancelId) {
-        // Handle cancellation
-        window.location.href = `/cancel.html?id=${cancelId}`;
-    }
-
-    // Initialize Flatpickr calendar
-    const datePicker = flatpickr("#datePicker", {
-        minDate: "today",
-        maxDate: new Date().fp_incr(30),
-        disable: [
-            function(date) {
-                return date.getDay() === 0 || date.getDay() === 1;
-            }
-        ],
-        locale: {
-            firstDayOfWeek: 1
-        },
-        onChange: function(selectedDates, dateStr) {
-            updateAvailableTimeSlots(dateStr);
-        }
-    });
-
-    // Populate time slots
-    const timeSlotSelect = document.getElementById('timeSlot');
-    if (timeSlotSelect) {
-        timeSlots.forEach(slot => {
-            const option = document.createElement('option');
-            option.value = slot;
-            option.textContent = slot;
-            timeSlotSelect.appendChild(option);
-        });
-    }
-
-    // Handle form submission
+    // Booking form submission
     const bookingForm = document.getElementById('bookingForm');
     if (bookingForm) {
         bookingForm.addEventListener('submit', async function(e) {
@@ -115,10 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
             submitButton.disabled = true;
 
             try {
-                const bookingId = generateBookingId();
-                const formData = new FormData(this);
-                
-                // Get all form data
+                // Get form data
+                const formData = new FormData(bookingForm);
                 const data = {
                     clientFirstName: formData.get('client_first_name'),
                     clientLastName: formData.get('client_last_name'),
@@ -134,59 +76,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     tattooDescription: formData.get('tattooDescription'),
                     colorPreference: formData.get('colorPreference') || 'Not specified',
                     additionalNotes: formData.get('additionalNotes') || 'None',
-                    bookingId: bookingId,
-                    isReschedule: rescheduleId ? true : false,
-                    originalBookingId: rescheduleId || bookingId
+                    bookingId: generateBookingId()
                 };
 
-                // Calculate age
-                const birthDate = new Date(data.clientBirthdate);
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const m = today.getMonth() - birthDate.getMonth();
-                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-
-                // Format date for display
                 const formattedDate = new Date(data.preferredDate).toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                 });
-
+                
                 try {
-                    console.log('Preparing to send emails...');
-
-                    // Send notification to shop first
-                    console.log('Sending shop notification...');
-                    const shopResponse = await emailjs.send(
-                        "service_2e752is",
-                        "template_tukgt7p",
-                        {
-                            to_name: "Chris",
-                            to_email: "senghakmad@gmail.com",
-                            from_name: `${data.clientFirstName} ${data.clientLastName}`,
-                            reply_to: data.clientEmail,
-                            client_name: `${data.clientFirstName} ${data.clientLastName}`,
-                            client_email: data.clientEmail,
-                            client_phone: data.clientPhone,
-                            appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
-                            tattoo_type: data.tattooType,
-                            tattoo_size: data.tattooSize,
-                            tattoo_placement: data.tattooPlacement,
-                            tattoo_description: data.tattooDescription,
-                            color_preference: data.colorPreference,
-                            booking_id: data.originalBookingId
-                        },
-                        "nqLDVniO3BUlQ-e1n"
-                    );
-                    console.log('Shop notification response:', shopResponse);
-                    console.log('Shop notification sent successfully');
-
-                    // Then send confirmation to client
                     console.log('Sending client confirmation...');
                     console.log('Client email:', data.clientEmail);
                     const clientResponse = await emailjs.send(
@@ -203,21 +103,23 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_size: data.tattooSize,
                             tattoo_placement: data.tattooPlacement,
                             color_preference: data.colorPreference,
-                            booking_id: data.originalBookingId
+                            booking_id: data.bookingId,
+                            website_link: "https://inkedbychris.com"
                         },
                         "nqLDVniO3BUlQ-e1n"
                     );
                     console.log('Client notification response:', clientResponse);
                     console.log('Client confirmation sent successfully');
 
-                    // Both emails sent successfully, show success message
+                    // Show success message
                     const successDiv = document.createElement('div');
                     successDiv.className = 'success-message';
                     successDiv.innerHTML = `
                         <h3>Booking Successful!</h3>
                         <p>Your appointment has been scheduled for ${formattedDate} at ${data.preferredTime}.</p>
                         <p>A confirmation email has been sent to ${data.clientEmail}.</p>
-                        <p>Your booking ID is: ${data.originalBookingId}</p>
+                        <p>Your booking ID is: ${data.bookingId}</p>
+                        <button onclick="location.reload()" class="refresh-button">Book Another Appointment</button>
                     `;
                     bookingForm.replaceWith(successDiv);
 
@@ -233,16 +135,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     errorDiv.className = 'error-message';
                     errorDiv.innerHTML = `
                         <h3>Email Notification Error</h3>
-                        <p>Your appointment has been saved, but there was an error sending email notifications.</p>
-                        <p>Please save your booking information:</p>
+                        <p>There was an error sending the confirmation email. Please save your booking information:</p>
                         <div class="booking-details">
-                            <p><strong>Booking ID:</strong> ${data.originalBookingId}</p>
+                            <p><strong>Booking ID:</strong> ${data.bookingId}</p>
                             <p><strong>Date:</strong> ${formattedDate}</p>
                             <p><strong>Time:</strong> ${data.preferredTime}</p>
                         </div>
                         <p>Contact us to confirm your appointment:</p>
                         <p><strong>Email:</strong> senghakmad@gmail.com</p>
-                        <p><strong>Phone:</strong> (651) 592-5122</p>`;
+                        <p><strong>Phone:</strong> (651) 592-5122</p>
+                        <button onclick="location.reload()" class="refresh-button">Try Again</button>`;
                     
                     bookingForm.replaceWith(errorDiv);
                     throw error;
@@ -255,7 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h3>Booking Error</h3>
                     <p>There was an error processing your booking. Please try again or contact us directly.</p>
                     <p><strong>Email:</strong> senghakmad@gmail.com</p>
-                    <p><strong>Phone:</strong> (651) 592-5122</p>`;
+                    <p><strong>Phone:</strong> (651) 592-5122</p>
+                    <button onclick="location.reload()" class="refresh-button">Try Again</button>`;
                 bookingForm.replaceWith(errorDiv);
             } finally {
                 submitButton.textContent = 'Book Appointment';
@@ -263,15 +166,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Helper function to generate booking ID
+    function generateBookingId() {
+        const timestamp = new Date().getTime().toString().slice(-6);
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `BK${timestamp}${random}`;
+    }
 });
 
-function generateBookingId() {
-    const timestamp = Date.now().toString(36);
-    const random = Math.random().toString(36).substring(2, 7);
-    return `BK${timestamp}${random}`.toUpperCase();
+// Check for reschedule or cancel parameters
+const urlParams = new URLSearchParams(window.location.search);
+const rescheduleId = urlParams.get('reschedule');
+const cancelId = urlParams.get('cancel');
+    
+if (rescheduleId) {
+    // Handle reschedule
+    const bookingSection = document.getElementById('booking');
+    if (bookingSection) {
+        bookingSection.scrollIntoView({ behavior: 'smooth' });
+        const message = document.createElement('div');
+        message.className = 'info-message';
+        message.innerHTML = `
+            <p>You're rescheduling appointment: ${rescheduleId}</p>
+            <p>Please select your new preferred date and time below.</p>
+        `;
+        const bookingForm = document.getElementById('bookingForm');
+        if (bookingForm) {
+            bookingForm.insertBefore(message, bookingForm.firstChild);
+        }
+    }
+} else if (cancelId) {
+    // Handle cancellation
+    window.location.href = `/cancel.html?id=${cancelId}`;
 }
 
-function updateAvailableTimeSlots(selectedDate) {
-    // You can implement logic here to show/hide time slots based on availability
-    // For now, it just shows all time slots
+// Populate time slots
+const timeSlotSelect = document.getElementById('timeSlot');
+if (timeSlotSelect) {
+    timeSlots.forEach(slot => {
+        const option = document.createElement('option');
+        option.value = slot;
+        option.textContent = slot;
+        timeSlotSelect.appendChild(option);
+    });
 }
