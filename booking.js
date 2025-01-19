@@ -120,7 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Get all form data
                 const data = {
-                    clientName: formData.get('client_name'),
+                    clientFirstName: formData.get('client_first_name'),
+                    clientLastName: formData.get('client_last_name'),
                     clientEmail: formData.get('client_email'),
                     clientPhone: formData.get('client_phone'),
                     clientGender: formData.get('client_gender'),
@@ -166,9 +167,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         {
                             to_name: "Chris",
                             to_email: "senghakmad@gmail.com",
-                            from_name: data.clientName,
+                            from_name: `${data.clientFirstName} ${data.clientLastName}`,
                             reply_to: data.clientEmail,
-                            client_name: data.clientName,
+                            client_name: `${data.clientFirstName} ${data.clientLastName}`,
                             client_email: data.clientEmail,
                             client_phone: data.clientPhone,
                             appointment_date: formattedDate,
@@ -192,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         "service_2e752is",
                         "template_gowinjb",
                         {
-                            to_name: data.clientName,
+                            to_name: `${data.clientFirstName} ${data.clientLastName}`,
                             to_email: data.clientEmail,
                             from_name: "Inked by Chris",
                             reply_to: "senghakmad@gmail.com",
