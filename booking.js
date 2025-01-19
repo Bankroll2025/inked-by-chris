@@ -205,44 +205,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p><strong>Phone:</strong> (651) 592-5122</p>`;
                     
                     bookingForm.replaceWith(errorDiv);
-                    throw new Error('Email sending failed: ' + error.message);
+                    throw error;
                 }
-
             } catch (error) {
                 console.error('Full error details:', error);
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'error-message';
                 errorDiv.innerHTML = `
                     <h3>Booking Error</h3>
-                    <p>Sorry, there was an error processing your booking: ${error.message}</p>
-                    <p>Please try again or contact us directly:</p>
+                    <p>There was an error processing your booking. Please try again or contact us directly.</p>
                     <p><strong>Email:</strong> senghakmad@gmail.com</p>
-                    <p><strong>Phone:</strong> (651) 592-5122</p>
-                    <div class="booking-options">
-                        <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
-                    </div>`;
-                
-                submitButton.parentNode.insertBefore(errorDiv, submitButton);
-                submitButton.style.display = 'none';
-            }
-
-            } catch (error) {
-                console.error('Booking error:', error);
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'error-message';
-                errorDiv.innerHTML = `
-                    <h3>Booking Error</h3>
-                    <p>Sorry, there was an error processing your booking.</p>
-                    <p>Please try again or contact us directly:</p>
-                    <p><strong>Email:</strong> senghakmad@gmail.com</p>
-                    <p><strong>Phone:</strong> (651) 592-5122</p>
-                    <div class="booking-options">
-                        <button onclick="window.location.reload()" class="retry-btn">Try Again</button>
-                        <button onclick="window.location.href='index.html'" class="home-btn">Return to Homepage</button>
-                    </div>`;
-                
-                submitButton.parentNode.insertBefore(errorDiv, submitButton);
-                submitButton.style.display = 'none';
+                    <p><strong>Phone:</strong> (651) 592-5122</p>`;
+                bookingForm.replaceWith(errorDiv);
+            } finally {
+                submitButton.textContent = 'Book Appointment';
+                submitButton.disabled = false;
             }
         });
     }
