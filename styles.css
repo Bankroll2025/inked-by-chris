@@ -1879,12 +1879,24 @@ button[type="submit"]:hover::before {
 }
 
 /* Required Field Indicator */
-label::after {
-    content: "*";
+label[for="client_first_name"]::after,
+label[for="client_last_name"]::after,
+label[for="client_email"]::after,
+label[for="client_phone"]::after,
+label[for="client_gender"]::after,
+label[for="client_birthdate"]::after,
+label[for="preferred_date"]::after,
+label[for="preferred_time"]::after,
+label[for="tattooType"]::after,
+label[for="tattooSize"]::after,
+label[for="tattooPlacement"]::after,
+label[for="tattooDescription"]::after,
+label[for="colorPreference"]::after {
+    content: " *";
     color: var(--accent-color);
-    margin-left: 4px;
 }
 
+/* Remove asterisk from optional fields */
 label[for="additionalNotes"]::after {
     content: "";
 }

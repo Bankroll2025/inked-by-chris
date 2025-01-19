@@ -231,27 +231,24 @@
                 <form id="bookingForm">
                     <h3>Personal Information</h3>
                     <div class="form-group">
-                        <label for="client_first_name">First Name*</label>
+                        <label for="client_first_name">First Name</label>
                         <input type="text" id="client_first_name" name="client_first_name" required>
                     </div>
                     <div class="form-group">
-                        <label for="client_last_name">Last Name*</label>
+                        <label for="client_last_name">Last Name</label>
                         <input type="text" id="client_last_name" name="client_last_name" required>
                     </div>
                     <div class="form-group">
-                        <label for="client_email">Email Address*</label>
+                        <label for="client_email">Email</label>
                         <input type="email" id="client_email" name="client_email" required>
                     </div>
                     <div class="form-group">
-                        <label for="client_phone">Phone Number*</label>
-                        <input type="tel" id="client_phone" name="client_phone" required
-                            placeholder="123-456-7890"
-                            pattern="[0-9]{3}-?[0-9]{3}-?[0-9]{4}"
-                            title="Please enter a valid phone number in the format: 123-456-7890"
-                            maxlength="12">
+                        <label for="client_phone">Phone Number</label>
+                        <input type="tel" id="client_phone" name="client_phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+                        <small>Format: 123-456-7890</small>
                     </div>
                     <div class="form-group">
-                        <label for="client_gender">Gender*</label>
+                        <label for="client_gender">Gender</label>
                         <select id="client_gender" name="client_gender" required>
                             <option value="">Select Gender</option>
                             <option value="male">Male</option>
@@ -261,17 +258,17 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="client_birthdate">Date of Birth*</label>
+                        <label for="client_birthdate">Birth Date</label>
                         <input type="date" id="client_birthdate" name="client_birthdate" required>
                     </div>
 
                     <h3>Preferred Appointment</h3>
                     <div class="form-group">
-                        <label for="datePicker">Preferred Date*</label>
+                        <label for="datePicker">Preferred Date</label>
                         <input type="text" id="datePicker" name="preferred_date" placeholder="Select Date" required>
                     </div>
                     <div class="form-group">
-                        <label for="timeSlot">Preferred Time*</label>
+                        <label for="timeSlot">Preferred Time</label>
                         <select id="timeSlot" name="preferred_time" required>
                             <option value="">Select Time</option>
                             <option value="10:00 AM">10:00 AM</option>
@@ -287,7 +284,7 @@
 
                     <h3>Tattoo Details</h3>
                     <div class="form-group">
-                        <label for="tattooType">Type of Tattoo*</label>
+                        <label for="tattooType">Tattoo Type</label>
                         <select id="tattooType" name="tattooType" required>
                             <option value="">Select Type</option>
                             <option value="traditional">Traditional</option>
@@ -300,7 +297,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tattooSize">Approximate Size*</label>
+                        <label for="tattooSize">Tattoo Size</label>
                         <select id="tattooSize" name="tattooSize" required>
                             <option value="">Select Size</option>
                             <option value="small">Small (2-3 inches)</option>
@@ -310,7 +307,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tattooPlacement">Placement on Body*</label>
+                        <label for="tattooPlacement">Tattoo Placement</label>
                         <select id="tattooPlacement" name="tattooPlacement" required>
                             <option value="">Select Placement</option>
                             <option value="arm">Arm</option>
@@ -327,12 +324,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="tattooDescription">Description of Tattoo*</label>
-                        <textarea id="tattooDescription" name="tattooDescription" rows="4" required
-                            placeholder="Please describe your tattoo idea in detail, including any reference images or specific elements you'd like to include."></textarea>
+                        <label for="tattooDescription">Tattoo Description</label>
+                        <textarea id="tattooDescription" name="tattooDescription" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="colorPreference">Color Preference*</label>
+                        <label for="colorPreference">Color Preference</label>
                         <select id="colorPreference" name="colorPreference" required>
                             <option value="">Select Preference</option>
                             <option value="color">Full Color</option>
@@ -343,8 +339,7 @@
                     </div>
                     <div class="form-group">
                         <label for="additionalNotes">Additional Notes (Optional)</label>
-                        <textarea id="additionalNotes" name="additionalNotes" rows="3"
-                            placeholder="Any additional information you'd like to share (e.g., scheduling flexibility, specific concerns, etc.)"></textarea>
+                        <textarea id="additionalNotes" name="additionalNotes" rows="3"></textarea>
                     </div>
 
                     <button type="submit">Book Appointment</button>
