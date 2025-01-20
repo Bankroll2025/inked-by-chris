@@ -3,53 +3,34 @@
     emailjs.init("nqLDVniO3BUlQ-e1n");
 })();
 
-// Available time slots (you can customize these)
-const timeSlots = [
-    "10:00 AM", "11:00 AM", "12:00 PM",
-    "1:00 PM", "2:00 PM", "3:00 PM",
-    "4:00 PM", "5:00 PM", "6:00 PM"
-];
-
 document.addEventListener('DOMContentLoaded', function() {
+    const bookingForm = document.getElementById('bookingForm');
+    
     // Initialize flatpickr
     const datePicker = flatpickr("#preferred_date", {
         minDate: "today",
         disable: [
             function(date) {
-                return (date.getDay() === 0); // Disable Sundays
+                // Disable Sundays and Mondays
+                return date.getDay() === 0 || date.getDay() === 1;
             }
         ],
-        dateFormat: "Y-m-d"
+        locale: {
+            "firstDayOfWeek": 1 // Start week on Monday
+        }
     });
 
-    // Phone number formatting
-    const phoneInput = document.getElementById('client_phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '').substring(0, 10);
-            if (value.length >= 6) {
-                value = value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
-            } else if (value.length >= 3) {
-                value = value.replace(/(\d{3})(\d{0,3})/, "$1-$2");
-            }
-            e.target.value = value;
-        });
+    // Initialize time picker
+    const timePicker = flatpickr("#preferred_time", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "h:i K",
+        minTime: "10:00",
+        maxTime: "18:00",
+        defaultDate: "10:00",
+        minuteIncrement: 30
+    });
 
-        phoneInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Backspace' || e.key === 'Delete') {
-                let value = e.target.value;
-                if (value.length === 8 || value.length === 4) { // Position right after a dash
-                    if (e.key === 'Backspace') {
-                        e.target.value = value.slice(0, -1);
-                        e.preventDefault();
-                    }
-                }
-            }
-        });
-    }
-
-    // Booking form submission
-    const bookingForm = document.getElementById('bookingForm');
     if (bookingForm) {
         bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -60,10 +41,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
                 // Get form data
-                const formData = new FormData(bookingForm);
+                const formData = {
+                    firstName: document.getElementById('client_first_name').value.trim(),
+                    lastName: document.getElementById('client_last_name').value.trim(),
+                    email: document.getElementById('client_email').value.trim(),
+                    phone: document.getElementById('client_phone').value.trim(),
+                    gender: document.getElementById('client_gender').value,
+                    birthdate: document.getElementById('client_birthdate').value,
+                    preferredDate: document.getElementById('preferred_date').value,
+                    preferredTime: document.getElementById('preferred_time').value,
+                    tattooType: document.getElementById('tattooType').value,
+                    tattooSize: document.getElementById('tattooSize').value,
+                    tattooPlacement: document.getElementById('tattooPlacement').value,
+                    tattooDescription: document.getElementById('tattooDescription').value.trim(),
+                    colorPreference: document.getElementById('colorPreference').value,
+                    additionalNotes: document.getElementById('additionalNotes').value.trim()
+                };
+
+                // Validate required fields
+                const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'gender', 'birthdate', 'preferredDate', 'preferredTime'];
+                const missingFields = requiredFields.filter(field => !formData[field]);
+                
+                if (missingFields.length > 0) {
+                    throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+                }
                 
                 // Calculate age
-                const birthDate = new Date(formData.get('client_birthdate'));
+                const birthDate = new Date(formData.birthdate);
                 const today = new Date();
                 let age = today.getFullYear() - birthDate.getFullYear();
                 const m = today.getMonth() - birthDate.getMonth();
@@ -73,37 +77,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Check if client is 18 or older
                 if (age < 18) {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'error-message';
-                    errorDiv.innerHTML = `
-                        <h3>Age Restriction</h3>
-                        <p>You must be 18 or older to book a tattoo appointment.</p>
-                        <button onclick="location.reload()" class="refresh-button">Try Again</button>
-                    `;
-                    bookingForm.replaceWith(errorDiv);
-                    return;
+                    throw new Error('You must be 18 or older to book a tattoo appointment.');
                 }
 
-                const data = {
-                    clientFirstName: formData.get('client_first_name'),
-                    clientLastName: formData.get('client_last_name'),
-                    clientEmail: formData.get('client_email'),
-                    clientPhone: formData.get('client_phone'),
-                    clientGender: formData.get('client_gender'),
-                    clientBirthdate: formData.get('client_birthdate'),
-                    clientAge: age,
-                    preferredDate: formData.get('preferred_date'),
-                    preferredTime: formData.get('preferred_time'),
-                    tattooType: formData.get('tattooType'),
-                    tattooSize: formData.get('tattooSize'),
-                    tattooPlacement: formData.get('tattooPlacement'),
-                    tattooDescription: formData.get('tattooDescription'),
-                    colorPreference: formData.get('colorPreference') || 'Not specified',
-                    additionalNotes: formData.get('additionalNotes') || 'None',
-                    bookingId: generateBookingId()
-                };
-
-                const formattedDate = new Date(data.preferredDate).toLocaleDateString('en-US', {
+                const bookingId = generateBookingId();
+                const formattedDate = new Date(formData.preferredDate).toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
@@ -111,66 +89,67 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 try {
-                    // Send notification to shop
+                    // Send notification to shop owner
                     console.log('Sending shop notification...');
                     const shopResponse = await emailjs.send(
                         "service_2e752is",
                         "template_tukgt7p",
                         {
                             to_name: "Chris",
-                            from_name: `${data.clientFirstName} ${data.clientLastName}`,
-                            client_email: data.clientEmail,
-                            client_phone: data.clientPhone,
+                            from_name: `${formData.firstName} ${formData.lastName}`,
+                            client_email: formData.email,
+                            client_phone: formData.phone,
+                            client_gender: formData.gender,
+                            client_age: age,
                             appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
-                            tattoo_type: data.tattooType,
-                            tattoo_size: data.tattooSize,
-                            tattoo_placement: data.tattooPlacement,
-                            tattoo_description: data.tattooDescription || 'Not provided',
-                            color_preference: data.colorPreference,
-                            additional_notes: data.additionalNotes || 'None',
-                            booking_id: data.bookingId
+                            appointment_time: formData.preferredTime,
+                            tattoo_type: formData.tattooType,
+                            tattoo_size: formData.tattooSize,
+                            tattoo_placement: formData.tattooPlacement,
+                            tattoo_description: formData.tattooDescription || 'Not provided',
+                            color_preference: formData.colorPreference || 'Not specified',
+                            additional_notes: formData.additionalNotes || 'None',
+                            booking_id: bookingId
                         }
                     );
                     console.log('Shop notification sent successfully');
 
-                    // Send confirmation to client's email only
+                    // Send confirmation to client
                     console.log('Sending client confirmation...');
-                    console.log('Client email:', data.clientEmail);
                     const clientResponse = await emailjs.send(
                         "service_2e752is",
                         "template_gowinjb",
                         {
-                            to_name: `${data.clientFirstName} ${data.clientLastName}`,
-                            client_email: data.clientEmail,
+                            to_name: formData.firstName,
+                            client_email: formData.email,
                             appointment_date: formattedDate,
-                            appointment_time: data.preferredTime,
-                            tattoo_type: data.tattooType,
-                            tattoo_size: data.tattooSize,
-                            tattoo_placement: data.tattooPlacement,
-                            booking_id: data.bookingId,
+                            appointment_time: formData.preferredTime,
+                            tattoo_type: formData.tattooType,
+                            tattoo_size: formData.tattooSize,
+                            tattoo_placement: formData.tattooPlacement,
+                            booking_id: bookingId,
                             studio_address: "2395 7th St N, Saint Paul, MN 55109",
                             studio_phone: "(651) 592-5122",
                             studio_email: "senghakmad@gmail.com"
                         }
                     );
-                    console.log('Client confirmation sent successfully to:', data.clientEmail);
+                    console.log('Client confirmation sent successfully');
 
                     // Show success message
                     const successDiv = document.createElement('div');
                     successDiv.className = 'success-message';
                     successDiv.innerHTML = `
                         <h3>Booking Successful!</h3>
-                        <p>Your appointment has been scheduled for ${formattedDate} at ${data.preferredTime}.</p>
-                        <p>A confirmation email has been sent to ${data.clientEmail}.</p>
-                        <p>Your booking ID is: ${data.bookingId}</p>
+                        <p>Your appointment has been scheduled for ${formattedDate} at ${formData.preferredTime}.</p>
+                        <p>A confirmation email has been sent to ${formData.email}.</p>
+                        <p>Your booking ID is: ${bookingId}</p>
                         <div class="booking-details">
-                            <p><strong>Name:</strong> ${data.clientFirstName} ${data.clientLastName}</p>
+                            <p><strong>Name:</strong> ${formData.firstName} ${formData.lastName}</p>
                             <p><strong>Date:</strong> ${formattedDate}</p>
-                            <p><strong>Time:</strong> ${data.preferredTime}</p>
-                            <p><strong>Tattoo Type:</strong> ${data.tattooType}</p>
-                            <p><strong>Size:</strong> ${data.tattooSize}</p>
-                            <p><strong>Placement:</strong> ${data.tattooPlacement}</p>
+                            <p><strong>Time:</strong> ${formData.preferredTime}</p>
+                            <p><strong>Tattoo Type:</strong> ${formData.tattooType}</p>
+                            <p><strong>Size:</strong> ${formData.tattooSize}</p>
+                            <p><strong>Placement:</strong> ${formData.tattooPlacement}</p>
                         </div>
                         <p class="studio-info">
                             <strong>Studio Location:</strong><br>
@@ -189,9 +168,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h3>Email Notification Error</h3>
                         <p>There was an error sending the confirmation email. Please save your booking information:</p>
                         <div class="booking-details">
-                            <p><strong>Booking ID:</strong> ${data.bookingId}</p>
+                            <p><strong>Booking ID:</strong> ${bookingId}</p>
                             <p><strong>Date:</strong> ${formattedDate}</p>
-                            <p><strong>Time:</strong> ${data.preferredTime}</p>
+                            <p><strong>Time:</strong> ${formData.preferredTime}</p>
                         </div>
                         <p>Contact us to confirm your appointment:</p>
                         <p><strong>Email:</strong> senghakmad@gmail.com</p>
@@ -207,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorDiv.className = 'error-message';
                 errorDiv.innerHTML = `
                     <h3>Booking Error</h3>
-                    <p>There was an error processing your booking. Please try again or contact us directly.</p>
+                    <p>${error.message || 'There was an error processing your booking. Please try again or contact us directly.'}</p>
                     <p><strong>Phone:</strong> (651) 592-5122</p>
                     <p><strong>Email:</strong> senghakmad@gmail.com</p>
                     <button onclick="location.reload()" class="refresh-button">Try Again</button>
@@ -257,6 +236,11 @@ if (rescheduleId) {
 // Populate time slots
 const timeSlotSelect = document.getElementById('timeSlot');
 if (timeSlotSelect) {
+    const timeSlots = [
+        "10:00 AM", "11:00 AM", "12:00 PM",
+        "1:00 PM", "2:00 PM", "3:00 PM",
+        "4:00 PM", "5:00 PM", "6:00 PM"
+    ];
     timeSlots.forEach(slot => {
         const option = document.createElement('option');
         option.value = slot;
