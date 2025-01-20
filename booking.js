@@ -86,8 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         "service_2e752is",
                         "template_tukgt7p",
                         {
-                            to_name: "Chris",
-                            from_name: `${formData.firstName} ${formData.lastName}`,
+                            booking_id: bookingId,
+                            client_name: `${formData.firstName} ${formData.lastName}`,
                             client_email: formData.email,
                             client_phone: formData.phone,
                             client_gender: formData.gender,
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_description: formData.tattooDescription || 'Not provided',
                             color_preference: formData.colorPreference || 'Not specified',
                             additional_notes: formData.additionalNotes || 'None',
-                            booking_id: bookingId
+                            reply_to: formData.email
                         }
                     );
                     console.log('Shop notification sent successfully');
@@ -111,17 +111,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         "service_2e752is",
                         "template_gowinjb",
                         {
-                            to_name: formData.firstName,
+                            booking_id: bookingId,
+                            client_name: `${formData.firstName} ${formData.lastName}`,
                             client_email: formData.email,
                             appointment_date: formattedDate,
                             appointment_time: formData.preferredTime,
                             tattoo_type: formData.tattooType,
                             tattoo_size: formData.tattooSize,
                             tattoo_placement: formData.tattooPlacement,
-                            booking_id: bookingId,
                             studio_address: "2395 7th St N, Saint Paul, MN 55109",
                             studio_phone: "(651) 592-5122",
-                            studio_email: "senghakmad@gmail.com"
+                            studio_email: "senghakmad@gmail.com",
+                            reply_to: "senghakmad@gmail.com"
                         }
                     );
                     console.log('Client confirmation sent successfully');
