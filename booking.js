@@ -1,4 +1,5 @@
 // Initialize EmailJS with your public key
+// Updated template parameters for better email delivery
 (function() {
     emailjs.init("nqLDVniO3BUlQ-e1n");
 })();
