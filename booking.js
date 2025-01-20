@@ -81,56 +81,61 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 try {
+                    // Prepare template parameters
+                    const shopTemplateParams = {
+                        to_name: "Chris",
+                        from_name: `${formData.firstName} ${formData.lastName}`,
+                        booking_id: bookingId,
+                        client_name: `${formData.firstName} ${formData.lastName}`,
+                        client_email: formData.email,
+                        client_phone: formData.phone,
+                        client_gender: formData.gender,
+                        client_age: age,
+                        appointment_date: formattedDate,
+                        appointment_time: formData.preferredTime,
+                        tattoo_type: formData.tattooType,
+                        tattoo_size: formData.tattooSize,
+                        tattoo_placement: formData.tattooPlacement,
+                        tattoo_description: formData.tattooDescription || 'Not provided',
+                        color_preference: formData.colorPreference || 'Not specified',
+                        additional_notes: formData.additionalNotes || 'None',
+                        reply_to: formData.email
+                    };
+
+                    const clientTemplateParams = {
+                        to_name: formData.firstName,
+                        from_name: "Inked by Chris",
+                        booking_id: bookingId,
+                        client_name: `${formData.firstName} ${formData.lastName}`,
+                        client_email: formData.email,
+                        appointment_date: formattedDate,
+                        appointment_time: formData.preferredTime,
+                        tattoo_type: formData.tattooType,
+                        tattoo_size: formData.tattooSize,
+                        tattoo_placement: formData.tattooPlacement,
+                        studio_address: "2395 7th St N, Saint Paul, MN 55109",
+                        studio_phone: "(651) 592-5122",
+                        studio_email: "senghakmad@gmail.com",
+                        reply_to: "senghakmad@gmail.com"
+                    };
+
                     // Send notification to shop owner
-                    console.log('Sending shop notification...');
+                    console.log('Sending shop notification...', shopTemplateParams);
                     const shopResponse = await emailjs.send(
                         "service_2e752is",
                         "template_tukgt7p",
-                        {
-                            to_name: "Chris",
-                            from_name: `${formData.firstName} ${formData.lastName}`,
-                            booking_id: bookingId,
-                            client_name: `${formData.firstName} ${formData.lastName}`,
-                            client_email: formData.email,
-                            client_phone: formData.phone,
-                            client_gender: formData.gender,
-                            client_age: age,
-                            appointment_date: formattedDate,
-                            appointment_time: formData.preferredTime,
-                            tattoo_type: formData.tattooType,
-                            tattoo_size: formData.tattooSize,
-                            tattoo_placement: formData.tattooPlacement,
-                            tattoo_description: formData.tattooDescription || 'Not provided',
-                            color_preference: formData.colorPreference || 'Not specified',
-                            additional_notes: formData.additionalNotes || 'None',
-                            reply_to: formData.email
-                        }
+                        shopTemplateParams
                     );
-                    console.log('Shop notification sent successfully');
+                    console.log('Shop notification sent successfully', shopResponse);
 
                     // Send confirmation to client
-                    console.log('Sending client confirmation...');
+                    console.log('Sending client confirmation...', clientTemplateParams);
                     const clientResponse = await emailjs.send(
                         "service_2e752is",
                         "template_gowinjb",
-                        {
-                            to_name: formData.firstName,
-                            from_name: "Inked by Chris",
-                            booking_id: bookingId,
-                            client_name: `${formData.firstName} ${formData.lastName}`,
-                            client_email: formData.email,
-                            appointment_date: formattedDate,
-                            appointment_time: formData.preferredTime,
-                            tattoo_type: formData.tattooType,
-                            tattoo_size: formData.tattooSize,
-                            tattoo_placement: formData.tattooPlacement,
-                            studio_address: "2395 7th St N, Saint Paul, MN 55109",
-                            studio_phone: "(651) 592-5122",
-                            studio_email: "senghakmad@gmail.com",
-                            reply_to: "senghakmad@gmail.com"
-                        }
+                        clientTemplateParams
                     );
-                    console.log('Client confirmation sent successfully');
+                    console.log('Client confirmation sent successfully', clientResponse);
 
                     // Show success message
                     const successDiv = document.createElement('div');
