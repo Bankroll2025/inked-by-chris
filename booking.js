@@ -6,8 +6,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const bookingForm = document.getElementById('bookingForm');
     
-    // Initialize flatpickr
-    const datePicker = flatpickr("#preferred_date", {
+    // Initialize flatpickr for appointment date
+    const datePicker = flatpickr("#appointment_date", {
         minDate: "today",
         disable: [
             function(date) {
@@ -20,42 +20,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Initialize time picker
-    const timePicker = flatpickr("#preferred_time", {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "h:i K",
-        minTime: "10:00",
-        maxTime: "18:00",
-        defaultDate: "10:00",
-        minuteIncrement: 30
-    });
-
     if (bookingForm) {
         bookingForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitButton = bookingForm.querySelector('button[type="submit"]');
-            submitButton.textContent = 'Processing...';
-            submitButton.disabled = true;
+            if (submitButton) {
+                submitButton.textContent = 'Processing...';
+                submitButton.disabled = true;
+            }
 
             try {
                 // Get form data
                 const formData = {
                     firstName: document.getElementById('client_first_name').value.trim(),
                     lastName: document.getElementById('client_last_name').value.trim(),
-                    email: document.getElementById('client_email').value.trim(),
-                    phone: document.getElementById('client_phone').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
                     gender: document.getElementById('client_gender').value,
-                    birthdate: document.getElementById('client_birthdate').value,
-                    preferredDate: document.getElementById('preferred_date').value,
-                    preferredTime: document.getElementById('preferred_time').value,
+                    birthdate: document.getElementById('birthdate').value,
+                    preferredDate: document.getElementById('appointment_date').value,
+                    preferredTime: document.getElementById('appointment_time').value,
                     tattooType: document.getElementById('tattooType').value,
                     tattooSize: document.getElementById('tattooSize').value,
                     tattooPlacement: document.getElementById('tattooPlacement').value,
-                    tattooDescription: document.getElementById('tattooDescription').value.trim(),
-                    colorPreference: document.getElementById('colorPreference').value,
-                    additionalNotes: document.getElementById('additionalNotes').value.trim()
+                    tattooDescription: document.getElementById('tattooDescription')?.value?.trim() || '',
+                    colorPreference: document.getElementById('colorPreference')?.value || 'Not specified',
+                    additionalNotes: document.getElementById('additionalNotes')?.value?.trim() || ''
                 };
 
                 // Validate required fields
@@ -193,8 +184,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 bookingForm.replaceWith(errorDiv);
             } finally {
-                submitButton.textContent = 'Book Appointment';
-                submitButton.disabled = false;
+                const submitButton = bookingForm.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.textContent = 'Book Appointment';
+                    submitButton.disabled = false;
+                }
             }
         });
     }
