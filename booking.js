@@ -119,12 +119,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         {
                             to_name: "Chris",
                             from_name: `${data.clientFirstName} ${data.clientLastName}`,
-                            to_email: "senghakmad@gmail.com",
-                            client_name: `${data.clientFirstName} ${data.clientLastName}`,
                             client_email: data.clientEmail,
                             client_phone: data.clientPhone,
-                            client_gender: data.clientGender,
-                            client_age: data.clientAge,
                             appointment_date: formattedDate,
                             appointment_time: data.preferredTime,
                             tattoo_type: data.tattooType,
@@ -133,10 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_description: data.tattooDescription || 'Not provided',
                             color_preference: data.colorPreference,
                             additional_notes: data.additionalNotes || 'None',
-                            booking_id: data.bookingId,
-                            subject: `APPOINTMENT: ${formattedDate} at ${data.preferredTime} - ${data.clientFirstName} ${data.clientLastName}`
-                        },
-                        "nqLDVniO3BUlQ-e1n"
+                            booking_id: data.bookingId
+                        }
                     );
                     console.log('Shop notification sent successfully');
 
@@ -148,18 +142,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         "template_gowinjb",
                         {
                             to_name: `${data.clientFirstName} ${data.clientLastName}`,
-                            to_email: data.clientEmail,
-                            from_name: "Inked by Chris",
-                            reply_to: "senghakmad@gmail.com",
+                            client_email: data.clientEmail,
                             appointment_date: formattedDate,
                             appointment_time: data.preferredTime,
                             tattoo_type: data.tattooType,
                             tattoo_size: data.tattooSize,
                             tattoo_placement: data.tattooPlacement,
-                            color_preference: data.colorPreference,
                             booking_id: data.bookingId,
-                            website_link: "https://inkedbychris.com",
-                            subject: `Your Tattoo Appointment Confirmation - ${formattedDate}`
+                            studio_address: "2395 7th St N, Saint Paul, MN 55109",
+                            studio_phone: "(651) 592-5122",
+                            studio_email: "senghakmad@gmail.com"
                         }
                     );
                     console.log('Client confirmation sent successfully to:', data.clientEmail);
@@ -172,6 +164,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p>Your appointment has been scheduled for ${formattedDate} at ${data.preferredTime}.</p>
                         <p>A confirmation email has been sent to ${data.clientEmail}.</p>
                         <p>Your booking ID is: ${data.bookingId}</p>
+                        <div class="booking-details">
+                            <p><strong>Name:</strong> ${data.clientFirstName} ${data.clientLastName}</p>
+                            <p><strong>Date:</strong> ${formattedDate}</p>
+                            <p><strong>Time:</strong> ${data.preferredTime}</p>
+                            <p><strong>Tattoo Type:</strong> ${data.tattooType}</p>
+                            <p><strong>Size:</strong> ${data.tattooSize}</p>
+                            <p><strong>Placement:</strong> ${data.tattooPlacement}</p>
+                        </div>
+                        <p class="studio-info">
+                            <strong>Studio Location:</strong><br>
+                            2395 7th St N<br>
+                            Saint Paul, MN 55109
+                        </p>
                         <button onclick="location.reload()" class="refresh-button">Book Another Appointment</button>
                     `;
                     bookingForm.replaceWith(successDiv);
@@ -203,9 +208,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorDiv.innerHTML = `
                     <h3>Booking Error</h3>
                     <p>There was an error processing your booking. Please try again or contact us directly.</p>
-                    <p><strong>Email:</strong> senghakmad@gmail.com</p>
                     <p><strong>Phone:</strong> (651) 592-5122</p>
-                    <button onclick="location.reload()" class="refresh-button">Try Again</button>`;
+                    <p><strong>Email:</strong> senghakmad@gmail.com</p>
+                    <button onclick="location.reload()" class="refresh-button">Try Again</button>
+                `;
                 bookingForm.replaceWith(errorDiv);
             } finally {
                 submitButton.textContent = 'Book Appointment';
@@ -216,9 +222,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Helper function to generate booking ID
     function generateBookingId() {
-        const timestamp = new Date().getTime().toString().slice(-6);
-        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-        return `BK${timestamp}${random}`;
+        const timestamp = Date.now().toString(36);
+        const randomStr = Math.random().toString(36).substring(2, 8);
+        return `IC-${timestamp}-${randomStr}`.toUpperCase();
     }
 });
 
