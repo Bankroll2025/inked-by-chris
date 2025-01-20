@@ -158,11 +158,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             tattoo_placement: data.tattooPlacement,
                             color_preference: data.colorPreference,
                             booking_id: data.bookingId,
-                            website_link: "https://inkedbychris.com",  // Update website URL
-                            subject: `Your Tattoo Appointment Confirmed - ${formattedDate} at ${data.preferredTime}`,
-                            email_to: data.clientEmail
-                        },
-                        "nqLDVniO3BUlQ-e1n"
+                            website_link: "https://inkedbychris.com",
+                            subject: `Your Tattoo Appointment Confirmation - ${formattedDate}`
+                        }
                     );
                     console.log('Client confirmation sent successfully to:', data.clientEmail);
 
